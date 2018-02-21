@@ -12,8 +12,11 @@ namespace osu.Framework.Platform.iOS.Input
 {
     public class iOSTouchHandler : InputHandler
     {
+        private readonly iOSPlatformGameView view;
+
         public iOSTouchHandler(iOSPlatformGameView view)
         {
+            this.view = view;
             view.HandleTouches += handleTouches;
         }
 
@@ -52,6 +55,12 @@ namespace osu.Framework.Platform.iOS.Input
         public override bool IsActive => true;
 
         public override int Priority => 0;
+
+        protected override void Dispose(bool disposing)
+        {
+            view.HandleTouches -= handleTouches;
+            base.Dispose(disposing);
+        }
 
         public override bool Initialize(GameHost host)
         {

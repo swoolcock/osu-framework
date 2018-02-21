@@ -24,7 +24,7 @@ namespace osu.Framework.Platform.iOS
 
         protected override IEnumerable<InputHandler> CreateAvailableInputHandlers()
         {
-            yield return new iOSTouchHandler(gameView);
+            return new InputHandler[] { new iOSTouchHandler(gameView) };
         }
 
         protected override Storage GetStorage(string baseName) => new WindowsStorage(baseName);
