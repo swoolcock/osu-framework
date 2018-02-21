@@ -1,9 +1,12 @@
 ﻿// Copyright (c) 2007-2017 ppy Pty Ltd <contact@ppy.sh>.
 // Licensed under the MIT Licence - https://raw.githubusercontent.com/ppy/osu-framework/master/LICENCE
 
+extern alias IOS;
+
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
+using IOS::ObjCRuntime;
 using ManagedBass;
 
 namespace osu.Framework.Audio.Track
@@ -27,40 +30,50 @@ namespace osu.Framework.Audio.Track
             dataStream = data;
         }
 
-        private void ac_Close(IntPtr user)
+        [MonoPInvokeCallback(typeof(FileCloseProcedure))]
+        private static void ac_Close(IntPtr user)
         {
             //manually handle closing of stream
         }
 
-        private long ac_Length(IntPtr user)
+        [MonoPInvokeCallback(typeof(FileLengthProcedure))]
+        private static long ac_Length(IntPtr user)
         {
-            if (dataStream == null) return 0;
+            var handle = GCHandle.FromIntPtr(user);
+            DataStreamFileProcedures inst = (DataStreamFileProcedures)handle.Target;
+
+            if (inst.dataStream == null) return 0;
 
             try
             {
-                return dataStream.Length;
+                return inst.dataStream.Length;
             }
             catch
             {
             }
-
+        
             return 0;
         }
 
-        private int ac_Read(IntPtr buffer, int length, IntPtr user)
+        [MonoPInvokeCallback(typeof(FileReadProcedure))]
+        private static int ac_Read(IntPtr buffer, int length, IntPtr user)
         {
-            if (dataStream == null) return 0;
+            var handle = GCHandle.FromIntPtr(user);
+            DataStreamFileProcedures inst = (DataStreamFileProcedures)handle.Target;
+
+            if (inst.dataStream == null) return 0;
+
 
             try
             {
-                if (length > readBuffer.Length)
-                    readBuffer = new byte[length];
+                if (length > inst.readBuffer.Length)
+                    inst.readBuffer = new byte[length];
 
-                if (!dataStream.CanRead)
+                if (!inst.dataStream.CanRead)
                     return 0;
 
-                int readBytes = dataStream.Read(readBuffer, 0, length);
-                Marshal.Copy(readBuffer, 0, buffer, readBytes);
+                int readBytes = inst.dataStream.Read(inst.readBuffer, 0, length);
+                Marshal.Copy(inst.readBuffer, 0, buffer, readBytes);
                 return readBytes;
             }
             catch
@@ -70,13 +83,16 @@ namespace osu.Framework.Audio.Track
             return 0;
         }
 
-        private bool ac_Seek(long offset, IntPtr user)
+        [MonoPInvokeCallback(typeof(FileSeekProcedure))]
+        private static bool ac_Seek(long offset, IntPtr user)
         {
-            if (dataStream == null) return false;
+            var handle = GCHandle.FromIntPtr(user);
+            DataStreamFileProcedures inst = (DataStreamFileProcedures)handle.Target;
+            if (inst.dataStream == null) return false;
 
             try
             {
-                return dataStream.Seek(offset, SeekOrigin.Begin) == offset;
+                return inst.dataStream.Seek(offset, SeekOrigin.Begin) == offset;
             }
             catch
             {

@@ -100,7 +100,7 @@ namespace osu.Framework.Audio
         /// <param name="sampleStore">The sample store containing all audio samples to be used in the future.</param>
         public AudioManager(ResourceStore<byte[]> trackStore, ResourceStore<byte[]> sampleStore)
         {
-            return;
+            //return;
 
             AudioDevice.ValueChanged += onDeviceChanged;
 

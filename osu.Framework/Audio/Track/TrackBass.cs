@@ -10,6 +10,7 @@ using OpenTK;
 using osu.Framework.IO;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 
 namespace osu.Framework.Audio.Track
 {
@@ -37,6 +38,9 @@ namespace osu.Framework.Audio.Track
         /// </summary>
         private bool isPlayed;
 
+        private DataStreamFileProcedures procedures;
+        private GCHandle pinnedProcedures;
+
         private volatile bool isLoaded;
 
         public override bool IsLoaded => isLoaded;
@@ -52,10 +56,15 @@ namespace osu.Framework.Audio.Track
                 //encapsulate incoming stream with async buffer if it isn't already.
                 dataStream = data as AsyncBufferStream ?? new AsyncBufferStream(data, quick ? 8 : -1);
 
-                var procs = new DataStreamFileProcedures(dataStream);
+                procedures = new DataStreamFileProcedures(dataStream);
+                pinnedProcedures = GCHandle.Alloc(procedures, GCHandleType.Pinned);
 
                 BassFlags flags = Preview ? 0 : BassFlags.Decode | BassFlags.Prescan | BassFlags.Float;
-                activeStream = Bass.CreateStream(StreamSystem.NoBuffer, flags, procs.BassProcedures, IntPtr.Zero);
+                try {
+                    activeStream = Bass.CreateStream(StreamSystem.NoBuffer, flags, procedures.BassProcedures, GCHandle.ToIntPtr(pinnedProcedures));
+                } catch(Exception e) {
+                    Logging.Logger.Log(e.ToString());
+                }
 
                 if (!Preview)
                 {
@@ -136,6 +145,9 @@ namespace osu.Framework.Audio.Track
 
             dataStream?.Dispose();
             dataStream = null;
+
+            if (pinnedProcedures.IsAllocated)
+                pinnedProcedures.Free();
 
             base.Dispose(disposing);
         }
