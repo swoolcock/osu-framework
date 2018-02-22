@@ -13,11 +13,13 @@ namespace osu.Framework.Platform.iOS.Input
     public class iOSTouchHandler : InputHandler
     {
         private readonly iOSPlatformGameView view;
+        private readonly float scale;
 
         public iOSTouchHandler(iOSPlatformGameView view)
         {
             this.view = view;
             view.HandleTouches += handleTouches;
+            scale = (float)UIScreen.MainScreen.Scale;
         }
 
         private void handleTouches(NSSet obj)
@@ -36,7 +38,7 @@ namespace osu.Framework.Platform.iOS.Input
             var location = touch.LocationInView(null);
 
             var basicState = new Framework.Input.MouseState();
-            basicState.Position = new Vector2((float)location.X, (float)location.Y);
+            basicState.Position = new Vector2((float)location.X * scale, (float)location.Y * scale);
 
             switch (touch.Phase)
             {
