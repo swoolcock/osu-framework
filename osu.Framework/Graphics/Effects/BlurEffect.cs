@@ -12,7 +12,7 @@ namespace osu.Framework.Graphics.Effects
     /// <summary>
     /// A blur effect that wraps a drawable in a <see cref="BufferedContainer"/> which applies a blur effect to it.
     /// </summary>
-    public class BlurEffect : IEffect<BufferedContainer>
+    public class BlurEffect : IEffect<Container>
     {
         /// <summary>
         /// The strength of the blur. Default is 1.
@@ -59,27 +59,28 @@ namespace osu.Framework.Graphics.Effects
         /// </summary>
         public bool CacheDrawnEffect;
 
-        public BufferedContainer ApplyTo(Drawable drawable)
+        //public BufferedContainer ApplyTo(Drawable drawable)
+        public Container ApplyTo(Drawable drawable)
         {
             Vector2 position = drawable.Position;
             drawable.Position = Vector2.Zero;
 
-            return new BufferedContainer
+            return new Container//BufferedContainer
             {
                 RelativeSizeAxes = drawable.RelativeSizeAxes,
                 AutoSizeAxes = Axes.Both & ~drawable.RelativeSizeAxes,
                 Anchor = drawable.Anchor,
                 Origin = drawable.Origin,
 
-                BlurSigma = Sigma,
-                BlurRotation = Rotation,
-                EffectColour = Colour.MultiplyAlpha(Strength),
-                EffectBlending = Blending,
-                EffectPlacement = Placement,
+                //BlurSigma = Sigma,
+                //BlurRotation = Rotation,
+                //EffectColour = Colour.MultiplyAlpha(Strength),
+                //EffectBlending = Blending,
+                //EffectPlacement = Placement,
 
-                DrawOriginal = DrawOriginal,
+                //DrawOriginal = DrawOriginal,
 
-                CacheDrawnFrameBuffer = CacheDrawnEffect,
+                //CacheDrawnFrameBuffer = CacheDrawnEffect,
 
                 Position = position,
                 Padding = !PadExtent ? new MarginPadding() : new MarginPadding
