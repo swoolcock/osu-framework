@@ -36,7 +36,8 @@ namespace osu.Framework.Platform.iOS.Input
 
         private void handleShouldChangeCharacters(NSRange range, string text)
         {
-            pending += text;
+            if (text == " " || text.Trim().Length > 0)
+                pending += text;
         }
 
         public void Deactivate(object sender)

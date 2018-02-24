@@ -8,9 +8,8 @@ using osu.Framework.Input.Handlers;
 using IOS::Foundation;
 using IOS::UIKit;
 using osu.Framework.Input;
-using OpenTK;
 using OpenTK.Input;
-using System.Linq;
+using System.Collections.Generic;
 
 namespace osu.Framework.Platform.iOS.Input
 {
@@ -42,14 +41,14 @@ namespace osu.Framework.Platform.iOS.Input
             bool keysAdded = false;
             foreach (char c in text)
             {
-                bool shiftHeld = char.IsUpper(c);
+                bool upper = false;
 
-                Key? key = keyForString(char.ToString(c));
+                Key? key = keyForString(char.ToString(c), out upper);
 
                 if (key.HasValue)
                 {
                     var basicState = new Framework.Input.KeyboardState();
-                    if (shiftHeld)
+                    if (upper)
                         basicState.Keys = new Key[] { key.Value, Key.LShift };
                     else
                         basicState.Keys = new Key[] { key.Value };
@@ -72,6 +71,7 @@ namespace osu.Framework.Platform.iOS.Input
         private void handleKeyCommand(UIKeyCommand cmd)
         {
             Key? key;
+            bool upper = false;
             // UIKeyCommand constants are not actually constants, so we can't use a switch
             if (cmd.Input == UIKeyCommand.LeftArrow)
                 key = Key.Left;
@@ -82,43 +82,155 @@ namespace osu.Framework.Platform.iOS.Input
             else if (cmd.Input == UIKeyCommand.DownArrow)
                 key = Key.Down;
             else
-                key = keyForString(cmd.Input);
+                key = keyForString(cmd.Input, out upper);
             
             if (key.HasValue)
             {
-                bool shiftHeld = (cmd.ModifierFlags & UIKeyModifierFlags.Shift) > 0;
-                var basicState = new Framework.Input.KeyboardState();
-                if (shiftHeld)
-                    basicState.Keys = new Key[] { key.Value, Key.LShift };
-                else
-                    basicState.Keys = new Key[] { key.Value };
-                
-                PendingStates.Enqueue(new InputState { Keyboard = basicState });
+                bool shiftHeld = (cmd.ModifierFlags & UIKeyModifierFlags.Shift) > 0 || upper;
+                bool superHeld = (cmd.ModifierFlags & UIKeyModifierFlags.Command) > 0;
+                bool ctrlHeld = (cmd.ModifierFlags & UIKeyModifierFlags.Control) > 0;
+                bool optionHeld = (cmd.ModifierFlags & UIKeyModifierFlags.Alternate) > 0;
+
+                var keys = new List<Key>();
+                keys.Add(key.Value);
+
+                if (shiftHeld) keys.Add(Key.LShift);
+                if (superHeld) keys.Add(Key.LWin);
+                if (ctrlHeld) keys.Add(Key.LControl);
+                if (optionHeld) keys.Add(Key.LAlt);
+
+                PendingStates.Enqueue(new InputState { Keyboard = new Framework.Input.KeyboardState { Keys = keys.ToArray() } });
                 PendingStates.Enqueue(new InputState { Keyboard = new Framework.Input.KeyboardState() });
             }
         }
 
-        private Key? keyForString(string str)
+        private Key? keyForString(string str, out bool upper)
         {
-            string keyName;
-
-            if (str.Length > 1)
-            {
-                // TODO: special strings
-                keyName = "";
-            }
-            else if (char.IsLetter(str[0]))
-                keyName = char.ToString(str[0]).ToUpper();
-            else if (char.IsDigit(str[0]))
-                keyName = "Number" + str[0];
-            else
+            upper = false;
+            if (str.Length == 0)
                 return null;
 
-            Key result;
-            if (Enum.TryParse(keyName, out result))
-                return result;
-            
-            return null;
+            char c = str[0];
+            switch(c)
+            {
+                case '\t':
+                    return Key.Tab;
+
+                case '1':
+                case '!':
+                    upper = !char.IsDigit(c);
+                    return Key.Number1;
+
+                case '2':
+                case '@':
+                    upper = !char.IsDigit(c);
+                    return Key.Number2;
+
+                case '3':
+                case '#':
+                    upper = !char.IsDigit(c);
+                    return Key.Number3;
+
+                case '4':
+                case '$':
+                    upper = !char.IsDigit(c);
+                    return Key.Number4;
+
+                case '5':
+                case '%':
+                    upper = !char.IsDigit(c);
+                    return Key.Number5;
+
+                case '6':
+                case '^':
+                    upper = !char.IsDigit(c);
+                    return Key.Number6;
+
+                case '7':
+                case '&':
+                    upper = !char.IsDigit(c);
+                    return Key.Number7;
+
+                case '8':
+                case '*':
+                    upper = !char.IsDigit(c);
+                    return Key.Number8;
+
+                case '9':
+                case '(':
+                    upper = !char.IsDigit(c);
+                    return Key.Number9;
+
+                case '0':
+                case ')':
+                    upper = !char.IsDigit(c);
+                    return Key.Number0;
+
+                case '-':
+                case '_':
+                    upper = c == '_';
+                    return Key.Minus;
+
+                case '=':
+                case '+':
+                    upper = c == '+';
+                    return Key.Plus;
+
+                case '`':
+                case '~':
+                    upper = c == '~';
+                    return Key.Tilde;
+
+                case '[':
+                case '{':
+                    upper = c == '{';
+                    return Key.BracketLeft;
+
+                case ']':
+                case '}':
+                    upper = c == '}';
+                    return Key.BracketRight;
+
+                case '\\':
+                case '|':
+                    upper = c == '|';
+                    return Key.BackSlash;
+
+                case ';':
+                case ':':
+                    upper = c == ':';
+                    return Key.Semicolon;
+
+                case '\'':
+                case '\"':
+                    upper = c == '\"';
+                    return Key.Quote;
+
+                case ',':
+                case '<':
+                    upper = c == '<';
+                    return Key.Comma;
+
+                case '.':
+                case '>':
+                    upper = c == '>';
+                    return Key.Period;
+
+                case '/':
+                case '?':
+                    upper = c == '?';
+                    return Key.Slash;
+
+                default:
+                    if (char.IsLetter(c))
+                    {
+                        string keyName = c.ToString().ToUpper();
+                        Key result;
+                        if (Enum.TryParse(keyName, out result))
+                            return result;
+                    }
+                    return null;
+            }
         }
 
         public override bool IsActive => true;
