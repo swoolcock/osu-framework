@@ -1,4 +1,7 @@
-﻿extern alias IOS;
+﻿// Copyright (c) 2007-2017 ppy Pty Ltd <contact@ppy.sh>.
+// Licensed under the MIT Licence - https://raw.githubusercontent.com/ppy/osu-framework/master/LICENCE
+
+extern alias IOS;
 
 using System;
 using System.ComponentModel;
@@ -7,6 +10,7 @@ using OpenTK.Input;
 using OpenTK.Platform;
 using IOS::System.Drawing;
 using OpenTK.Platform.iPhoneOS;
+using IOS::UIKit;
 
 namespace osu.Framework.Platform.iOS
 {
@@ -37,7 +41,7 @@ namespace osu.Framework.Platform.iOS
             set => gameView.Title = value;
         }
 
-        public bool Focused => gameView.Focused;
+        public bool Focused => UIApplication.SharedApplication.ApplicationState != UIApplicationState.Background;
         public bool Visible
         {
             get => gameView.Visible;
