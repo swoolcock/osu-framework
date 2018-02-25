@@ -1,14 +1,16 @@
 ﻿// Copyright (c) 2007-2017 ppy Pty Ltd <contact@ppy.sh>.
 // Licensed under the MIT Licence - https://raw.githubusercontent.com/ppy/osu-framework/master/LICENCE
 
+#if __IOS__
 extern alias IOS;
+using IOS::ObjCRuntime;
+#endif
 
 using ManagedBass;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using System;
 using System.Runtime.InteropServices;
-using IOS::ObjCRuntime;
 
 namespace osu.Framework.Audio.Sample
 {
@@ -63,7 +65,9 @@ namespace osu.Framework.Audio.Sample
 
         public int CreateChannel() => Bass.SampleGetChannel(sampleId);
 
+#if __IOS__
         [MonoPInvokeCallback(typeof(SyncProcedure))]
+#endif
         private static void syncProcedure(int handle, int channel, int data, IntPtr user)
         {
             var gcHandle = GCHandle.FromIntPtr(user);

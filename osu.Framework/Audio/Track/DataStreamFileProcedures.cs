@@ -1,12 +1,14 @@
 ﻿// Copyright (c) 2007-2017 ppy Pty Ltd <contact@ppy.sh>.
 // Licensed under the MIT Licence - https://raw.githubusercontent.com/ppy/osu-framework/master/LICENCE
 
+#if __IOS__
 extern alias IOS;
+using IOS::ObjCRuntime;
+#endif
 
 using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using IOS::ObjCRuntime;
 using ManagedBass;
 
 namespace osu.Framework.Audio.Track
@@ -30,13 +32,17 @@ namespace osu.Framework.Audio.Track
             dataStream = data;
         }
 
+#if __IOS__
         [MonoPInvokeCallback(typeof(FileCloseProcedure))]
+#endif
         private static void ac_Close(IntPtr user)
         {
             //manually handle closing of stream
         }
 
+#if __IOS__
         [MonoPInvokeCallback(typeof(FileLengthProcedure))]
+#endif
         private static long ac_Length(IntPtr user)
         {
             var handle = GCHandle.FromIntPtr(user);
@@ -55,7 +61,9 @@ namespace osu.Framework.Audio.Track
             return 0;
         }
 
+#if __IOS__
         [MonoPInvokeCallback(typeof(FileReadProcedure))]
+#endif
         private static int ac_Read(IntPtr buffer, int length, IntPtr user)
         {
             var handle = GCHandle.FromIntPtr(user);
@@ -83,7 +91,9 @@ namespace osu.Framework.Audio.Track
             return 0;
         }
 
+#if __IOS__
         [MonoPInvokeCallback(typeof(FileSeekProcedure))]
+#endif
         private static bool ac_Seek(long offset, IntPtr user)
         {
             var handle = GCHandle.FromIntPtr(user);

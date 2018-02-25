@@ -38,7 +38,6 @@ namespace osu.Framework.Audio.Track
         /// </summary>
         private bool isPlayed;
 
-        private DataStreamFileProcedures procedures;
         private GCHandle pinnedProcedures;
 
         private volatile bool isLoaded;
@@ -56,15 +55,11 @@ namespace osu.Framework.Audio.Track
                 //encapsulate incoming stream with async buffer if it isn't already.
                 dataStream = data as AsyncBufferStream ?? new AsyncBufferStream(data, quick ? 8 : -1);
 
-                procedures = new DataStreamFileProcedures(dataStream);
-                pinnedProcedures = GCHandle.Alloc(procedures, GCHandleType.Pinned);
+                var procs = new DataStreamFileProcedures(dataStream);
+                pinnedProcedures = GCHandle.Alloc(procs, GCHandleType.Pinned);
 
                 BassFlags flags = Preview ? 0 : BassFlags.Decode | BassFlags.Prescan | BassFlags.Float;
-                try {
-                    activeStream = Bass.CreateStream(StreamSystem.NoBuffer, flags, procedures.BassProcedures, GCHandle.ToIntPtr(pinnedProcedures));
-                } catch(Exception e) {
-                    Logging.Logger.Log(e.ToString());
-                }
+                activeStream = Bass.CreateStream(StreamSystem.NoBuffer, flags, procs.BassProcedures, GCHandle.ToIntPtr(pinnedProcedures));
 
                 if (!Preview)
                 {

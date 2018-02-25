@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using ManagedBass;
@@ -30,6 +31,7 @@ namespace osu.Framework.Audio.Track
 
         private readonly CancellationTokenSource cancelSource = new CancellationTokenSource();
         private readonly Task readTask;
+        private GCHandle pinnedProcedures;
 
         /// <summary>
         /// Constructs a new <see cref="Waveform"/> from provided audio data.
@@ -42,8 +44,9 @@ namespace osu.Framework.Audio.Track
             readTask = Task.Run(() =>
             {
                 var procs = new DataStreamFileProcedures(data);
+                pinnedProcedures = GCHandle.Alloc(procs, GCHandleType.Pinned);
 
-                int decodeStream = Bass.CreateStream(StreamSystem.NoBuffer, BassFlags.Decode | BassFlags.Float, procs.BassProcedures, IntPtr.Zero);
+                int decodeStream = Bass.CreateStream(StreamSystem.NoBuffer, BassFlags.Decode | BassFlags.Float, procs.BassProcedures, GCHandle.ToIntPtr(pinnedProcedures));
 
                 ChannelInfo info;
                 Bass.ChannelGetInfo(decodeStream, out info);
@@ -187,6 +190,9 @@ namespace osu.Framework.Audio.Track
                 return;
             isDisposed = true;
 
+            if (pinnedProcedures.IsAllocated)
+                pinnedProcedures.Free();
+            
             cancelSource?.Cancel();
             cancelSource?.Dispose();
             points = null;
