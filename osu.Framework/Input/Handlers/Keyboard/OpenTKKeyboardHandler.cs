@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2007-2017 ppy Pty Ltd <contact@ppy.sh>.
+﻿// Copyright (c) 2007-2018 ppy Pty Ltd <contact@ppy.sh>.
 // Licensed under the MIT Licence - https://raw.githubusercontent.com/ppy/osu-framework/master/LICENCE
 
 using System;
@@ -24,13 +24,13 @@ namespace osu.Framework.Input.Handlers.Keyboard
             {
                 if (enabled)
                 {
-                    host.Window.Implementation.KeyDown += handleState;
-                    host.Window.Implementation.KeyUp += handleState;
+                    host.Window.KeyDown += handleState;
+                    host.Window.KeyUp += handleState;
                 }
                 else
                 {
-                    host.Window.Implementation.KeyDown -= handleState;
-                    host.Window.Implementation.KeyUp -= handleState;
+                    host.Window.KeyDown -= handleState;
+                    host.Window.KeyUp -= handleState;
                 }
             };
             Enabled.TriggerChange();

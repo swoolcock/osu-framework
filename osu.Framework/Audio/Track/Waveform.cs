@@ -1,4 +1,4 @@
-// Copyright (c) 2007-2017 ppy Pty Ltd <contact@ppy.sh>.
+// Copyright (c) 2007-2018 ppy Pty Ltd <contact@ppy.sh>.
 // Licensed under the MIT Licence - https://raw.githubusercontent.com/ppy/osu-framework/master/LICENCE
 
 using System;
@@ -48,8 +48,7 @@ namespace osu.Framework.Audio.Track
 
                 int decodeStream = Bass.CreateStream(StreamSystem.NoBuffer, BassFlags.Decode | BassFlags.Float, procs.BassProcedures, GCHandle.ToIntPtr(pinnedProcedures));
 
-                ChannelInfo info;
-                Bass.ChannelGetInfo(decodeStream, out info);
+                Bass.ChannelGetInfo(decodeStream, out ChannelInfo info);
 
                 long length = Bass.ChannelGetLength(decodeStream);
 

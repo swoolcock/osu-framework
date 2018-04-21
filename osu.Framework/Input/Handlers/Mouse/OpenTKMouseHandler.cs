@@ -1,6 +1,7 @@
-﻿// Copyright (c) 2007-2017 ppy Pty Ltd <contact@ppy.sh>.
+﻿// Copyright (c) 2007-2018 ppy Pty Ltd <contact@ppy.sh>.
 // Licensed under the MIT Licence - https://raw.githubusercontent.com/ppy/osu-framework/master/LICENCE
 
+using System.Drawing;
 using osu.Framework.Platform;
 using osu.Framework.Statistics;
 using osu.Framework.Threading;
@@ -21,8 +22,8 @@ namespace osu.Framework.Input.Handlers.Mouse
         {
             this.host = host;
 
-            host.Window.Implementation.MouseLeave += (s, e) => mouseInWindow = false;
-            host.Window.Implementation.MouseEnter += (s, e) => mouseInWindow = true;
+            host.Window.MouseLeave += (s, e) => mouseInWindow = false;
+            host.Window.MouseEnter += (s, e) => mouseInWindow = true;
 
             mouseInWindow = host.Window.CursorInWindow;
 
@@ -30,16 +31,16 @@ namespace osu.Framework.Input.Handlers.Mouse
             {
                 if (enabled)
                 {
-                    host.Window.Implementation.MouseMove += handleMouseEvent;
-                    host.Window.Implementation.MouseDown += handleMouseEvent;
-                    host.Window.Implementation.MouseUp += handleMouseEvent;
-                    host.Window.Implementation.MouseWheel += handleMouseEvent;
+                    host.Window.MouseMove += handleMouseEvent;
+                    host.Window.MouseDown += handleMouseEvent;
+                    host.Window.MouseUp += handleMouseEvent;
+                    host.Window.MouseWheel += handleMouseEvent;
 
                     // polling is used to keep a valid mouse position when we aren't receiving events.
                     host.InputThread.Scheduler.Add(scheduled = new ScheduledDelegate(delegate
                     {
                         // we should be getting events if the mouse is inside the window.
-                        if (mouseInWindow || !host.Window.Implementation.Visible || host.Window.Implementation.WindowState == WindowState.Minimized) return;
+                        if (mouseInWindow || !host.Window.Visible || host.Window.WindowState == WindowState.Minimized) return;
 
                         var state = OpenTK.Input.Mouse.GetCursorState();
 
@@ -56,10 +57,10 @@ namespace osu.Framework.Input.Handlers.Mouse
                 {
                     scheduled?.Cancel();
 
-                    host.Window.Implementation.MouseMove -= handleMouseEvent;
-                    host.Window.Implementation.MouseDown -= handleMouseEvent;
-                    host.Window.Implementation.MouseUp -= handleMouseEvent;
-                    host.Window.Implementation.MouseWheel -= handleMouseEvent;
+                    host.Window.MouseMove -= handleMouseEvent;
+                    host.Window.MouseDown -= handleMouseEvent;
+                    host.Window.MouseUp -= handleMouseEvent;
+                    host.Window.MouseWheel -= handleMouseEvent;
 
                     lastState = null;
                 }

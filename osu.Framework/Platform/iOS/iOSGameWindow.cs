@@ -1,7 +1,8 @@
-﻿// Copyright (c) 2007-2017 ppy Pty Ltd <contact@ppy.sh>.
+// Copyright (c) 2007-2017 ppy Pty Ltd <contact@ppy.sh>.
 // Licensed under the MIT Licence - https://raw.githubusercontent.com/ppy/osu-framework/master/LICENCE
 
 using System;
+using OpenTK.Graphics;
 using OpenTK.Platform.iPhoneOS;
 using osu.Framework.Configuration;
 using osu.Framework.Platform;
@@ -14,6 +15,8 @@ namespace osu.Framework.Platform.iOS
             : base(new iOSPlatformGameWindow(gameView))
         {
         }
+
+        internal override IGraphicsContext Context => throw new NotImplementedException();
 
         public override void SetupWindow(FrameworkConfigManager config)
         {

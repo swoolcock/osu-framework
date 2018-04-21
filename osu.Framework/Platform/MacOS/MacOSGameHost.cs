@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2007-2017 ppy Pty Ltd <contact@ppy.sh>.
+﻿// Copyright (c) 2007-2018 ppy Pty Ltd <contact@ppy.sh>.
 // Licensed under the MIT Licence - https://raw.githubusercontent.com/ppy/osu-framework/master/LICENCE
 
 using System.Collections.Generic;
@@ -13,9 +13,9 @@ namespace osu.Framework.Platform.MacOS
             : base(gameName, bindIPC)
         {
             Window = new MacOSGameWindow();
-            Window.Implementation.WindowStateChanged += (sender, e) =>
+            Window.WindowStateChanged += (sender, e) =>
             {
-                if (Window.Implementation.WindowState != OpenTK.WindowState.Minimized)
+                if (Window.WindowState != OpenTK.WindowState.Minimized)
                     OnActivated();
                 else
                     OnDeactivated();

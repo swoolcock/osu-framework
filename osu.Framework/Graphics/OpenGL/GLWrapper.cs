@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2007-2017 ppy Pty Ltd <contact@ppy.sh>.
+﻿// Copyright (c) 2007-2018 ppy Pty Ltd <contact@ppy.sh>.
 // Licensed under the MIT Licence - https://raw.githubusercontent.com/ppy/osu-framework/master/LICENCE
 
 using System;
@@ -47,13 +47,13 @@ namespace osu.Framework.Graphics.OpenGL
 
         public static bool IsInitialized { get; private set; }
 
-        private static GameHost host;
+        private static WeakReference<GameHost> host;
 
         internal static void Initialize(GameHost host)
         {
             if (IsInitialized) return;
 
-            GLWrapper.host = host;
+            GLWrapper.host = new WeakReference<GameHost>(host);
             reset_scheduler.SetCurrentThread();
 
             MaxTextureSize = Math.Min(4096, GL.GetInteger(GetPName.MaxTextureSize));
@@ -68,7 +68,8 @@ namespace osu.Framework.Graphics.OpenGL
 
         internal static void ScheduleDisposal(Action disposalAction)
         {
-            host?.UpdateThread.Scheduler.Add(() => reset_scheduler.Add(disposalAction.Invoke));
+            if (host != null && host.TryGetTarget(out GameHost h))
+                h.UpdateThread.Scheduler.Add(() => reset_scheduler.Add(disposalAction.Invoke));
         }
 
         internal static void Reset(Vector2 size)
