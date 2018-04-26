@@ -1,12 +1,17 @@
 ﻿// Copyright (c) 2007-2018 ppy Pty Ltd <contact@ppy.sh>.
 // Licensed under the MIT Licence - https://raw.githubusercontent.com/ppy/osu-framework/master/LICENCE
 
+#if __IOS__
 extern alias IOS;
+using IOS::System.Drawing;
+#else
+using System.Drawing;
+using System.Drawing.Imaging;
+using Bitmap = System.Drawing.Bitmap;
+#endif
 
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Linq;
 using System.Reflection;
 using System.Runtime;
@@ -32,8 +37,6 @@ using osu.Framework.Statistics;
 using osu.Framework.Threading;
 using osu.Framework.Timing;
 using osu.Framework.IO.File;
-using Bitmap = System.Drawing.Bitmap;
-using IOS::System.Drawing;
 
 namespace osu.Framework.Platform
 {
@@ -327,8 +330,9 @@ namespace osu.Framework.Platform
             bool complete = false;
 
             var bitmap = new Bitmap(clientRectangle.Width, clientRectangle.Height);
+#if !__IOS__
             BitmapData data = bitmap.LockBits(clientRectangle, ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-
+#endif
             /*
             DrawThread.Scheduler.Add(() =>
             {

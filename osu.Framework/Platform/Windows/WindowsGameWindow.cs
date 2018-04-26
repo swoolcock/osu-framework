@@ -2,7 +2,9 @@
 // Licensed under the MIT Licence - https://raw.githubusercontent.com/ppy/osu-framework/master/LICENCE
 
 using System;
+#if !__IOS__
 using System.Drawing;
+#endif
 using System.IO;
 using System.Runtime.InteropServices;
 using OpenTK.Input;
@@ -13,8 +15,10 @@ namespace osu.Framework.Platform.Windows
     {
         private const int seticon_message = 0x0080;
 
+#if !__IOS__
         private Icon smallIcon;
         private Icon largeIcon;
+#endif
 
         protected override void OnKeyDown(object sender, KeyboardKeyEventArgs e)
         {
@@ -38,11 +42,13 @@ namespace osu.Framework.Platform.Windows
             stream.Position = 0;
             secondStream.Position = 0;
 
+#if !__IOS__
             smallIcon = new Icon(stream, 24, 24);
             largeIcon = new Icon(secondStream, 256, 256);
 
             SendMessage(WindowInfo.Handle, seticon_message, (IntPtr)0, smallIcon.Handle);
             SendMessage(WindowInfo.Handle, seticon_message, (IntPtr)1, largeIcon.Handle);
+#endif
         }
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
