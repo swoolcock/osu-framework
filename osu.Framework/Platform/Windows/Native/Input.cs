@@ -1,13 +1,15 @@
 ﻿// Copyright (c) 2007-2018 ppy Pty Ltd <contact@ppy.sh>.
 // Licensed under the MIT Licence - https://raw.githubusercontent.com/ppy/osu-framework/master/LICENCE
 
+#if __IOS__
 extern alias IOS;
+using IOS::System.Drawing;
+#endif
 
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using OpenTK;
-using IOS::System.Drawing;
 
 namespace osu.Framework.Platform.Windows.Native
 {

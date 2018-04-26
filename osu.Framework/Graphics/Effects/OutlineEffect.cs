@@ -11,7 +11,12 @@ namespace osu.Framework.Graphics.Effects
     /// <summary>
     /// Creates an outline around the drawable this effect gets applied to.
     /// </summary>
-    public class OutlineEffect : IEffect<Container>
+    public class OutlineEffect
+#if __IOS__
+        : IEffect<Container>
+#else
+        : IEffect<BufferedContainer>
+#endif
     {
         /// <summary>
         /// The strength of the outline. A higher strength means that the blur effect used to draw the outline fades slower.
@@ -41,8 +46,12 @@ namespace osu.Framework.Graphics.Effects
         /// </summary>
         public bool CacheDrawnEffect;
 
-        //public BufferedContainer ApplyTo(Drawable drawable) => drawable.WithEffect(new BlurEffect
-        public Container ApplyTo(Drawable drawable) => drawable.WithEffect(new BlurEffect
+#if __IOS__
+        public Container ApplyTo(Drawable drawable) =>
+#else
+        public BufferedContainer ApplyTo(Drawable drawable) =>
+#endif
+        drawable.WithEffect(new BlurEffect
         {
             Strength = Strength,
             Sigma = BlurSigma,

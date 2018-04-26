@@ -1,7 +1,11 @@
 ﻿// Copyright (c) 2007-2018 ppy Pty Ltd <contact@ppy.sh>.
 // Licensed under the MIT Licence - https://raw.githubusercontent.com/ppy/osu-framework/master/LICENCE
 
+#if __IOS__
 extern alias IOS;
+using Size = IOS::System.Drawing.Size;
+using Point = IOS::System.Drawing.Point;
+#endif
 
 using System;
 using System.Drawing;
@@ -9,8 +13,6 @@ using System.IO;
 using osu.Framework.Configuration;
 using osu.Framework.Input;
 using OpenTK;
-using Size = IOS::System.Drawing.Size;
-using Point = IOS::System.Drawing.Point;
 using OpenTK.Graphics;
 
 namespace osu.Framework.Platform
