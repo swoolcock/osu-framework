@@ -28,8 +28,18 @@ namespace osu.Framework.Graphics.Transforms
 
             public void Write(T d, TValue value)
             {
-                if (Field != null) Field.SetValue(d, value);
-                if (Property != null) Property.SetValue(d, value);
+#if __IOS__
+                try
+                {
+#endif
+                    if (Field != null) Field.SetValue(d, value);
+                    if (Property != null) Property.SetValue(d, value);
+#if __IOS__
+                }
+                catch (TargetInvocationException)
+                {
+                }
+#endif
             }
 
             public TValue Read(T d)
