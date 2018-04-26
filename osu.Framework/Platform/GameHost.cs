@@ -447,7 +447,9 @@ namespace osu.Framework.Platform
             finally
             {
                 // Close the window and stop all threads
+#if !__IOS__
                 exit();
+#endif
             }
         }
 
@@ -644,7 +646,7 @@ namespace osu.Framework.Platform
 
         public abstract ITextInputSource GetTextInput();
 
-        #region IDisposable Support
+#region IDisposable Support
 
         private bool isDisposed;
 
@@ -687,7 +689,7 @@ namespace osu.Framework.Platform
             GC.SuppressFinalize(this);
         }
 
-        #endregion
+#endregion
 
         /// <summary>
         /// Defines the platform-specific key bindings that will be used by <see cref="PlatformActionContainer"/>.
