@@ -32,9 +32,6 @@ namespace osu.Framework.Graphics.Textures
             int height = (int)image.Size.Height;
 
             IntPtr data = Marshal.AllocHGlobal(width * height * 4);
-            byte* bytes = (byte*)data;
-            for (int i = width * height * 4 - 1; i >= 0; i--)
-                bytes[i] = 0;
 
             using (CGBitmapContext textureContext = new CGBitmapContext(data, width, height, 8, width * 4, image.CGImage.ColorSpace, CGImageAlphaInfo.PremultipliedLast))
                 textureContext.DrawImage(new IOS::System.Drawing.RectangleF(0, 0, width, height), image.CGImage);
@@ -47,31 +44,7 @@ namespace osu.Framework.Graphics.Textures
                 PixelFormat = PixelFormat.Rgba
             };
 
-            unsafe
-            {
-                //convert from BGRA (System.Drawing) to RGBA
-                //don't need to consider stride because we're in a raw format
-
-                fixed (byte* pixels = t.Pixels)
-                {
-                    var dest = pixels;
-
-                    int length = t.Pixels.Length / 4;
-                    for (int i = 0; i < length; i++)
-                    {
-                        //BGRA -> RGBA
-                        // ReSharper disable once PossibleNullReferenceException
-                        dest[0] = bytes[2];
-                        dest[1] = bytes[1];
-                        dest[2] = bytes[0];
-                        dest[3] = bytes[3];
-
-                        bytes += 4;
-                        dest += 4;
-                    }
-                }
-            }
-
+            Marshal.Copy(data, t.Pixels, 0, t.Pixels.Length);
             Marshal.FreeHGlobal(data);
 
             return t;
