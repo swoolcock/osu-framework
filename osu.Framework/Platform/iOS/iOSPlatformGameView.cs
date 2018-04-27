@@ -17,6 +17,7 @@ using IOS::UIKit;
 using OpenTK;
 using OpenTK.Graphics.ES20;
 using OpenTK.Platform.iPhoneOS;
+using System.Threading.Tasks;
 
 namespace osu.Framework.Platform.iOS
 {
@@ -52,8 +53,6 @@ namespace osu.Framework.Platform.iOS
             ContentScaleFactor = UIScreen.MainScreen.Scale;
 
             AddSubview(KeyboardTextField = new DummyTextField());
-
-            KeyboardTextField.BecomeFirstResponder();
         }
 
         public float Scale { get; private set; }
@@ -70,6 +69,7 @@ namespace osu.Framework.Platform.iOS
             public event Action<UIKeyCommand> HandleKeyCommand;
 
             public const int cursor_position = 5;
+            private int responderSemaphore;
 
             public DummyTextField()
             {
@@ -115,6 +115,24 @@ namespace osu.Framework.Platform.iOS
                 Text = "dummytext";
                 var newPosition = GetPosition(BeginningOfDocument, cursor_position);
                 SelectedTextRange = GetTextRange(newPosition, newPosition);
+            }
+
+            public void UpdateFirstResponder(bool become)
+            {
+                if (become)
+                {
+                    responderSemaphore = Math.Max(responderSemaphore + 1, 1);
+                    InvokeOnMainThread(() => BecomeFirstResponder());
+                }
+                else
+                {
+                    responderSemaphore = Math.Max(responderSemaphore - 1, 0);
+                    Task.Delay(200).ContinueWith(task =>
+                    {
+                        if (responderSemaphore <= 0)
+                            InvokeOnMainThread(() => ResignFirstResponder());
+                    });
+                }
             }
         }
     }

@@ -43,11 +43,13 @@ namespace osu.Framework.Platform.iOS.Input
         public void Deactivate(object sender)
         {
             view.KeyboardTextField.HandleShouldChangeCharacters -= handleShouldChangeCharacters;
+            view.KeyboardTextField.UpdateFirstResponder(false);
         }
 
         public void Activate(object sender)
         {
             view.KeyboardTextField.HandleShouldChangeCharacters += handleShouldChangeCharacters;
+            view.KeyboardTextField.UpdateFirstResponder(true);
         }
 
         public event Action<string> OnNewImeComposition;
