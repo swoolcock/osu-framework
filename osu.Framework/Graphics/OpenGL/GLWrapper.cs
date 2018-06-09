@@ -29,7 +29,8 @@ namespace osu.Framework.Graphics.OpenGL
         public static RectangleF Ortho { get; private set; }
         public static Matrix4 ProjectionMatrix { get; private set; }
 
-        public static bool UsingBackbuffer => lastFrameBuffer == 0;
+        public static bool UsingBackbuffer => lastFrameBuffer == DefaultFrameBuffer;
+        public static int DefaultFrameBuffer = 0;
 
         /// <summary>
         /// Check whether we have an initialised and non-disposed GL context.
@@ -95,7 +96,7 @@ namespace osu.Framework.Graphics.OpenGL
             if (lastActiveBatch != null)
                 this_frame_batches.Add(lastActiveBatch);
 
-            lastFrameBuffer = 0;
+            lastFrameBuffer = DefaultFrameBuffer;
 
             viewport_stack.Clear();
             ortho_stack.Clear();

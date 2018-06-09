@@ -11,12 +11,7 @@ namespace osu.Framework.Graphics.Effects
     /// <summary>
     /// Creates a glow around the drawable this effect gets applied to.
     /// </summary>
-    public class GlowEffect
-#if __IOS__
-        : IEffect<Container>
-#else
-        : IEffect<BufferedContainer>
-#endif
+    public class GlowEffect : IEffect<BufferedContainer>
     {
         /// <summary>
         /// The strength of the glow. A higher strength means that the glow fades outward slower. Default is 1.
@@ -55,12 +50,7 @@ namespace osu.Framework.Graphics.Effects
         /// </summary>
         public bool CacheDrawnEffect;
 
-#if __IOS__
-        public Container ApplyTo(Drawable drawable) =>
-#else
-        public BufferedContainer ApplyTo(Drawable drawable) =>
-#endif
-        drawable.WithEffect(new BlurEffect
+        public BufferedContainer ApplyTo(Drawable drawable) => drawable.WithEffect(new BlurEffect
         {
             Strength = Strength,
             Sigma = BlurSigma,

@@ -12,12 +12,7 @@ namespace osu.Framework.Graphics.Effects
     /// <summary>
     /// A blur effect that wraps a drawable in a <see cref="BufferedContainer"/> which applies a blur effect to it.
     /// </summary>
-    public class BlurEffect
-#if __IOS__
-        : IEffect<Container>
-#else
-        : IEffect<BufferedContainer>
-#endif
+    public class BlurEffect : IEffect<BufferedContainer>
     {
         /// <summary>
         /// The strength of the blur. Default is 1.
@@ -64,20 +59,7 @@ namespace osu.Framework.Graphics.Effects
         /// </summary>
         public bool CacheDrawnEffect;
 
-#if __IOS__
-        public Container ApplyTo(Drawable drawable)
-        {
-            return new Container
-            {
-                Padding = !PadExtent ? new MarginPadding() : new MarginPadding
-                {
-                    Horizontal = Blur.KernelSize(Sigma.X),
-                    Vertical = Blur.KernelSize(Sigma.Y),
-                },
-            }.Wrap(drawable);
-        }
-#else
-        public Container ApplyTo(Drawable drawable)
+        public BufferedContainer ApplyTo(Drawable drawable)
         {
             return new BufferedContainer
             {
@@ -98,6 +80,5 @@ namespace osu.Framework.Graphics.Effects
                 },
             }.Wrap(drawable);
         }
-#endif
     }
 }

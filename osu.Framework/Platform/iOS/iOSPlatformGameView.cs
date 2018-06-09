@@ -18,6 +18,7 @@ using OpenTK;
 using OpenTK.Graphics.ES20;
 using OpenTK.Platform.iPhoneOS;
 using System.Threading.Tasks;
+using osu.Framework.Graphics.OpenGL;
 
 namespace osu.Framework.Platform.iOS
 {
@@ -61,6 +62,12 @@ namespace osu.Framework.Platform.iOS
         public override void TouchesCancelled(NSSet touches, UIEvent evt) => HandleTouches?.Invoke(touches);
         public override void TouchesEnded(NSSet touches, UIEvent evt) => HandleTouches?.Invoke(touches);
         public override void TouchesMoved(NSSet touches, UIEvent evt) => HandleTouches?.Invoke(touches);
+
+        protected override void CreateFrameBuffer()
+        {
+            base.CreateFrameBuffer();
+            GLWrapper.DefaultFrameBuffer = Framebuffer;
+        }
 
         public class DummyTextField : UITextField
         {
