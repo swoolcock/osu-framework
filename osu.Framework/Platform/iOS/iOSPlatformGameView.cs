@@ -20,6 +20,8 @@ using OpenTK.Platform.iPhoneOS;
 using System.Threading.Tasks;
 using osu.Framework.Graphics.OpenGL;
 
+using osu.Framework.Platform.iOS.Native;
+
 namespace osu.Framework.Platform.iOS
 {
     [Register("iOSPlatformGameView")]
@@ -54,6 +56,14 @@ namespace osu.Framework.Platform.iOS
             ContentScaleFactor = UIScreen.MainScreen.Scale;
 
             AddSubview(KeyboardTextField = new DummyTextField());
+
+            var handle = Class.GetHandle("OpenTK_Platform_iPhoneOS_CADisplayLinkTimeSource");
+            Swizzling.SwizzleMethod(handle, new Selector("runIteration:").Handle, CustomRunIteration);
+        }
+
+        [MonoPInvokeCallback(typeof(Swizzling.SwizzleDelegateIntPtr))]
+        public static void CustomRunIteration(IntPtr block, IntPtr self, IntPtr timer)
+        {
         }
 
         public float Scale { get; private set; }

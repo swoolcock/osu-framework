@@ -47,5 +47,8 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Platform\iOS\Native\" />
+  </ItemGroup>
   <Import Project="..\iOS.props" />
 </Project>
