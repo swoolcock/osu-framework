@@ -191,7 +191,7 @@ namespace osu.Framework.Audio.Track
 
             if (pinnedProcedures.IsAllocated)
                 pinnedProcedures.Free();
-            
+
             cancelSource?.Cancel();
             cancelSource?.Dispose();
             points = null;

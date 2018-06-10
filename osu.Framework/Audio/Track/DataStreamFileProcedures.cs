@@ -57,7 +57,7 @@ namespace osu.Framework.Audio.Track
             catch
             {
             }
-        
+
             return 0;
         }
 

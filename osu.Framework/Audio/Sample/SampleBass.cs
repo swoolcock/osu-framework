@@ -49,10 +49,10 @@ namespace osu.Framework.Audio.Sample
 
             if (pinnedData.IsAllocated)
                 pinnedData.Free();
-            
+
             if (pinnedInstance.IsAllocated)
                 pinnedInstance.Free();
-            
+
             base.Dispose(disposing);
         }
 

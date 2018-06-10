@@ -20,7 +20,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using OpenTK;
 using OpenTK.Graphics;
-using OpenTK.Graphics.ES30;
 using OpenTK.Input;
 using osu.Framework.Allocation;
 using osu.Framework.Configuration;
@@ -332,8 +331,7 @@ namespace osu.Framework.Platform
             var bitmap = new Bitmap(clientRectangle.Width, clientRectangle.Height);
 #if !__IOS__
             BitmapData data = bitmap.LockBits(clientRectangle, ImageLockMode.WriteOnly, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
-#endif
-            /*
+
             DrawThread.Scheduler.Add(() =>
             {
                 if (GraphicsContext.CurrentContext == null)
@@ -351,7 +349,7 @@ namespace osu.Framework.Platform
 
             bitmap.UnlockBits(data);
             bitmap.RotateFlip(RotateFlipType.RotateNoneFlipY);
-            */
+#endif
 
             return bitmap;
         }

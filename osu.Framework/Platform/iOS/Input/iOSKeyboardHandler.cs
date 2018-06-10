@@ -1,4 +1,4 @@
-﻿// Copyright (c) 2007-2017 ppy Pty Ltd <contact@ppy.sh>.
+﻿// Copyright (c) 2007-2018 ppy Pty Ltd <contact@ppy.sh>.
 // Licensed under the MIT Licence - https://raw.githubusercontent.com/ppy/osu-framework/master/LICENCE
 
 extern alias IOS;
@@ -83,7 +83,7 @@ namespace osu.Framework.Platform.iOS.Input
                 key = Key.Down;
             else
                 key = keyForString(cmd.Input, out upper);
-            
+
             if (key.HasValue)
             {
                 bool shiftHeld = (cmd.ModifierFlags & UIKeyModifierFlags.Shift) > 0 || upper;
