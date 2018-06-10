@@ -38,7 +38,7 @@ namespace SampleGame.iOS
             Window.RootViewController = viewController;
             Window.MakeKeyAndVisible();
 
-            gameView.Run(60.0);
+            gameView.RunWithFrameInterval(1);
 
             host = new iOSGameHost(gameView);
             host.Run(new SampleGame());
