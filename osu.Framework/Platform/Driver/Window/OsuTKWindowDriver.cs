@@ -6,5 +6,8 @@ namespace osu.Framework.Platform.Driver.Window
     public class OsuTKWindowDriver : WindowDriver
     {
 
+        public override void Initialise(IDriverProvider provider)
+        {
+        }
     }
 }

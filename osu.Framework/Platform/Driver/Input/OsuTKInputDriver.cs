@@ -5,6 +5,9 @@ namespace osu.Framework.Platform.Driver.Input
 {
     public class OsuTKInputDriver : InputDriver
     {
+        public override void Initialise(IDriverProvider provider)
+        {
 
+        }
     }
 }

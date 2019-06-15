@@ -7,6 +7,8 @@ namespace osu.Framework.Platform.Driver.Graphics
 {
     public abstract class GraphicsDriver : IGraphicsDriver
     {
+        public abstract void Initialise(IDriverProvider provider);
+
         #region IDisposable
 
         private bool isDisposed;

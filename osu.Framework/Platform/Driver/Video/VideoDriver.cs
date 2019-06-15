@@ -7,6 +7,8 @@ namespace osu.Framework.Platform.Driver.Video
 {
     public abstract class VideoDriver : IVideoDriver
     {
+        public abstract void Initialise(IDriverProvider provider);
+
         #region IDisposable
 
         private bool isDisposed;

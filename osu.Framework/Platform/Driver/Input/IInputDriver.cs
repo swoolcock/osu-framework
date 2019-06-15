@@ -5,7 +5,7 @@ using System;
 
 namespace osu.Framework.Platform.Driver.Input
 {
-    public interface IInputDriver : IDisposable
+    public interface IInputDriver : IDriver
     {
 
     }

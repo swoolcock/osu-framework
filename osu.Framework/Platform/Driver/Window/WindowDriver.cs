@@ -7,6 +7,8 @@ namespace osu.Framework.Platform.Driver.Window
 {
     public abstract class WindowDriver : IWindowDriver
     {
+        public abstract void Initialise(IDriverProvider provider);
+
         #region IDisposable
 
         private bool isDisposed;

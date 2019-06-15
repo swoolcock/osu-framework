@@ -51,11 +51,19 @@ namespace osu.Framework.Platform
 
         protected virtual void CreateDrivers()
         {
+            // create drivers from virtual methods
             Window = CreateWindow();
             Input = CreateInput();
             Graphics = CreateGraphics();
             Audio = CreateAudio();
             Video = CreateVideo();
+
+            // initialise drivers
+            Window.Initialise(this);
+            Input.Initialise(this);
+            Graphics.Initialise(this);
+            Audio.Initialise(this);
+            Video.Initialise(this);
         }
 
         #region IDisposable
@@ -68,11 +76,11 @@ namespace osu.Framework.Platform
             {
                 if (disposing)
                 {
-                    Window?.Dispose();
-                    Input?.Dispose();
-                    Graphics?.Dispose();
-                    Audio?.Dispose();
                     Video?.Dispose();
+                    Audio?.Dispose();
+                    Graphics?.Dispose();
+                    Input?.Dispose();
+                    Window?.Dispose();
                 }
 
                 isDisposed = true;

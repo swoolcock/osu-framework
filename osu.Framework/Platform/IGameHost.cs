@@ -8,7 +8,11 @@ namespace osu.Framework.Platform
 {
     public interface IGameHost : IDriverProvider, IDisposable
     {
+        #region Events
+
         event Func<bool> ExitRequested;
         event Action Exited;
+
+        #endregion
     }
 }

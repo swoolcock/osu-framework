@@ -7,6 +7,8 @@ namespace osu.Framework.Platform.Driver.Audio
 {
     public abstract class AudioDriver : IAudioDriver
     {
+        public abstract void Initialise(IDriverProvider provider);
+
         #region IDisposable
 
         private bool isDisposed;

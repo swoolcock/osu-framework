@@ -5,6 +5,8 @@ namespace osu.Framework.Platform.Driver.Graphics
 {
     public class OsuTKGraphicsDriver : GraphicsDriver
     {
-        // TODO: expose osuTK's OpenGL calls
+        public override void Initialise(IDriverProvider provider)
+        {
+        }
     }
 }

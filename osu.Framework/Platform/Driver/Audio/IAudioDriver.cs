@@ -5,7 +5,7 @@ using System;
 
 namespace osu.Framework.Platform.Driver.Audio
 {
-    public interface IAudioDriver : IDisposable
+    public interface IAudioDriver : IDriver
     {
 
     }

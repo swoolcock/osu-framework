@@ -3,9 +3,10 @@
 
 using System;
 
-namespace osu.Framework.Platform.Driver.Graphics
+namespace osu.Framework.Platform.Driver
 {
-    public interface IGraphicsDriver : IDriver
+    public interface IDriver : IDisposable
     {
+        void Initialise(IDriverProvider provider);
     }
 }

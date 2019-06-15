@@ -7,6 +7,8 @@ namespace osu.Framework.Platform.Driver.Input
 {
     public abstract class InputDriver : IInputDriver
     {
+        public abstract void Initialise(IDriverProvider provider);
+
         #region IDisposable
 
         private bool isDisposed;

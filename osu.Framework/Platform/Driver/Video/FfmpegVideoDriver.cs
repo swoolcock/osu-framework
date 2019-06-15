@@ -5,6 +5,8 @@ namespace osu.Framework.Platform.Driver.Video
 {
     public class FfmpegVideoDriver : VideoDriver
     {
-
+        public override void Initialise(IDriverProvider provider)
+        {
+        }
     }
 }

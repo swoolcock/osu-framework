@@ -5,6 +5,9 @@ namespace osu.Framework.Platform.Driver.Audio
 {
     public class BassAudioDriver : AudioDriver
     {
+        public override void Initialise(IDriverProvider provider)
+        {
+        }
 
     }
 }

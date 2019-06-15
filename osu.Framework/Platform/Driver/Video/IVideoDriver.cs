@@ -5,8 +5,7 @@ using System;
 
 namespace osu.Framework.Platform.Driver.Video
 {
-    public interface IVideoDriver : IDisposable
+    public interface IVideoDriver : IDriver
     {
-
     }
 }

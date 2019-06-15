@@ -5,7 +5,7 @@ using System;
 
 namespace osu.Framework.Platform.Driver.Window
 {
-    public interface IWindowDriver : IDisposable
+    public interface IWindowDriver : IDriver
     {
 
     }
