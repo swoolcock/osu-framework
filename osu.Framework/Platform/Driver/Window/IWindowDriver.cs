@@ -4,6 +4,7 @@
 using System;
 using System.Drawing;
 using osu.Framework.Bindables;
+using osuTK;
 
 namespace osu.Framework.Platform.Driver.Window
 {
@@ -16,6 +17,11 @@ namespace osu.Framework.Platform.Driver.Window
         IBindable<bool> Focused { get; }
 
         Bindable<CursorState> CursorState { get; }
+
+        IBindable<bool> CursorInWindow { get; }
+
+        // NOTE: this will use our own WindowState enum in future
+        Bindable<WindowState> WindowState { get; }
 
         #endregion
 

@@ -17,11 +17,28 @@ namespace osu.Framework.Platform.Driver.Window
         private readonly BindableBool focused = new BindableBool();
         public override IBindable<bool> Focused => focused;
 
+        private readonly BindableBool cursorInWindow = new BindableBool();
+        public override IBindable<bool> CursorInWindow => cursorInWindow;
+
         private bool boundsChanging;
+        private bool windowStateChanging;
 
         public OsuTKWindowDriver(IGameWindow implementation)
         {
             Implementation = implementation;
+
+            Implementation.Closing += (sender, e) => e.Cancel = OnCloseRequested();
+            Implementation.Closed += (sender, e) => OnClosed();
+            Implementation.FocusedChanged += (sender, e) => focused.Value = Implementation.Focused;
+            Implementation.Resize += implementation_MoveResize;
+            Implementation.Move += implementation_MoveResize;
+            Implementation.WindowStateChanged += implementation_WindowStateChanged;
+            Implementation.MouseEnter += (sender, e) => cursorInWindow.Value = true;
+            Implementation.MouseLeave += (sender, e) => cursorInWindow.Value = false;
+
+            Bounds.ValueChanged += bounds_ValueChanged;
+            WindowState.ValueChanged += windowState_ValueChanged;
+            CursorState.ValueChanged += cursorState_ValueChanged;
         }
 
         public OsuTKWindowDriver(int width, int height)
@@ -31,15 +48,9 @@ namespace osu.Framework.Platform.Driver.Window
 
         public override void Initialise(IDriverProvider provider)
         {
-            Implementation.Closing += (sender, e) => e.Cancel = OnCloseRequested();
-            Implementation.Closed += (sender, e) => OnClosed();
-            Implementation.FocusedChanged += (sender, e) => focused.Value = Implementation.Focused;
-            Implementation.Resize += implementation_MoveResize;
-            Implementation.Move += implementation_MoveResize;
-
-            CursorState.ValueChanged += cursorState_ValueChanged;
-            Bounds.ValueChanged += bounds_ValueChanged;
         }
+
+        #region Event Handlers
 
         private void implementation_MoveResize(object sender, EventArgs evt)
         {
@@ -74,5 +85,48 @@ namespace osu.Framework.Platform.Driver.Window
                 // may not be supported by platform.
             }
         }
+
+        private void implementation_WindowStateChanged(object sender, EventArgs evt)
+        {
+            if (windowStateChanging)
+                return;
+
+            windowStateChanging = true;
+            WindowState.Value = Implementation.WindowState;
+            windowStateChanging = false;
+        }
+
+        private void windowState_ValueChanged(ValueChangedEvent<WindowState> evt)
+        {
+            if (windowStateChanging)
+                return;
+
+            windowStateChanging = true;
+            Implementation.WindowState = evt.NewValue;
+            windowStateChanging = false;
+        }
+
+        #endregion
+
+        #region IDisposable
+
+        private bool isDisposed;
+
+        protected override void Dispose(bool disposing)
+        {
+            if (!isDisposed)
+            {
+                if (disposing)
+                {
+                    Implementation?.Dispose();
+                }
+
+                isDisposed = true;
+            }
+
+            base.Dispose(disposing);
+        }
+
+        #endregion
     }
 }

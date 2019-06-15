@@ -4,6 +4,7 @@
 using System;
 using System.Drawing;
 using osu.Framework.Bindables;
+using osuTK;
 
 namespace osu.Framework.Platform.Driver.Window
 {
@@ -19,9 +20,13 @@ namespace osu.Framework.Platform.Driver.Window
 
         public virtual Bindable<Rectangle> Bounds { get; } = new Bindable<Rectangle>();
 
-        public virtual IBindable<bool> Focused { get; } = new Bindable<bool>();
+        public virtual IBindable<bool> Focused { get; } = new BindableBool();
 
         public virtual Bindable<CursorState> CursorState { get; } = new Bindable<CursorState>();
+
+        public virtual IBindable<bool> CursorInWindow { get; } = new BindableBool();
+
+        public virtual Bindable<WindowState> WindowState { get; } = new Bindable<WindowState>();
 
         #endregion
 
