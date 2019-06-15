@@ -2,12 +2,20 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using System.IO;
+using osu.Framework.Graphics.Video;
 
 namespace osu.Framework.Platform.Driver.Video
 {
+    /// <summary>
+    /// Abstract implementation of <see cref="IVideoDriver"/> that will provide any base functionality required
+    /// by driver subclasses that should not be exposed via the interface.
+    /// </summary>
     public abstract class VideoDriver : IVideoDriver
     {
         public abstract void Initialise(IDriverProvider provider);
+
+        public abstract VideoDecoder CreateVideoDecoder(Stream stream);
 
         #region IDisposable
 

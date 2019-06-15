@@ -1,6 +1,9 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+using System.IO;
+using osu.Framework.Graphics.Video;
+
 namespace osu.Framework.Platform.Driver.Video
 {
     public class FfmpegVideoDriver : VideoDriver
@@ -8,5 +11,7 @@ namespace osu.Framework.Platform.Driver.Video
         public override void Initialise(IDriverProvider provider)
         {
         }
+
+        public override VideoDecoder CreateVideoDecoder(Stream stream) => new VideoDecoder(stream);
     }
 }
