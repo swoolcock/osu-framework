@@ -7,6 +7,10 @@ using osu.Framework.Bindables;
 
 namespace osu.Framework.Platform.Driver.Window
 {
+    /// <summary>
+    /// Abstract implementation of <see cref="IWindowDriver"/> that will provide any base functionality required
+    /// by driver subclasses that should not be exposed via the interface.
+    /// </summary>
     public abstract class WindowDriver : IWindowDriver
     {
         public abstract void Initialise(IDriverProvider provider);

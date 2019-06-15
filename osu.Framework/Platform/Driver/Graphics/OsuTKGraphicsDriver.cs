@@ -3,6 +3,9 @@
 
 namespace osu.Framework.Platform.Driver.Graphics
 {
+    /// <summary>
+    /// Concrete implementation of <see cref="IGraphicsDriver"/> that uses osuTK's OpenGL context and calls.
+    /// </summary>
     public class OsuTKGraphicsDriver : GraphicsDriver
     {
         public override void Initialise(IDriverProvider provider)

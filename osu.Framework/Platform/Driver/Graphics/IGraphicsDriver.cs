@@ -5,6 +5,9 @@ using System;
 
 namespace osu.Framework.Platform.Driver.Graphics
 {
+    /// <summary>
+    /// Exposes graphics commands in an API-agnostic way.
+    /// </summary>
     public interface IGraphicsDriver : IDriver
     {
     }

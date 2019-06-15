@@ -5,6 +5,10 @@ using System;
 
 namespace osu.Framework.Platform.Driver.Graphics
 {
+    /// <summary>
+    /// Abstract implementation of <see cref="IGraphicsDriver"/> that will provide any base functionality required
+    /// by driver subclasses that should not be exposed via the interface.
+    /// </summary>
     public abstract class GraphicsDriver : IGraphicsDriver
     {
         public abstract void Initialise(IDriverProvider provider);

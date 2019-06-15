@@ -7,6 +7,10 @@ using osu.Framework.Input.Handlers;
 
 namespace osu.Framework.Platform.Driver.Input
 {
+    /// <summary>
+    /// Abstract implementation of <see cref="IInputDriver"/> that will provide any base functionality required
+    /// by driver subclasses that should not be exposed via the interface.
+    /// </summary>
     public abstract class InputDriver : IInputDriver
     {
         #region Events

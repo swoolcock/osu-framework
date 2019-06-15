@@ -10,6 +10,10 @@ using osu.Framework.Audio.Track;
 
 namespace osu.Framework.Platform.Driver.Audio
 {
+    /// <summary>
+    /// Abstract implementation of <see cref="IAudioDriver"/> that will provide any base functionality required
+    /// by driver subclasses that should not be exposed via the interface.
+    /// </summary>
     public abstract class AudioDriver : IAudioDriver
     {
         #region IAudioDriver

@@ -10,6 +10,9 @@ using osu.Framework.Audio.Track;
 
 namespace osu.Framework.Platform.Driver.Audio
 {
+    /// <summary>
+    /// Provides audio tracks and samples.
+    /// </summary>
     public interface IAudioDriver : IDriver
     {
         Track CreateTrack(Stream data, bool quick = false);
