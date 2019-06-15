@@ -64,6 +64,10 @@ namespace osu.Framework.Platform
             Graphics.Initialise(this);
             Audio.Initialise(this);
             Video.Initialise(this);
+
+            // connect driver events to gamehost
+            Window.CloseRequested += OnExitRequested;
+            Window.Closed += OnExited;
         }
 
         #region IDisposable

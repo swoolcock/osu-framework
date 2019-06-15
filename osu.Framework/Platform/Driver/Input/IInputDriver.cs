@@ -7,6 +7,11 @@ namespace osu.Framework.Platform.Driver.Input
 {
     public interface IInputDriver : IDriver
     {
-
+        event Action KeyDown;
+        event Action KeyUp;
+        event Action KeyPress;
+        event Action MouseDown;
+        event Action MouseUp;
+        event Action MouseMove;
     }
 }
