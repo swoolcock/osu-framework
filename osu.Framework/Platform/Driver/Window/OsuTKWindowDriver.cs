@@ -20,9 +20,6 @@ namespace osu.Framework.Platform.Driver.Window
         private readonly BindableBool cursorInWindow = new BindableBool();
         public override IBindable<bool> CursorInWindow => cursorInWindow;
 
-        private bool boundsChanging;
-        private bool windowStateChanging;
-
         public OsuTKWindowDriver(IGameWindow implementation)
         {
             Implementation = implementation;
@@ -51,6 +48,9 @@ namespace osu.Framework.Platform.Driver.Window
         }
 
         #region Event Handlers
+
+        private bool boundsChanging;
+        private bool windowStateChanging;
 
         private void implementation_MoveResize(object sender, EventArgs evt)
         {
