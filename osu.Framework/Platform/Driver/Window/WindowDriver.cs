@@ -21,6 +21,8 @@ namespace osu.Framework.Platform.Driver.Window
 
         public virtual IBindable<bool> Focused { get; } = new Bindable<bool>();
 
+        public virtual Bindable<CursorState> CursorState { get; } = new Bindable<CursorState>();
+
         #endregion
 
         #region Events
