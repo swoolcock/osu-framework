@@ -11,7 +11,10 @@ namespace osu.Framework.Platform
 {
     public class NewDesktopGameHost : NewGameHost
     {
-        protected override IWindowDriver CreateWindow() => new OsuTKWindowDriver();
+        private const int default_window_width = 1366;
+        private const int default_window_height = 768;
+
+        protected override IWindowDriver CreateWindow() => new OsuTKWindowDriver(default_window_width, default_window_height);
 
         protected override IInputDriver CreateInput() => new OsuTKInputDriver();
 
