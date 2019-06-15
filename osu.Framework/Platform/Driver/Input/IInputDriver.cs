@@ -2,16 +2,27 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using System.Collections.Generic;
+using osu.Framework.Input.Handlers;
 
 namespace osu.Framework.Platform.Driver.Input
 {
+    /// <summary>
+    /// Provides input events and instantiates <see cref="InputHandler"/>s for those events.
+    /// </summary>
     public interface IInputDriver : IDriver
     {
+        #region Events
+
         event Action KeyDown;
         event Action KeyUp;
         event Action KeyPress;
         event Action MouseDown;
         event Action MouseUp;
         event Action MouseMove;
+
+        #endregion
+
+        IEnumerable<InputHandler> CreateInputHandlers();
     }
 }

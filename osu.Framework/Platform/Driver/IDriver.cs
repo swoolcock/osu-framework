@@ -5,8 +5,17 @@ using System;
 
 namespace osu.Framework.Platform.Driver
 {
+    /// <summary>
+    /// All drivers inherit from <see cref="IDriver"/> to define them as <see cref="IDisposable"/>
+    /// and provide an initialisation method that is executed after all drivers have been created.
+    /// </summary>
     public interface IDriver : IDisposable
     {
+        /// <summary>
+        /// Performs initialisation of the driver. Drivers provided by the passed <see cref="IDriverProvider"/>
+        /// will never be null, but there is no guarantee they have been <see cref="Initialise"/>d.
+        /// </summary>
+        /// <param name="provider">Provides uninitialised drivers.</param>
         void Initialise(IDriverProvider provider);
     }
 }
