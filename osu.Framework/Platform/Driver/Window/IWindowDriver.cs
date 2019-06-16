@@ -10,20 +10,34 @@ namespace osu.Framework.Platform.Driver.Window
 {
     public interface IWindowDriver : IDriver
     {
-        #region Bindables
-
-        Bindable<Rectangle> Bounds { get; }
+        #region Read-only Bindables
 
         IBindable<bool> Focused { get; }
 
-        Bindable<CursorState> CursorState { get; }
-
         IBindable<bool> CursorInWindow { get; }
+
+        #endregion
+
+        #region Mutable Bindables
+
+        Bindable<Rectangle> Bounds { get; }
+
+        Bindable<Size> InternalSize { get; }
+
+        Bindable<CursorState> CursorState { get; }
 
         // NOTE: this will use our own WindowState enum in future
         Bindable<WindowState> WindowState { get; }
 
         Bindable<string> Title { get; }
+
+        #endregion
+
+        #region Properties
+
+        Size? MinimumSize { get; set; }
+
+        Size? MaximumSize { get; set; }
 
         #endregion
 

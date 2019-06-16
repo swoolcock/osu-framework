@@ -16,19 +16,33 @@ namespace osu.Framework.Platform.Driver.Window
     {
         public abstract void Initialise(IDriverProvider provider);
 
-        #region Bindables
+        #region Read-only Bindables
+
+        public abstract IBindable<bool> Focused { get; }
+
+        public abstract IBindable<bool> CursorInWindow { get; }
+
+        #endregion
+
+        #region Mutable Bindables
 
         public virtual Bindable<Rectangle> Bounds { get; } = new Bindable<Rectangle>();
 
-        public virtual IBindable<bool> Focused { get; } = new BindableBool();
+        public virtual Bindable<Size> InternalSize { get; } = new BindableSize();
 
         public virtual Bindable<CursorState> CursorState { get; } = new Bindable<CursorState>();
-
-        public virtual IBindable<bool> CursorInWindow { get; } = new BindableBool();
 
         public virtual Bindable<WindowState> WindowState { get; } = new Bindable<WindowState>();
 
         public virtual Bindable<string> Title { get; } = new Bindable<string>();
+
+        #endregion
+
+        #region Properties
+
+        public Size? MinimumSize { get; set; }
+
+        public Size? MaximumSize { get; set; }
 
         #endregion
 

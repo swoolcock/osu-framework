@@ -14,11 +14,15 @@ namespace osu.Framework.Platform.Driver.Window
     {
         internal readonly IGameWindow Implementation;
 
+        #region Read-only Bindables
+
         private readonly BindableBool focused = new BindableBool();
         public override IBindable<bool> Focused => focused;
 
         private readonly BindableBool cursorInWindow = new BindableBool();
         public override IBindable<bool> CursorInWindow => cursorInWindow;
+
+        #endregion
 
         public OsuTKWindowDriver(IGameWindow implementation)
         {
@@ -27,13 +31,14 @@ namespace osu.Framework.Platform.Driver.Window
             Implementation.Closing += (sender, e) => e.Cancel = OnCloseRequested();
             Implementation.Closed += (sender, e) => OnClosed();
             Implementation.FocusedChanged += (sender, e) => focused.Value = Implementation.Focused;
-            Implementation.Resize += implementation_MoveResize;
             Implementation.Move += implementation_MoveResize;
+            Implementation.Resize += implementation_MoveResize;
             Implementation.WindowStateChanged += implementation_WindowStateChanged;
             Implementation.MouseEnter += (sender, e) => cursorInWindow.Value = true;
             Implementation.MouseLeave += (sender, e) => cursorInWindow.Value = false;
 
             Bounds.ValueChanged += bounds_ValueChanged;
+            InternalSize.ValueChanged += internalSize_ValueChanged;
             WindowState.ValueChanged += windowState_ValueChanged;
             CursorState.ValueChanged += cursorState_ValueChanged;
         }
@@ -49,27 +54,41 @@ namespace osu.Framework.Platform.Driver.Window
 
         #region Event Handlers
 
-        private bool boundsChanging;
+        private bool boundsChangingFromEvent;
+        private bool boundsChangingFromBindable;
         private bool windowStateChanging;
 
         private void implementation_MoveResize(object sender, EventArgs evt)
         {
-            if (boundsChanging)
+            if (boundsChangingFromEvent)
                 return;
 
-            boundsChanging = true;
+            boundsChangingFromEvent = true;
             Bounds.Value = Implementation.Bounds;
-            boundsChanging = false;
+            InternalSize.Value = Implementation.ClientSize;
+            boundsChangingFromEvent = false;
         }
 
         private void bounds_ValueChanged(ValueChangedEvent<Rectangle> evt)
         {
-            if (boundsChanging)
+            if (boundsChangingFromBindable)
                 return;
 
-            boundsChanging = true;
+            boundsChangingFromBindable = true;
             Implementation.Bounds = evt.NewValue;
-            boundsChanging = false;
+            InternalSize.Value = Implementation.ClientSize;
+            boundsChangingFromBindable = false;
+        }
+
+        private void internalSize_ValueChanged(ValueChangedEvent<Size> evt)
+        {
+            if (boundsChangingFromBindable)
+                return;
+
+            boundsChangingFromBindable = true;
+            Implementation.ClientSize = evt.NewValue;
+            Bounds.Value = Implementation.Bounds;
+            boundsChangingFromBindable = false;
         }
 
         private void cursorState_ValueChanged(ValueChangedEvent<CursorState> evt)
