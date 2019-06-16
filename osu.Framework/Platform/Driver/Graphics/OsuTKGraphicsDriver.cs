@@ -26,7 +26,7 @@ namespace osu.Framework.Platform.Driver.Graphics
         public override void Initialise(IDriverProvider provider)
         {
             if (!(provider.Window is OsuTKWindowDriver window))
-                throw new Exception($"{typeof(OsuTKGraphicsDriver)} requires a matching {typeof(OsuTKWindowDriver)}");
+                throw new Exception($"{nameof(OsuTKGraphicsDriver)} requires a corresponding {nameof(OsuTKWindowDriver)}");
 
             if (window.Implementation is osuTK.GameWindow impl)
                 context = impl.Context;

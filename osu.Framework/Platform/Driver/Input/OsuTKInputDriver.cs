@@ -17,7 +17,7 @@ namespace osu.Framework.Platform.Driver.Input
         public override void Initialise(IDriverProvider provider)
         {
             if (!(provider.Window is OsuTKWindowDriver window))
-                throw new Exception($"{typeof(OsuTKInputDriver)} requires a matching {typeof(OsuTKWindowDriver)}");
+                throw new Exception($"{nameof(OsuTKInputDriver)} requires a corresponding {nameof(OsuTKWindowDriver)}");
 
             // osuTK input events are triggered through the osuTK.GameWindow implementation
             window.Implementation.KeyDown += (sender, e) => OnKeyDown();
