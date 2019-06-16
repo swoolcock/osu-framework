@@ -23,6 +23,8 @@ namespace osu.Framework.Platform.Driver.Window
         // NOTE: this will use our own WindowState enum in future
         Bindable<WindowState> WindowState { get; }
 
+        Bindable<string> Title { get; }
+
         #endregion
 
         #region Events

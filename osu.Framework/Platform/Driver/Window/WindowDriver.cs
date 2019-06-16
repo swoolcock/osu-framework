@@ -28,6 +28,8 @@ namespace osu.Framework.Platform.Driver.Window
 
         public virtual Bindable<WindowState> WindowState { get; } = new Bindable<WindowState>();
 
+        public virtual Bindable<string> Title { get; } = new Bindable<string>();
+
         #endregion
 
         #region Events
