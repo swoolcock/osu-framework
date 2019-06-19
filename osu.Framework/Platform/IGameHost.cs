@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using osu.Framework.Allocation;
 using osu.Framework.Backends;
 using osu.Framework.Backends.Window;
 using osu.Framework.Bindables;
@@ -51,6 +52,8 @@ namespace osu.Framework.Platform
         #endregion
 
         #region Execution
+
+        DependencyContainer Dependencies { get; }
 
         void Run(Game game);
 

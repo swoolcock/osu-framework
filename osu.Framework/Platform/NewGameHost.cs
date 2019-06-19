@@ -117,6 +117,8 @@ namespace osu.Framework.Platform
 
         #region Execution
 
+        public DependencyContainer Dependencies { get; } = new DependencyContainer();
+
         public void Run(Game game)
         {
             CreateBackends();
@@ -134,6 +136,8 @@ namespace osu.Framework.Platform
 
             RegisterThread(InputThread = new InputThread());
             RegisterThread(AudioThread = new AudioThread());
+
+            Dependencies.CacheAs<IGameHost>(this);
         }
 
         protected virtual void UpdateInitialize()
