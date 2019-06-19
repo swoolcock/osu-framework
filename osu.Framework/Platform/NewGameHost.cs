@@ -2,12 +2,14 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using System.Collections.Generic;
 using osu.Framework.Backends.Audio;
 using osu.Framework.Backends.Graphics;
 using osu.Framework.Backends.Input;
 using osu.Framework.Backends.Storage;
 using osu.Framework.Backends.Video;
 using osu.Framework.Backends.Window;
+using osu.Framework.Threading;
 
 namespace osu.Framework.Platform
 {
@@ -75,9 +77,60 @@ namespace osu.Framework.Platform
             Window.Closed += OnExited;
         }
 
+        #region Execution
+
         public void Run(Game game)
         {
         }
+
+        #endregion
+
+        #region Threading
+
+        public GameThread DrawThread { get; private set; }
+        public GameThread UpdateThread { get; private set; }
+        public InputThread InputThread { get; private set; }
+        public AudioThread AudioThread { get; private set; }
+
+        private double maximumUpdateHz;
+
+        public double MaximumUpdateHz
+        {
+            get => maximumUpdateHz;
+            set => UpdateThread.ActiveHz = maximumUpdateHz = value;
+        }
+
+        private double maximumDrawHz;
+
+        public double MaximumDrawHz
+        {
+            get => maximumDrawHz;
+            set => DrawThread.ActiveHz = maximumDrawHz = value;
+        }
+
+        public double MaximumInactiveHz
+        {
+            get => DrawThread.InactiveHz;
+            set
+            {
+                DrawThread.InactiveHz = value;
+                UpdateThread.InactiveHz = value;
+            }
+        }
+
+        private readonly List<GameThread> threads = new List<GameThread>();
+
+        public IEnumerable<GameThread> Threads => threads;
+
+        public void RegisterThread(GameThread thread)
+        {
+        }
+
+        public void UnregisterThread(GameThread thread)
+        {
+        }
+
+        #endregion
 
         #region IDisposable
 
