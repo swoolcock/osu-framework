@@ -11,7 +11,7 @@ using osuTK.Platform;
 
 namespace osu.Framework.Backends.Window
 {
-    public class OsuTKWindowDriver : WindowDriver
+    public class OsuTKWindowBackend : WindowBackend
     {
         internal readonly IGameWindow Implementation;
 
@@ -25,7 +25,7 @@ namespace osu.Framework.Backends.Window
 
         #endregion
 
-        public OsuTKWindowDriver(IGameWindow implementation)
+        public OsuTKWindowBackend(IGameWindow implementation)
         {
             Implementation = implementation;
 
@@ -44,12 +44,12 @@ namespace osu.Framework.Backends.Window
             CursorState.ValueChanged += cursorState_ValueChanged;
         }
 
-        public OsuTKWindowDriver(int width, int height)
+        public OsuTKWindowBackend(int width, int height)
             : this(new osuTK.GameWindow(width, height, new GraphicsMode(GraphicsMode.Default.ColorFormat, GraphicsMode.Default.Depth, GraphicsMode.Default.Stencil, GraphicsMode.Default.Samples, GraphicsMode.Default.AccumulatorFormat, 3)))
         {
         }
 
-        public override void Initialise(IDriverProvider provider)
+        public override void Initialise(IBackendProvider provider)
         {
         }
 

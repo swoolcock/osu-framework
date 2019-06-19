@@ -14,14 +14,14 @@ namespace osu.Framework.Platform
         private const int default_window_width = 1366;
         private const int default_window_height = 768;
 
-        protected override IWindowDriver CreateWindow() => new OsuTKWindowDriver(default_window_width, default_window_height);
+        protected override IWindowBackend CreateWindow() => new OsuTKWindowBackend(default_window_width, default_window_height);
 
-        protected override IInputDriver CreateInput() => new OsuTKInputDriver();
+        protected override IInputBackend CreateInput() => new OsuTKInputBackend();
 
-        protected override IGraphicsDriver CreateGraphics() => new OsuTKGraphicsDriver();
+        protected override IGraphicsBackend CreateGraphics() => new OsuTKGraphicsBackend();
 
-        protected override IAudioDriver CreateAudio() => new BassAudioDriver();
+        protected override IAudioBackend CreateAudio() => new BassAudioBackend();
 
-        protected override IVideoDriver CreateVideo() => new FfmpegVideoDriver();
+        protected override IVideoBackend CreateVideo() => new FfmpegVideoBackend();
     }
 }

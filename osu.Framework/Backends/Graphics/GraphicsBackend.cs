@@ -6,12 +6,12 @@ using System;
 namespace osu.Framework.Backends.Graphics
 {
     /// <summary>
-    /// Abstract implementation of <see cref="IGraphicsDriver"/> that will provide any base functionality required
-    /// by driver subclasses that should not be exposed via the interface.
+    /// Abstract implementation of <see cref="IGraphicsBackend"/> that will provide any base functionality required
+    /// by backend subclasses that should not be exposed via the interface.
     /// </summary>
-    public abstract class GraphicsDriver : IGraphicsDriver
+    public abstract class GraphicsBackend : IGraphicsBackend
     {
-        public abstract void Initialise(IDriverProvider provider);
+        public abstract void Initialise(IBackendProvider provider);
 
         #region IDisposable
 
@@ -35,7 +35,7 @@ namespace osu.Framework.Backends.Graphics
             GC.SuppressFinalize(this);
         }
 
-        ~GraphicsDriver()
+        ~GraphicsBackend()
         {
             Dispose(false);
         }

@@ -8,10 +8,10 @@ using osu.Framework.Input.Handlers;
 namespace osu.Framework.Backends.Input
 {
     /// <summary>
-    /// Abstract implementation of <see cref="IInputDriver"/> that will provide any base functionality required
-    /// by driver subclasses that should not be exposed via the interface.
+    /// Abstract implementation of <see cref="IInputBackend"/> that will provide any base functionality required
+    /// by backend subclasses that should not be exposed via the interface.
     /// </summary>
-    public abstract class InputDriver : IInputDriver
+    public abstract class InputBackend : IInputBackend
     {
         #region Events
 
@@ -42,7 +42,7 @@ namespace osu.Framework.Backends.Input
 
         public abstract IEnumerable<InputHandler> CreateInputHandlers();
 
-        public abstract void Initialise(IDriverProvider provider);
+        public abstract void Initialise(IBackendProvider provider);
 
         #region IDisposable
 
@@ -66,7 +66,7 @@ namespace osu.Framework.Backends.Input
             GC.SuppressFinalize(this);
         }
 
-        ~InputDriver()
+        ~InputBackend()
         {
             Dispose(false);
         }

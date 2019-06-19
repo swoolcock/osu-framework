@@ -10,12 +10,12 @@ using osuTK;
 namespace osu.Framework.Backends.Window
 {
     /// <summary>
-    /// Abstract implementation of <see cref="IWindowDriver"/> that will provide any base functionality required
-    /// by driver subclasses that should not be exposed via the interface.
+    /// Abstract implementation of <see cref="IWindowBackend"/> that will provide any base functionality required
+    /// by backend subclasses that should not be exposed via the interface.
     /// </summary>
-    public abstract class WindowDriver : IWindowDriver
+    public abstract class WindowBackend : IWindowBackend
     {
-        public abstract void Initialise(IDriverProvider provider);
+        public abstract void Initialise(IBackendProvider provider);
 
         #region Read-only Bindables
 
@@ -84,7 +84,7 @@ namespace osu.Framework.Backends.Window
             GC.SuppressFinalize(this);
         }
 
-        ~WindowDriver()
+        ~WindowBackend()
         {
             Dispose(false);
         }

@@ -10,33 +10,33 @@ using osu.Framework.Backends.Window;
 namespace osu.Framework.Backends
 {
     /// <summary>
-    /// Provides concrete implementations of various <see cref="IDriver"/> classes required by the game.
+    /// Provides concrete implementations of various <see cref="IBackend"/> classes required by the game.
     /// </summary>
-    public interface IDriverProvider
+    public interface IBackendProvider
     {
         /// <summary>
-        /// Provides the concrete implementation of the window.
+        /// Provides the concrete implementation of the window backend.
         /// </summary>
-        IWindowDriver Window { get; }
+        IWindowBackend Window { get; }
 
         /// <summary>
-        /// Provides the concrete implementation of the input driver.
+        /// Provides the concrete implementation of the input backend.
         /// </summary>
-        IInputDriver Input { get; }
+        IInputBackend Input { get; }
 
         /// <summary>
-        /// Provides the concrete implementation of the graphics driver.
+        /// Provides the concrete implementation of the graphics backend.
         /// </summary>
-        IGraphicsDriver Graphics { get; }
+        IGraphicsBackend Graphics { get; }
 
         /// <summary>
-        /// Provides the concrete implementation of the audio driver.
+        /// Provides the concrete implementation of the audio backend.
         /// </summary>
-        IAudioDriver Audio { get; }
+        IAudioBackend Audio { get; }
 
         /// <summary>
-        /// Provides the concrete implementation of the video driver.
+        /// Provides the concrete implementation of the video backend.
         /// </summary>
-        IVideoDriver Video { get; }
+        IVideoBackend Video { get; }
     }
 }

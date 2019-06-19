@@ -10,9 +10,9 @@ using osu.Framework.Audio.Track;
 
 namespace osu.Framework.Backends.Audio
 {
-    public class BassAudioDriver : AudioDriver
+    public class BassAudioBackend : AudioBackend
     {
-        public override void Initialise(IDriverProvider provider)
+        public override void Initialise(IBackendProvider provider)
         {
         }
 

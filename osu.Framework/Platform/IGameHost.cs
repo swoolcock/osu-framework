@@ -6,7 +6,7 @@ using osu.Framework.Backends;
 
 namespace osu.Framework.Platform
 {
-    public interface IGameHost : IDriverProvider, IDisposable
+    public interface IGameHost : IBackendProvider, IDisposable
     {
         #region Events
 

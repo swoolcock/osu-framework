@@ -8,12 +8,12 @@ using osu.Framework.Graphics.Video;
 namespace osu.Framework.Backends.Video
 {
     /// <summary>
-    /// Abstract implementation of <see cref="IVideoDriver"/> that will provide any base functionality required
-    /// by driver subclasses that should not be exposed via the interface.
+    /// Abstract implementation of <see cref="IVideoBackend"/> that will provide any base functionality required
+    /// by backend subclasses that should not be exposed via the interface.
     /// </summary>
-    public abstract class VideoDriver : IVideoDriver
+    public abstract class VideoBackend : IVideoBackend
     {
-        public abstract void Initialise(IDriverProvider provider);
+        public abstract void Initialise(IBackendProvider provider);
 
         public abstract VideoDecoder CreateVideoDecoder(Stream stream);
 
@@ -39,7 +39,7 @@ namespace osu.Framework.Backends.Video
             GC.SuppressFinalize(this);
         }
 
-        ~VideoDriver()
+        ~VideoBackend()
         {
             Dispose(false);
         }

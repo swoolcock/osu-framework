@@ -12,13 +12,13 @@ namespace osu.Framework.Platform
 {
     public abstract class NewGameHost : IGameHost
     {
-        #region IDriverProvider
+        #region IBackendProvider
 
-        public IWindowDriver Window { get; private set; }
-        public IInputDriver Input { get; private set; }
-        public IGraphicsDriver Graphics { get; private set; }
-        public IAudioDriver Audio { get; private set; }
-        public IVideoDriver Video { get; private set; }
+        public IWindowBackend Window { get; private set; }
+        public IInputBackend Input { get; private set; }
+        public IGraphicsBackend Graphics { get; private set; }
+        public IAudioBackend Audio { get; private set; }
+        public IVideoBackend Video { get; private set; }
 
         #endregion
 
@@ -38,34 +38,34 @@ namespace osu.Framework.Platform
 
         #endregion
 
-        protected abstract IWindowDriver CreateWindow();
-        protected abstract IInputDriver CreateInput();
-        protected abstract IGraphicsDriver CreateGraphics();
-        protected abstract IAudioDriver CreateAudio();
-        protected abstract IVideoDriver CreateVideo();
+        protected abstract IWindowBackend CreateWindow();
+        protected abstract IInputBackend CreateInput();
+        protected abstract IGraphicsBackend CreateGraphics();
+        protected abstract IAudioBackend CreateAudio();
+        protected abstract IVideoBackend CreateVideo();
 
         protected NewGameHost()
         {
-            CreateDrivers();
+            CreateBackends();
         }
 
-        protected virtual void CreateDrivers()
+        protected virtual void CreateBackends()
         {
-            // create drivers from virtual methods
+            // create backends from virtual methods
             Window = CreateWindow();
             Input = CreateInput();
             Graphics = CreateGraphics();
             Audio = CreateAudio();
             Video = CreateVideo();
 
-            // initialise drivers
+            // initialise backends
             Window.Initialise(this);
             Input.Initialise(this);
             Graphics.Initialise(this);
             Audio.Initialise(this);
             Video.Initialise(this);
 
-            // connect driver events to gamehost
+            // connect backend events to gamehost
             Window.CloseRequested += OnExitRequested;
             Window.Closed += OnExited;
         }

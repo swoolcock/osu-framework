@@ -10,7 +10,7 @@ namespace osu.Framework.Backends.Input
     /// <summary>
     /// Provides input events and instantiates <see cref="InputHandler"/>s for those events.
     /// </summary>
-    public interface IInputDriver : IDriver
+    public interface IInputBackend : IBackend
     {
         #region Events
 

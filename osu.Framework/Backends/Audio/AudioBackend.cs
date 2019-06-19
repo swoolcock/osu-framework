@@ -11,14 +11,14 @@ using osu.Framework.Audio.Track;
 namespace osu.Framework.Backends.Audio
 {
     /// <summary>
-    /// Abstract implementation of <see cref="IAudioDriver"/> that will provide any base functionality required
-    /// by driver subclasses that should not be exposed via the interface.
+    /// Abstract implementation of <see cref="IAudioBackend"/> that will provide any base functionality required
+    /// by backend subclasses that should not be exposed via the interface.
     /// </summary>
-    public abstract class AudioDriver : IAudioDriver
+    public abstract class AudioBackend : IAudioBackend
     {
-        #region IAudioDriver
+        #region IAudioBackend
 
-        public abstract void Initialise(IDriverProvider provider);
+        public abstract void Initialise(IBackendProvider provider);
 
         public abstract Track CreateTrack(Stream data, bool quick);
 
@@ -50,7 +50,7 @@ namespace osu.Framework.Backends.Audio
             GC.SuppressFinalize(this);
         }
 
-        ~AudioDriver()
+        ~AudioBackend()
         {
             Dispose(false);
         }

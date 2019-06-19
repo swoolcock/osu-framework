@@ -6,9 +6,9 @@ using osu.Framework.Graphics.Video;
 
 namespace osu.Framework.Backends.Video
 {
-    public class FfmpegVideoDriver : VideoDriver
+    public class FfmpegVideoBackend : VideoBackend
     {
-        public override void Initialise(IDriverProvider provider)
+        public override void Initialise(IBackendProvider provider)
         {
         }
 

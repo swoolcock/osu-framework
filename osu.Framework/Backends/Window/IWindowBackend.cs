@@ -9,7 +9,7 @@ using osuTK;
 
 namespace osu.Framework.Backends.Window
 {
-    public interface IWindowDriver : IDriver
+    public interface IWindowBackend : IBackend
     {
         #region Read-only Bindables
 

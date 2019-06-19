@@ -11,9 +11,9 @@ using osuTK.Graphics.ES30;
 namespace osu.Framework.Backends.Graphics
 {
     /// <summary>
-    /// Concrete implementation of <see cref="IGraphicsDriver"/> that uses osuTK's OpenGL context and calls.
+    /// Concrete implementation of <see cref="IGraphicsBackend"/> that uses osuTK's OpenGL context and calls.
     /// </summary>
-    public class OsuTKGraphicsDriver : GraphicsDriver
+    public class OsuTKGraphicsBackend : GraphicsBackend
     {
         private IGraphicsContext context;
 
@@ -23,10 +23,10 @@ namespace osu.Framework.Backends.Graphics
 
         internal bool IsEmbedded { get; private set; }
 
-        public override void Initialise(IDriverProvider provider)
+        public override void Initialise(IBackendProvider provider)
         {
-            if (!(provider.Window is OsuTKWindowDriver window))
-                throw new Exception($"{nameof(OsuTKGraphicsDriver)} requires a corresponding {nameof(OsuTKWindowDriver)}");
+            if (!(provider.Window is OsuTKWindowBackend window))
+                throw new Exception($"{nameof(OsuTKGraphicsBackend)} requires a corresponding {nameof(OsuTKWindowBackend)}");
 
             if (window.Implementation is osuTK.GameWindow impl)
                 context = impl.Context;

@@ -12,12 +12,12 @@ using osu.Framework.Input.Handlers.Mouse;
 
 namespace osu.Framework.Backends.Input
 {
-    public class OsuTKInputDriver : InputDriver
+    public class OsuTKInputBackend : InputBackend
     {
-        public override void Initialise(IDriverProvider provider)
+        public override void Initialise(IBackendProvider provider)
         {
-            if (!(provider.Window is OsuTKWindowDriver window))
-                throw new Exception($"{nameof(OsuTKInputDriver)} requires a corresponding {nameof(OsuTKWindowDriver)}");
+            if (!(provider.Window is OsuTKWindowBackend window))
+                throw new Exception($"{nameof(OsuTKInputBackend)} requires a corresponding {nameof(OsuTKWindowBackend)}");
 
             // osuTK input events are triggered through the osuTK.GameWindow implementation
             window.Implementation.KeyDown += (sender, e) => OnKeyDown();
@@ -45,7 +45,7 @@ namespace osu.Framework.Backends.Input
             foreach (var h in defaultDisabled)
                 h.Enabled.Value = false;
 
-            // NOTE: at this point we would connect the handlers to the driver events
+            // NOTE: at this point we would connect the handlers to the backend events
 
             return defaultEnabled.Concat(defaultDisabled);
         }
