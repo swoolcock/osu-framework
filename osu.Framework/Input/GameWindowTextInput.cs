@@ -8,11 +8,11 @@ namespace osu.Framework.Input
 {
     public class GameWindowTextInput : ITextInputSource
     {
-        private readonly IWindow window;
+        private readonly IWindowDeprecated window;
 
         private string pending = string.Empty;
 
-        public GameWindowTextInput(IWindow window)
+        public GameWindowTextInput(IWindowDeprecated window)
         {
             this.window = window;
         }

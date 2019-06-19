@@ -19,7 +19,7 @@ namespace osu.Framework.Tests.Visual.Platform
         private readonly SpriteText currentDisplay = new SpriteText();
         private readonly SpriteText supportedWindowModes = new SpriteText();
 
-        private IWindow window;
+        private IWindowDeprecated window;
         private readonly BindableSize sizeFullscreen = new BindableSize();
         private readonly Bindable<WindowMode> windowMode = new Bindable<WindowMode>();
 

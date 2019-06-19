@@ -16,7 +16,7 @@ namespace osu.Framework.Platform.MacOS
 
         private static bool isCapsLockOn => (Cocoa.CGEventSourceFlagsState(event_source_state_hid_system_state) & event_flag_mask_alpha_shift) != 0;
 
-        public MacOSTextInput(IWindow window)
+        public MacOSTextInput(IWindowDeprecated window)
             : base(window)
         {
         }

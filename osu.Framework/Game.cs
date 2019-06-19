@@ -25,7 +25,7 @@ namespace osu.Framework
 {
     public abstract class Game : Container, IKeyBindingHandler<FrameworkAction>
     {
-        public IWindow Window => Host?.Window;
+        public IWindowDeprecated Window => Host?.Window;
 
         public ResourceStore<byte[]> Resources { get; private set; }
 

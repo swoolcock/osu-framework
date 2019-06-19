@@ -21,7 +21,7 @@ namespace osu.Framework.Tests.Visual.Platform
         private readonly Box box;
         private readonly SpriteText textbox;
 
-        private IWindow window;
+        private IWindowDeprecated window;
 
         public TestSceneSafeArea()
         {
