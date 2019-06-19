@@ -3,8 +3,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
+using osu.Framework.Allocation;
 using osu.Framework.Backends.Audio;
 using osu.Framework.Backends.Graphics;
 using osu.Framework.Backends.Input;
@@ -12,6 +14,8 @@ using osu.Framework.Backends.Storage;
 using osu.Framework.Backends.Video;
 using osu.Framework.Backends.Window;
 using osu.Framework.Bindables;
+using osu.Framework.Development;
+using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Logging;
 using osu.Framework.Statistics;
 using osu.Framework.Threading;
@@ -117,27 +121,74 @@ namespace osu.Framework.Platform
 
         #region Execution
 
+        public ExecutionState ExecutionState { get; private set; }
+
         public DependencyContainer Dependencies { get; } = new DependencyContainer();
 
         public void Run(Game game)
         {
-            CreateBackends();
+            DebugUtils.HostAssembly = game.GetType().Assembly;
 
-            RegisterThread(DrawThread = new DrawThread(DrawFrame)
+            if (ExecutionState != ExecutionState.Idle)
+                throw new InvalidOperationException("A game that has already been run cannot be restarted.");
+
+            try
             {
-                OnThreadStart = DrawInitialize,
-            });
+                CreateBackends();
 
-            RegisterThread(UpdateThread = new UpdateThread(UpdateFrame)
+                RegisterThread(DrawThread = new DrawThread(DrawFrame)
+                {
+                    OnThreadStart = DrawInitialize,
+                });
+
+                RegisterThread(UpdateThread = new UpdateThread(UpdateFrame)
+                {
+                    OnThreadStart = UpdateInitialize,
+                    Monitor = { HandleGC = true },
+                });
+
+                RegisterThread(InputThread = new InputThread());
+                RegisterThread(AudioThread = new AudioThread());
+
+                Dependencies.CacheAs<IGameHost>(this);
+            }
+            finally
             {
-                OnThreadStart = UpdateInitialize,
-                Monitor = { HandleGC = true },
-            });
+                // Close the window and stop all threads
+                PerformExit(true);
+            }
+        }
 
-            RegisterThread(InputThread = new InputThread());
-            RegisterThread(AudioThread = new AudioThread());
+        /// <summary>
+        /// Schedules the game to exit in the next frame.
+        /// </summary>
+        public void Exit() => PerformExit(false);
 
-            Dependencies.CacheAs<IGameHost>(this);
+        /// <summary>
+        /// Schedules the game to exit in the next frame (or immediately if <paramref name="immediately"/> is true).
+        /// </summary>
+        /// <param name="immediately">If true, exits the game immediately.  If false (default), schedules the game to exit in the next frame.</param>
+        protected virtual void PerformExit(bool immediately)
+        {
+            if (immediately)
+                exit();
+            else
+            {
+                ExecutionState = ExecutionState.Stopping;
+                InputThread.Scheduler.Add(exit, false);
+            }
+        }
+
+        /// <summary>
+        /// Exits the game. This must always be called from <see cref="InputThread"/>.
+        /// </summary>
+        private void exit()
+        {
+            // exit() may be called without having been scheduled from Exit(), so ensure the correct exiting state
+            ExecutionState = ExecutionState.Stopping;
+            // TODO: Window?.Close();
+            stopAllThreads();
+            ExecutionState = ExecutionState.Stopped;
         }
 
         protected virtual void UpdateInitialize()
@@ -242,6 +293,22 @@ namespace osu.Framework.Platform
 
             IsActive.UnbindFrom(thread.IsActive);
             thread.UnhandledException = null;
+        }
+
+        private const int thread_join_timeout = 30000;
+
+        private void stopAllThreads()
+        {
+            threads.ForEach(t => t.Exit());
+            threads.Where(t => t.Running).ForEach(t =>
+            {
+                if (!t.Thread.Join(thread_join_timeout))
+                    Logger.Log($"Thread {t.Name} failed to exit in allocated time ({thread_join_timeout}ms).", LoggingTarget.Runtime, LogLevel.Important);
+            });
+
+            // as the input thread isn't actually handled by a thread, the above join does not necessarily mean it has been completed to an exiting state.
+            while (!InputThread.Exited)
+                InputThread.RunUpdate();
         }
 
         #endregion

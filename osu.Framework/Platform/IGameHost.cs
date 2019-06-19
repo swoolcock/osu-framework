@@ -53,6 +53,7 @@ namespace osu.Framework.Platform
 
         #region Execution
 
+        ExecutionState ExecutionState { get; }
         DependencyContainer Dependencies { get; }
 
         void Run(Game game);
