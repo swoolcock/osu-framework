@@ -4,6 +4,7 @@
 using osu.Framework.Backends.Audio;
 using osu.Framework.Backends.Graphics;
 using osu.Framework.Backends.Input;
+using osu.Framework.Backends.Storage;
 using osu.Framework.Backends.Video;
 using osu.Framework.Backends.Window;
 
@@ -38,5 +39,10 @@ namespace osu.Framework.Backends
         /// Provides the concrete implementation of the video backend.
         /// </summary>
         IVideoBackend Video { get; }
+
+        /// <summary>
+        /// Provides the concrete implementation of the storage backend.
+        /// </summary>
+        IStorageBackend Storage { get; }
     }
 }

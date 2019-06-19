@@ -5,6 +5,7 @@ using System;
 using osu.Framework.Backends.Audio;
 using osu.Framework.Backends.Graphics;
 using osu.Framework.Backends.Input;
+using osu.Framework.Backends.Storage;
 using osu.Framework.Backends.Video;
 using osu.Framework.Backends.Window;
 
@@ -19,6 +20,7 @@ namespace osu.Framework.Platform
         public IGraphicsBackend Graphics { get; private set; }
         public IAudioBackend Audio { get; private set; }
         public IVideoBackend Video { get; private set; }
+        public IStorageBackend Storage { get; private set; }
 
         #endregion
 
@@ -43,6 +45,7 @@ namespace osu.Framework.Platform
         protected abstract IGraphicsBackend CreateGraphics();
         protected abstract IAudioBackend CreateAudio();
         protected abstract IVideoBackend CreateVideo();
+        protected abstract IStorageBackend CreateStorage();
 
         protected NewGameHost()
         {
@@ -57,6 +60,7 @@ namespace osu.Framework.Platform
             Graphics = CreateGraphics();
             Audio = CreateAudio();
             Video = CreateVideo();
+            Storage = CreateStorage();
 
             // initialise backends
             Window.Initialise(this);
@@ -64,6 +68,7 @@ namespace osu.Framework.Platform
             Graphics.Initialise(this);
             Audio.Initialise(this);
             Video.Initialise(this);
+            Storage.Initialise(this);
 
             // connect backend events to gamehost
             Window.CloseRequested += OnExitRequested;
@@ -84,6 +89,7 @@ namespace osu.Framework.Platform
             {
                 if (disposing)
                 {
+                    Storage?.Dispose();
                     Video?.Dispose();
                     Audio?.Dispose();
                     Graphics?.Dispose();
