@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using osu.Framework.Input.Handlers;
 
-namespace osu.Framework.Platform.Driver.Input
+namespace osu.Framework.Backends.Input
 {
     /// <summary>
     /// Provides input events and instantiates <see cref="InputHandler"/>s for those events.

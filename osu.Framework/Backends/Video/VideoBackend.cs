@@ -5,7 +5,7 @@ using System;
 using System.IO;
 using osu.Framework.Graphics.Video;
 
-namespace osu.Framework.Platform.Driver.Video
+namespace osu.Framework.Backends.Video
 {
     /// <summary>
     /// Abstract implementation of <see cref="IVideoDriver"/> that will provide any base functionality required

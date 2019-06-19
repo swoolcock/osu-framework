@@ -3,7 +3,7 @@
 
 using System;
 
-namespace osu.Framework.Platform.Driver.Graphics
+namespace osu.Framework.Backends.Graphics
 {
     /// <summary>
     /// Abstract implementation of <see cref="IGraphicsDriver"/> that will provide any base functionality required

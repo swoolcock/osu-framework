@@ -3,7 +3,7 @@
 
 using System;
 
-namespace osu.Framework.Platform.Driver
+namespace osu.Framework.Backends
 {
     /// <summary>
     /// All drivers inherit from <see cref="IDriver"/> to define them as <see cref="IDisposable"/>

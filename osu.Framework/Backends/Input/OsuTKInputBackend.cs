@@ -4,13 +4,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using osu.Framework.Backends.Window;
 using osu.Framework.Input.Handlers;
 using osu.Framework.Input.Handlers.Joystick;
 using osu.Framework.Input.Handlers.Keyboard;
 using osu.Framework.Input.Handlers.Mouse;
-using osu.Framework.Platform.Driver.Window;
 
-namespace osu.Framework.Platform.Driver.Input
+namespace osu.Framework.Backends.Input
 {
     public class OsuTKInputDriver : InputDriver
     {

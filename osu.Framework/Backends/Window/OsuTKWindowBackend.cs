@@ -4,11 +4,12 @@
 using System;
 using System.Drawing;
 using osu.Framework.Bindables;
+using osu.Framework.Platform;
 using osuTK;
 using osuTK.Graphics;
 using osuTK.Platform;
 
-namespace osu.Framework.Platform.Driver.Window
+namespace osu.Framework.Backends.Window
 {
     public class OsuTKWindowDriver : WindowDriver
     {

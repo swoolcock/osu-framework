@@ -4,7 +4,7 @@
 using System.IO;
 using osu.Framework.Graphics.Video;
 
-namespace osu.Framework.Platform.Driver.Video
+namespace osu.Framework.Backends.Video
 {
     public class FfmpegVideoDriver : VideoDriver
     {

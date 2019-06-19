@@ -1,13 +1,13 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osu.Framework.Platform.Driver.Audio;
-using osu.Framework.Platform.Driver.Graphics;
-using osu.Framework.Platform.Driver.Input;
-using osu.Framework.Platform.Driver.Video;
-using osu.Framework.Platform.Driver.Window;
+using osu.Framework.Backends.Audio;
+using osu.Framework.Backends.Graphics;
+using osu.Framework.Backends.Input;
+using osu.Framework.Backends.Video;
+using osu.Framework.Backends.Window;
 
-namespace osu.Framework.Platform.Driver
+namespace osu.Framework.Backends
 {
     /// <summary>
     /// Provides concrete implementations of various <see cref="IDriver"/> classes required by the game.

@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using osu.Framework.Input.Handlers;
 
-namespace osu.Framework.Platform.Driver.Input
+namespace osu.Framework.Backends.Input
 {
     /// <summary>
     /// Abstract implementation of <see cref="IInputDriver"/> that will provide any base functionality required

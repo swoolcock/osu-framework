@@ -3,12 +3,12 @@
 
 using System;
 using System.Linq;
+using osu.Framework.Backends.Window;
 using osu.Framework.Logging;
-using osu.Framework.Platform.Driver.Window;
 using osuTK.Graphics;
 using osuTK.Graphics.ES30;
 
-namespace osu.Framework.Platform.Driver.Graphics
+namespace osu.Framework.Backends.Graphics
 {
     /// <summary>
     /// Concrete implementation of <see cref="IGraphicsDriver"/> that uses osuTK's OpenGL context and calls.
