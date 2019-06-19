@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using osu.Framework.Backends;
+using osu.Framework.Bindables;
 using osu.Framework.Threading;
 
 namespace osu.Framework.Platform
@@ -20,6 +21,12 @@ namespace osu.Framework.Platform
         /// An unhandled exception was thrown. Return true to ignore and continue running.
         /// </summary>
         event Func<Exception, bool> ExceptionThrown;
+
+        #endregion
+
+        #region Bindables
+
+        IBindable<bool> IsActive { get; }
 
         #endregion
 

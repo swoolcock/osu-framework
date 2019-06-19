@@ -11,7 +11,9 @@ using osu.Framework.Backends.Input;
 using osu.Framework.Backends.Storage;
 using osu.Framework.Backends.Video;
 using osu.Framework.Backends.Window;
+using osu.Framework.Bindables;
 using osu.Framework.Logging;
+using osu.Framework.Statistics;
 using osu.Framework.Threading;
 
 namespace osu.Framework.Platform
@@ -49,6 +51,14 @@ namespace osu.Framework.Platform
 
         #endregion
 
+        #region Bindables
+
+        public IBindable<bool> IsActive { get; } = new Bindable<bool>(true);
+
+        private readonly Bindable<bool> performanceLogging = new Bindable<bool>();
+
+        #endregion
+
         protected abstract IWindow CreateWindow();
         protected abstract IInput CreateInput();
         protected abstract IGraphics CreateGraphics();
@@ -61,6 +71,9 @@ namespace osu.Framework.Platform
             CreateBackends();
         }
 
+        /// <summary>
+        /// Creates and initialises the backends for this <see cref="IGameHost"/>, and connects any events and bindables.
+        /// </summary>
         protected virtual void CreateBackends()
         {
             // create backends from virtual methods
@@ -163,13 +176,27 @@ namespace osu.Framework.Platform
 
         public void RegisterThread(GameThread thread)
         {
-            // TODO
+            threads.Add(thread);
+            thread.IsActive.BindTo(IsActive);
+            thread.UnhandledException = unhandledExceptionHandler;
+            thread.Monitor.EnablePerformanceProfiling = performanceLogging.Value;
         }
 
         public void UnregisterThread(GameThread thread)
         {
-            // TODO
+            if (!threads.Remove(thread))
+                return;
+
+            IsActive.UnbindFrom(thread.IsActive);
+            thread.UnhandledException = null;
         }
+
+        #endregion
+
+        #region Performance Monitoring
+
+        private PerformanceMonitor inputMonitor => InputThread.Monitor;
+        private PerformanceMonitor drawMonitor => DrawThread.Monitor;
 
         #endregion
 
