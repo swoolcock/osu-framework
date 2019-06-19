@@ -10,7 +10,7 @@ namespace osu.Framework.Backends.Video
     /// Provides video decoders.
     /// Assumption here is that <see cref="VideoDecoder"/> will be an abstract class, realised by "FfmpegVideoDecoder" or similar.
     /// </summary>
-    public interface IVideoBackend : IBackend
+    public interface IVideo : IBackend
     {
         VideoDecoder CreateVideoDecoder(Stream stream);
     }

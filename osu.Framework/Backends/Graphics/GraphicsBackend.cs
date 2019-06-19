@@ -9,7 +9,7 @@ namespace osu.Framework.Backends.Graphics
     /// Abstract implementation of <see cref="IGraphicsBackend"/> that will provide any base functionality required
     /// by backend subclasses that should not be exposed via the interface.
     /// </summary>
-    public abstract class GraphicsBackend : IGraphicsBackend
+    public abstract class GraphicsBackend : IGraphics
     {
         public abstract void Initialise(IBackendProvider provider);
 

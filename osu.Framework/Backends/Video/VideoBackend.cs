@@ -11,7 +11,7 @@ namespace osu.Framework.Backends.Video
     /// Abstract implementation of <see cref="IVideoBackend"/> that will provide any base functionality required
     /// by backend subclasses that should not be exposed via the interface.
     /// </summary>
-    public abstract class VideoBackend : IVideoBackend
+    public abstract class VideoBackend : IVideo
     {
         public abstract void Initialise(IBackendProvider provider);
 

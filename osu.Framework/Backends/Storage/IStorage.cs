@@ -3,7 +3,7 @@
 
 namespace osu.Framework.Backends.Storage
 {
-    public interface IStorageBackend : IBackend
+    public interface IStorage : IBackend
     {
     }
 }

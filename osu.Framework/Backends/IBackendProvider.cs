@@ -18,31 +18,31 @@ namespace osu.Framework.Backends
         /// <summary>
         /// Provides the concrete implementation of the window backend.
         /// </summary>
-        IWindowBackend Window { get; }
+        IWindow Window { get; }
 
         /// <summary>
         /// Provides the concrete implementation of the input backend.
         /// </summary>
-        IInputBackend Input { get; }
+        IInput Input { get; }
 
         /// <summary>
         /// Provides the concrete implementation of the graphics backend.
         /// </summary>
-        IGraphicsBackend Graphics { get; }
+        IGraphics Graphics { get; }
 
         /// <summary>
         /// Provides the concrete implementation of the audio backend.
         /// </summary>
-        IAudioBackend Audio { get; }
+        IAudio Audio { get; }
 
         /// <summary>
         /// Provides the concrete implementation of the video backend.
         /// </summary>
-        IVideoBackend Video { get; }
+        IVideo Video { get; }
 
         /// <summary>
         /// Provides the concrete implementation of the storage backend.
         /// </summary>
-        IStorageBackend Storage { get; }
+        IStorage Storage { get; }
     }
 }

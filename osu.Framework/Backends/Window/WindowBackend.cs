@@ -13,7 +13,7 @@ namespace osu.Framework.Backends.Window
     /// Abstract implementation of <see cref="IWindowBackend"/> that will provide any base functionality required
     /// by backend subclasses that should not be exposed via the interface.
     /// </summary>
-    public abstract class WindowBackend : IWindowBackend
+    public abstract class WindowBackend : IWindow
     {
         public abstract void Initialise(IBackendProvider provider);
 

@@ -5,7 +5,7 @@ using System;
 
 namespace osu.Framework.Backends.Storage
 {
-    public abstract class StorageBackend : IStorageBackend
+    public abstract class StorageBackend : IStorage
     {
         public abstract void Initialise(IBackendProvider provider);
 

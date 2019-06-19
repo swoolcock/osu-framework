@@ -6,7 +6,7 @@ namespace osu.Framework.Backends.Graphics
     /// <summary>
     /// Exposes graphics commands in an API-agnostic way.
     /// </summary>
-    public interface IGraphicsBackend : IBackend
+    public interface IGraphics : IBackend
     {
     }
 }

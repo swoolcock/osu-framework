@@ -15,12 +15,12 @@ namespace osu.Framework.Platform
     {
         #region IBackendProvider
 
-        public IWindowBackend Window { get; private set; }
-        public IInputBackend Input { get; private set; }
-        public IGraphicsBackend Graphics { get; private set; }
-        public IAudioBackend Audio { get; private set; }
-        public IVideoBackend Video { get; private set; }
-        public IStorageBackend Storage { get; private set; }
+        public IWindow Window { get; private set; }
+        public IInput Input { get; private set; }
+        public IGraphics Graphics { get; private set; }
+        public IAudio Audio { get; private set; }
+        public IVideo Video { get; private set; }
+        public IStorage Storage { get; private set; }
 
         #endregion
 
@@ -40,12 +40,12 @@ namespace osu.Framework.Platform
 
         #endregion
 
-        protected abstract IWindowBackend CreateWindow();
-        protected abstract IInputBackend CreateInput();
-        protected abstract IGraphicsBackend CreateGraphics();
-        protected abstract IAudioBackend CreateAudio();
-        protected abstract IVideoBackend CreateVideo();
-        protected abstract IStorageBackend CreateStorage();
+        protected abstract IWindow CreateWindow();
+        protected abstract IInput CreateInput();
+        protected abstract IGraphics CreateGraphics();
+        protected abstract IAudio CreateAudio();
+        protected abstract IVideo CreateVideo();
+        protected abstract IStorage CreateStorage();
 
         protected NewGameHost()
         {

@@ -14,7 +14,7 @@ namespace osu.Framework.Backends.Audio
     /// Abstract implementation of <see cref="IAudioBackend"/> that will provide any base functionality required
     /// by backend subclasses that should not be exposed via the interface.
     /// </summary>
-    public abstract class AudioBackend : IAudioBackend
+    public abstract class AudioBackend : IAudio
     {
         #region IAudioBackend
 

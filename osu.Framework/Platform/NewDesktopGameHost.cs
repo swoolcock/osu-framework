@@ -16,16 +16,16 @@ namespace osu.Framework.Platform
         private const int default_window_width = 1366;
         private const int default_window_height = 768;
 
-        protected override IWindowBackend CreateWindow() => new OsuTKWindowBackend(default_window_width, default_window_height);
+        protected override IWindow CreateWindow() => new OsuTKWindowBackend(default_window_width, default_window_height);
 
-        protected override IInputBackend CreateInput() => new OsuTKInputBackend();
+        protected override IInput CreateInput() => new OsuTKInputBackend();
 
-        protected override IGraphicsBackend CreateGraphics() => new OsuTKGraphicsBackend();
+        protected override IGraphics CreateGraphics() => new OsuTKGraphicsBackend();
 
-        protected override IAudioBackend CreateAudio() => new BassAudioBackend();
+        protected override IAudio CreateAudio() => new BassAudioBackend();
 
-        protected override IVideoBackend CreateVideo() => new FfmpegVideoBackend();
+        protected override IVideo CreateVideo() => new FfmpegVideoBackend();
 
-        protected override IStorageBackend CreateStorage() => throw new NotImplementedException();
+        protected override IStorage CreateStorage() => throw new NotImplementedException();
     }
 }
