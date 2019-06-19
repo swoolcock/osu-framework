@@ -16,6 +16,11 @@ namespace osu.Framework.Platform
         event Func<bool> ExitRequested;
         event Action Exited;
 
+        /// <summary>
+        /// An unhandled exception was thrown. Return true to ignore and continue running.
+        /// </summary>
+        event Func<Exception, bool> ExceptionThrown;
+
         #endregion
 
         #region Execution

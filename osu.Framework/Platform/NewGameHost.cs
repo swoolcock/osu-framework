@@ -3,12 +3,15 @@
 
 using System;
 using System.Collections.Generic;
+using System.Runtime.ExceptionServices;
+using System.Threading.Tasks;
 using osu.Framework.Backends.Audio;
 using osu.Framework.Backends.Graphics;
 using osu.Framework.Backends.Input;
 using osu.Framework.Backends.Storage;
 using osu.Framework.Backends.Video;
 using osu.Framework.Backends.Window;
+using osu.Framework.Logging;
 using osu.Framework.Threading;
 
 namespace osu.Framework.Platform
@@ -32,6 +35,8 @@ namespace osu.Framework.Platform
 
         public event Action Exited;
 
+        public event Func<Exception, bool> ExceptionThrown;
+
         #endregion
 
         #region Event Invocation
@@ -39,6 +44,8 @@ namespace osu.Framework.Platform
         protected virtual bool OnExitRequested() => ExitRequested?.Invoke() ?? false;
 
         protected virtual void OnExited() => Exited?.Invoke();
+
+        protected virtual bool OnExceptionThrown(Exception exception) => ExceptionThrown?.Invoke(exception) ?? false;
 
         #endregion
 
@@ -85,6 +92,38 @@ namespace osu.Framework.Platform
 
         #endregion
 
+        #region Exception Handling
+
+        private void unhandledExceptionHandler(object sender, UnhandledExceptionEventArgs args)
+        {
+            var exception = (Exception)args.ExceptionObject;
+            exception.Data["unhandled"] = "unhandled";
+            handleException(exception);
+        }
+
+        private void unobservedExceptionHandler(object sender, UnobservedTaskExceptionEventArgs args)
+        {
+            args.Exception.Data["unhandled"] = "unobserved";
+            handleException(args.Exception);
+        }
+
+        private void handleException(Exception exception)
+        {
+            if (OnExceptionThrown(exception))
+            {
+                AppDomain.CurrentDomain.UnhandledException -= unhandledExceptionHandler;
+
+                var captured = ExceptionDispatchInfo.Capture(exception);
+
+                //we want to throw this exception on the input thread to interrupt window and also headless execution.
+                InputThread.Scheduler.Add(() => { captured.Throw(); });
+            }
+
+            Logger.Error(exception, $"An {exception.Data["unhandled"]} error has occurred.", recursive: true);
+        }
+
+        #endregion
+
         #region Threading
 
         public GameThread DrawThread { get; private set; }
@@ -124,10 +163,12 @@ namespace osu.Framework.Platform
 
         public void RegisterThread(GameThread thread)
         {
+            // TODO
         }
 
         public void UnregisterThread(GameThread thread)
         {
+            // TODO
         }
 
         #endregion
