@@ -70,6 +70,10 @@ namespace osu.Framework.Platform
             Window.Closed += OnExited;
         }
 
+        public void Run(Game game)
+        {
+        }
+
         #region IDisposable
 
         private bool isDisposed;

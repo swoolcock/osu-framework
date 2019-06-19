@@ -14,5 +14,7 @@ namespace osu.Framework.Platform
         event Action Exited;
 
         #endregion
+
+        void Run(Game game);
     }
 }
