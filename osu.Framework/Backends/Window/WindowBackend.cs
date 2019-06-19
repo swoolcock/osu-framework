@@ -10,7 +10,7 @@ using osuTK;
 namespace osu.Framework.Backends.Window
 {
     /// <summary>
-    /// Abstract implementation of <see cref="IWindowBackend"/> that will provide any base functionality required
+    /// Abstract implementation of <see cref="IWindow"/> that will provide any base functionality required
     /// by backend subclasses that should not be exposed via the interface.
     /// </summary>
     public abstract class WindowBackend : IWindow

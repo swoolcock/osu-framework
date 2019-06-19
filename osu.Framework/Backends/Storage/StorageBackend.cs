@@ -5,6 +5,10 @@ using System;
 
 namespace osu.Framework.Backends.Storage
 {
+    /// <summary>
+    /// Abstract implementation of <see cref="IStorage"/> that will provide any base functionality required
+    /// by backend subclasses that should not be exposed via the interface.
+    /// </summary>
     public abstract class StorageBackend : IStorage
     {
         public abstract void Initialise(IBackendProvider provider);

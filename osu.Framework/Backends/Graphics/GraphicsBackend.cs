@@ -6,7 +6,7 @@ using System;
 namespace osu.Framework.Backends.Graphics
 {
     /// <summary>
-    /// Abstract implementation of <see cref="IGraphicsBackend"/> that will provide any base functionality required
+    /// Abstract implementation of <see cref="IGraphics"/> that will provide any base functionality required
     /// by backend subclasses that should not be exposed via the interface.
     /// </summary>
     public abstract class GraphicsBackend : IGraphics

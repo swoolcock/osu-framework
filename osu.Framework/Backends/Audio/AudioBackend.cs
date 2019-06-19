@@ -11,12 +11,12 @@ using osu.Framework.Audio.Track;
 namespace osu.Framework.Backends.Audio
 {
     /// <summary>
-    /// Abstract implementation of <see cref="IAudioBackend"/> that will provide any base functionality required
+    /// Abstract implementation of <see cref="IAudio"/> that will provide any base functionality required
     /// by backend subclasses that should not be exposed via the interface.
     /// </summary>
     public abstract class AudioBackend : IAudio
     {
-        #region IAudioBackend
+        #region IAudio
 
         public abstract void Initialise(IBackendProvider provider);
 

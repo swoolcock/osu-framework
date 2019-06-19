@@ -12,7 +12,7 @@ namespace osu.Framework.Backends
     public interface IBackend : IDisposable
     {
         /// <summary>
-        /// Performs initialisation of the driver. Drivers provided by the passed <see cref="IBackendProvider"/>
+        /// Performs initialisation of the backend. Backends provided by the passed <see cref="IBackendProvider"/>
         /// will never be null, but there is no guarantee they have been <see cref="Initialise"/>d.
         /// </summary>
         /// <param name="provider">Provides uninitialised backends.</param>

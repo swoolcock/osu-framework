@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
@@ -16,6 +17,7 @@ using osu.Framework.Backends.Window;
 using osu.Framework.Bindables;
 using osu.Framework.Development;
 using osu.Framework.Extensions.IEnumerableExtensions;
+using osu.Framework.IO.File;
 using osu.Framework.Logging;
 using osu.Framework.Statistics;
 using osu.Framework.Threading;
@@ -134,6 +136,9 @@ namespace osu.Framework.Platform
 
             try
             {
+                AppDomain.CurrentDomain.UnhandledException += unhandledExceptionHandler;
+                TaskScheduler.UnobservedTaskException += unobservedExceptionHandler;
+
                 CreateBackends();
 
                 RegisterThread(DrawThread = new DrawThread(DrawFrame)
@@ -150,7 +155,33 @@ namespace osu.Framework.Platform
                 RegisterThread(InputThread = new InputThread());
                 RegisterThread(AudioThread = new AudioThread());
 
+                Trace.Listeners.Clear();
+                Trace.Listeners.Add(new ThrowingTraceListener());
+
+                FileSafety.DeleteCleanupDirectory();
+
+                var assembly = DebugUtils.GetEntryAssembly();
+                string assemblyPath = DebugUtils.GetEntryPath();
+
+                Logger.GameIdentifier = Name;
+                Logger.VersionIdentifier = assembly.GetName().Version.ToString();
+
+                if (assemblyPath != null)
+                    Environment.CurrentDirectory = assemblyPath;
+
                 Dependencies.CacheAs<IGameHost>(this);
+                Dependencies.CacheAs(Window);
+                Dependencies.CacheAs(Input);
+                Dependencies.CacheAs(Graphics);
+                Dependencies.CacheAs(Audio);
+                Dependencies.CacheAs(Video);
+                Dependencies.CacheAs(Storage);
+
+                // TODO: SetupForRun();
+
+                ExecutionState = ExecutionState.Running;
+
+                // TODO: SetupConfig(game.GetFrameworkConfigDefaults());
             }
             finally
             {

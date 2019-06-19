@@ -8,7 +8,7 @@ using osu.Framework.Input.Handlers;
 namespace osu.Framework.Backends.Input
 {
     /// <summary>
-    /// Abstract implementation of <see cref="IInputBackend"/> that will provide any base functionality required
+    /// Abstract implementation of <see cref="IInput"/> that will provide any base functionality required
     /// by backend subclasses that should not be exposed via the interface.
     /// </summary>
     public abstract class InputBackend : IInput

@@ -8,7 +8,7 @@ using osu.Framework.Graphics.Video;
 namespace osu.Framework.Backends.Video
 {
     /// <summary>
-    /// Abstract implementation of <see cref="IVideoBackend"/> that will provide any base functionality required
+    /// Abstract implementation of <see cref="IVideo"/> that will provide any base functionality required
     /// by backend subclasses that should not be exposed via the interface.
     /// </summary>
     public abstract class VideoBackend : IVideo
