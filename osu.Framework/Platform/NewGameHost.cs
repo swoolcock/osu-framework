@@ -33,6 +33,10 @@ namespace osu.Framework.Platform
 
         #region Events
 
+        public event Action Activated;
+
+        public event Action Deactivated;
+
         public event Func<bool> ExitRequested;
 
         public event Action Exited;
@@ -43,11 +47,21 @@ namespace osu.Framework.Platform
 
         #region Event Invocation
 
+        protected virtual void OnActivated() => UpdateThread.Scheduler.Add(() => Activated?.Invoke());
+
+        protected virtual void OnDeactivated() => UpdateThread.Scheduler.Add(() => Deactivated?.Invoke());
+
         protected virtual bool OnExitRequested() => ExitRequested?.Invoke() ?? false;
 
         protected virtual void OnExited() => Exited?.Invoke();
 
         protected virtual bool OnExceptionThrown(Exception exception) => ExceptionThrown?.Invoke(exception) ?? false;
+
+        #endregion
+
+        #region Properties
+
+        public string Name { get; }
 
         #endregion
 
@@ -59,17 +73,14 @@ namespace osu.Framework.Platform
 
         #endregion
 
+        #region Backend Creation
+
         protected abstract IWindow CreateWindow();
         protected abstract IInput CreateInput();
         protected abstract IGraphics CreateGraphics();
         protected abstract IAudio CreateAudio();
         protected abstract IVideo CreateVideo();
         protected abstract IStorage CreateStorage();
-
-        protected NewGameHost()
-        {
-            CreateBackends();
-        }
 
         /// <summary>
         /// Creates and initialises the backends for this <see cref="IGameHost"/>, and connects any events and bindables.
@@ -97,9 +108,47 @@ namespace osu.Framework.Platform
             Window.Closed += OnExited;
         }
 
+        #endregion
+
+        protected NewGameHost(string gameName = @"")
+        {
+            Name = gameName;
+        }
+
         #region Execution
 
         public void Run(Game game)
+        {
+            CreateBackends();
+
+            RegisterThread(DrawThread = new DrawThread(DrawFrame)
+            {
+                OnThreadStart = DrawInitialize,
+            });
+
+            RegisterThread(UpdateThread = new UpdateThread(UpdateFrame)
+            {
+                OnThreadStart = UpdateInitialize,
+                Monitor = { HandleGC = true },
+            });
+
+            RegisterThread(InputThread = new InputThread());
+            RegisterThread(AudioThread = new AudioThread());
+        }
+
+        protected virtual void UpdateInitialize()
+        {
+        }
+
+        protected virtual void UpdateFrame()
+        {
+        }
+
+        protected virtual void DrawInitialize()
+        {
+        }
+
+        protected virtual void DrawFrame()
         {
         }
 
@@ -210,6 +259,9 @@ namespace osu.Framework.Platform
             {
                 if (disposing)
                 {
+                    inputMonitor?.Dispose();
+                    drawMonitor?.Dispose();
+
                     Storage?.Dispose();
                     Video?.Dispose();
                     Audio?.Dispose();

@@ -5,6 +5,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using osu.Framework.Backends;
+using osu.Framework.Backends.Window;
 using osu.Framework.Bindables;
 using osu.Framework.Threading;
 
@@ -13,6 +14,16 @@ namespace osu.Framework.Platform
     public interface IGameHost : IBackendProvider, IDisposable
     {
         #region Events
+
+        /// <summary>
+        /// Invoked when the game window is activated. Always invoked from the update thread.
+        /// </summary>
+        event Action Activated;
+
+        /// <summary>
+        /// Invoked when the game window is deactivated. Always invoked from the update thread.
+        /// </summary>
+        event Action Deactivated;
 
         event Func<bool> ExitRequested;
         event Action Exited;
@@ -24,8 +35,17 @@ namespace osu.Framework.Platform
 
         #endregion
 
+        #region Properties
+
+        string Name { get; }
+
+        #endregion
+
         #region Bindables
 
+        /// <summary>
+        /// Whether the <see cref="IWindow"/> is active (in the foreground).
+        /// </summary>
         IBindable<bool> IsActive { get; }
 
         #endregion
