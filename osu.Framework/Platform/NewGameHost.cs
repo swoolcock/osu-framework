@@ -5,9 +5,11 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Drawing;
 using System.Linq;
 using System.Runtime;
 using System.Runtime.ExceptionServices;
+using System.Threading;
 using System.Threading.Tasks;
 using osu.Framework.Allocation;
 using osu.Framework.Backends.Audio;
@@ -20,7 +22,9 @@ using osu.Framework.Bindables;
 using osu.Framework.Configuration;
 using osu.Framework.Development;
 using osu.Framework.Extensions.IEnumerableExtensions;
+using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.OpenGL;
 using osu.Framework.Input;
 using osu.Framework.IO.File;
 using osu.Framework.Logging;
@@ -28,6 +32,7 @@ using osu.Framework.Statistics;
 using osu.Framework.Threading;
 using osu.Framework.Timing;
 using osuTK;
+using osuTK.Graphics.ES30;
 
 namespace osu.Framework.Platform
 {
@@ -146,12 +151,17 @@ namespace osu.Framework.Platform
 
         public DependencyContainer Dependencies { get; } = new DependencyContainer();
 
+        protected TripleBuffer<DrawNode> DrawRoots = new TripleBuffer<DrawNode>();
+
         /// <summary>
         /// The clock which is to be used by the scene graph (will be assigned to <see cref="Root"/>).
         /// </summary>
         protected virtual IFrameBasedClock SceneGraphClock => UpdateThread.Clock;
 
         protected Container Root;
+
+        private ulong frameCount;
+        private long lastDrawFrameId;
 
         public void Run(Game game)
         {
@@ -288,20 +298,134 @@ namespace osu.Framework.Platform
             ExecutionState = ExecutionState.Stopped;
         }
 
+        private void setVSyncMode()
+        {
+            if (Window == null) return;
+
+            // TODO: DrawThread.Scheduler.Add(() => Window.VSync = frameSyncMode.Value == FrameSync.VSync ? VSyncMode.On : VSyncMode.Off);
+        }
+
         protected virtual void UpdateInitialize()
         {
+            // TODO: probably don't need this any more?
+            //this was added due to the dependency on GLWrapper.MaxTextureSize begin initialised.
+            DrawThread.WaitUntilInitialized();
         }
 
         protected virtual void UpdateFrame()
         {
+            if (Root == null) return;
+
+            frameCount++;
+
+            // if (Window == null)
+            // {
+            //     var windowedSize = Config.Get<Size>(FrameworkSetting.WindowedSize);
+            //     Root.Size = new Vector2(windowedSize.Width, windowedSize.Height);
+            // }
+            // else if (Window.WindowState != WindowState.Minimized)
+            //     Root.Size = new Vector2(Window.ClientSize.Width, Window.ClientSize.Height);
+            var internalSize = Window.InternalSize.Value;
+            Root.Size = new Vector2(internalSize.Width, internalSize.Height);
+
+            // Ensure we maintain a valid size for any children immediately scaling by the window size
+            Root.Size = Vector2.ComponentMax(Vector2.One, Root.Size);
+
+            try
+            {
+                Root.UpdateSubTree();
+            }
+            catch (DependencyInjectionException die)
+            {
+                die.DispatchInfo.Throw();
+            }
+
+            Root.UpdateSubTreeMasking(Root, Root.ScreenSpaceDrawQuad.AABBFloat);
+
+            using (var buffer = DrawRoots.Get(UsageType.Write))
+                buffer.Object = Root.GenerateDrawNodeSubtree(frameCount, buffer.Index, false);
         }
 
         protected virtual void DrawInitialize()
         {
+            // TODO: use backends
+
+            if (!(Window is OsuTKWindowBackend window))
+                return;
+
+            window.Implementation.MakeCurrent();
+            // TODO: GLWrapper.Initialize(this);
+
+            setVSyncMode();
+
+            GLWrapper.Reset(new Vector2(Window.InternalSize.Value.Width, Window.InternalSize.Value.Height));
         }
 
         protected virtual void DrawFrame()
         {
+            if (Root == null)
+                return;
+
+            // TODO: use backends
+            while (ExecutionState > ExecutionState.Stopping)
+            {
+                using (var buffer = DrawRoots.Get(UsageType.Read))
+                {
+                    if (buffer?.Object == null || buffer.FrameId == lastDrawFrameId)
+                    {
+                        using (drawMonitor.BeginCollecting(PerformanceCollectionType.Sleep))
+                            Thread.Sleep(1);
+                        continue;
+                    }
+
+                    using (drawMonitor.BeginCollecting(PerformanceCollectionType.GLReset))
+                        GLWrapper.Reset(new Vector2(Window.InternalSize.Value.Width, Window.InternalSize.Value.Height));
+
+                    if (!bypassFrontToBackPass.Value)
+                    {
+                        var depthValue = new DepthValue();
+
+                        GLWrapper.PushDepthInfo(DepthInfo.Default);
+
+                        // Front pass
+                        buffer.Object.DrawOpaqueInteriorSubTree(depthValue, null);
+
+                        GLWrapper.PopDepthInfo();
+
+                        // The back pass doesn't write depth, but needs to depth test properly
+                        GLWrapper.PushDepthInfo(new DepthInfo(true, false));
+                    }
+                    else
+                    {
+                        // Disable depth testing
+                        GLWrapper.PushDepthInfo(new DepthInfo());
+                    }
+
+                    // Back pass
+                    buffer.Object.Draw(null);
+
+                    GLWrapper.PopDepthInfo();
+
+                    lastDrawFrameId = buffer.FrameId;
+                    break;
+                }
+            }
+
+            GLWrapper.FlushCurrentBatch();
+
+            using (drawMonitor.BeginCollecting(PerformanceCollectionType.SwapBuffer))
+            {
+                // TODO: use backends
+                if (Window is OsuTKWindowBackend window)
+                {
+                    window.Implementation.SwapBuffers();
+
+                    // if (window.Implementation.VSync == VSyncMode.On)
+                    //     // without glFinish, vsync is basically unplayable due to the extra latency introduced.
+                    //     // we will likely want to give the user control over this in the future as an advanced setting.
+                    GL.Finish();
+                }
+            }
         }
 
         private void bootstrapSceneGraph(Game game)
