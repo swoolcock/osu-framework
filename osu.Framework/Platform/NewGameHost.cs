@@ -293,15 +293,13 @@ namespace osu.Framework.Platform
         {
             // exit() may be called without having been scheduled from Exit(), so ensure the correct exiting state
             ExecutionState = ExecutionState.Stopping;
-            // TODO: Window?.Close();
+            Window.Close();
             stopAllThreads();
             ExecutionState = ExecutionState.Stopped;
         }
 
         private void setVSyncMode()
         {
-            if (Window == null) return;
-
             // TODO: DrawThread.Scheduler.Add(() => Window.VSync = frameSyncMode.Value == FrameSync.VSync ? VSyncMode.On : VSyncMode.Off);
         }
 

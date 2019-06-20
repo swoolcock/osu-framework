@@ -54,5 +54,11 @@ namespace osu.Framework.Backends.Window
         event Action Closed;
 
         #endregion
+
+        #region Methods
+
+        void Close();
+
+        #endregion
     }
 }

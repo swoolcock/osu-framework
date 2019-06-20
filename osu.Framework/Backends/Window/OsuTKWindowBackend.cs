@@ -141,6 +141,12 @@ namespace osu.Framework.Backends.Window
 
         #endregion
 
+        #region Methods
+
+        public override void Close() => Implementation.Close();
+
+        #endregion
+
         #region IDisposable
 
         private bool isDisposed;

@@ -87,6 +87,12 @@ namespace osu.Framework.Backends.Window
 
         #endregion
 
+        #region Methods
+
+        public abstract void Close();
+
+        #endregion
+
         #region IDisposable
 
         private bool isDisposed;
