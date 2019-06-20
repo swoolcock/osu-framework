@@ -2,8 +2,10 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using osu.Framework.Bindables;
+using osu.Framework.Configuration;
 using osu.Framework.Platform;
 using osuTK;
 using osuTK.Graphics;
@@ -49,7 +51,11 @@ namespace osu.Framework.Backends.Window
         {
         }
 
-        public override void Initialise(IBackendProvider provider)
+        public override void Initialise(IGameHost host)
+        {
+        }
+
+        public override void Configure(ConfigManager<FrameworkSetting> config)
         {
         }
 

@@ -2,6 +2,9 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using System.Collections.Generic;
+using osu.Framework.Configuration;
+using osu.Framework.Platform;
 
 namespace osu.Framework.Backends.Storage
 {
@@ -11,7 +14,8 @@ namespace osu.Framework.Backends.Storage
     /// </summary>
     public abstract class StorageBackend : IStorage
     {
-        public abstract void Initialise(IBackendProvider provider);
+        public abstract void Initialise(IGameHost host);
+        public abstract void Configure(ConfigManager<FrameworkSetting> config);
 
         #region IDisposable
 

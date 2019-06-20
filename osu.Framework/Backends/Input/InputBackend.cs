@@ -3,7 +3,9 @@
 
 using System;
 using System.Collections.Generic;
+using osu.Framework.Configuration;
 using osu.Framework.Input.Handlers;
+using osu.Framework.Platform;
 
 namespace osu.Framework.Backends.Input
 {
@@ -41,8 +43,9 @@ namespace osu.Framework.Backends.Input
         #endregion
 
         public abstract IEnumerable<InputHandler> CreateInputHandlers();
+        public abstract void Configure(ConfigManager<FrameworkSetting> config);
 
-        public abstract void Initialise(IBackendProvider provider);
+        public abstract void Initialise(IGameHost host);
 
         #region IDisposable
 

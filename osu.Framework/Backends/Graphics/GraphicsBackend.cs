@@ -2,6 +2,9 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using System.Collections.Generic;
+using osu.Framework.Configuration;
+using osu.Framework.Platform;
 
 namespace osu.Framework.Backends.Graphics
 {
@@ -11,7 +14,8 @@ namespace osu.Framework.Backends.Graphics
     /// </summary>
     public abstract class GraphicsBackend : IGraphics
     {
-        public abstract void Initialise(IBackendProvider provider);
+        public abstract void Initialise(IGameHost host);
+        public abstract void Configure(ConfigManager<FrameworkSetting> config);
 
         #region IDisposable
 

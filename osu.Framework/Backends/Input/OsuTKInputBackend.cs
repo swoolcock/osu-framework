@@ -5,18 +5,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using osu.Framework.Backends.Window;
+using osu.Framework.Configuration;
 using osu.Framework.Input.Handlers;
 using osu.Framework.Input.Handlers.Joystick;
 using osu.Framework.Input.Handlers.Keyboard;
 using osu.Framework.Input.Handlers.Mouse;
+using osu.Framework.Platform;
 
 namespace osu.Framework.Backends.Input
 {
     public class OsuTKInputBackend : InputBackend
     {
-        public override void Initialise(IBackendProvider provider)
+        public override void Initialise(IGameHost host)
         {
-            if (!(provider.Window is OsuTKWindowBackend window))
+            if (!(host.Window is OsuTKWindowBackend window))
                 throw new Exception($"{nameof(OsuTKInputBackend)} requires a corresponding {nameof(OsuTKWindowBackend)}");
 
             // osuTK input events are triggered through the osuTK.GameWindow implementation
@@ -26,6 +28,10 @@ namespace osu.Framework.Backends.Input
             window.Implementation.MouseDown += (sender, e) => OnMouseDown();
             window.Implementation.MouseUp += (sender, e) => OnMouseUp();
             window.Implementation.MouseMove += (sender, e) => OnMouseMove();
+        }
+
+        public override void Configure(ConfigManager<FrameworkSetting> config)
+        {
         }
 
         public override IEnumerable<InputHandler> CreateInputHandlers()

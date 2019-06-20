@@ -2,8 +2,11 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using System.Collections.Generic;
 using System.IO;
+using osu.Framework.Configuration;
 using osu.Framework.Graphics.Video;
+using osu.Framework.Platform;
 
 namespace osu.Framework.Backends.Video
 {
@@ -13,7 +16,8 @@ namespace osu.Framework.Backends.Video
     /// </summary>
     public abstract class VideoBackend : IVideo
     {
-        public abstract void Initialise(IBackendProvider provider);
+        public abstract void Initialise(IGameHost host);
+        public abstract void Configure(ConfigManager<FrameworkSetting> config);
 
         public abstract VideoDecoder CreateVideoDecoder(Stream stream);
 

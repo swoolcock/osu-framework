@@ -2,9 +2,12 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using osu.Framework.Backends.Window;
+using osu.Framework.Configuration;
 using osu.Framework.Logging;
+using osu.Framework.Platform;
 using osuTK.Graphics;
 using osuTK.Graphics.ES30;
 
@@ -23,9 +26,9 @@ namespace osu.Framework.Backends.Graphics
 
         internal bool IsEmbedded { get; private set; }
 
-        public override void Initialise(IBackendProvider provider)
+        public override void Initialise(IGameHost host)
         {
-            if (!(provider.Window is OsuTKWindowBackend window))
+            if (!(host.Window is OsuTKWindowBackend window))
                 throw new Exception($"{nameof(OsuTKGraphicsBackend)} requires a corresponding {nameof(OsuTKWindowBackend)}");
 
             if (window.Implementation is osuTK.GameWindow impl)
@@ -66,6 +69,10 @@ namespace osu.Framework.Backends.Graphics
                         GL Extensions:              {GL.GetString(StringName.Extensions)}");
 
             window.Implementation.MakeCurrent();
+        }
+
+        public override void Configure(ConfigManager<FrameworkSetting> config)
+        {
         }
 
         private string getVersionNumberSubstring(string version)

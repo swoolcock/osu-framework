@@ -2,8 +2,10 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using osu.Framework.Bindables;
+using osu.Framework.Configuration;
 using osu.Framework.Platform;
 using osuTK;
 
@@ -15,7 +17,8 @@ namespace osu.Framework.Backends.Window
     /// </summary>
     public abstract class WindowBackend : IWindow
     {
-        public abstract void Initialise(IBackendProvider provider);
+        public abstract void Initialise(IGameHost host);
+        public abstract void Configure(ConfigManager<FrameworkSetting> config);
 
         #region Read-only Bindables
 

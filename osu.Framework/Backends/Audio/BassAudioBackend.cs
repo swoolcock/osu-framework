@@ -3,16 +3,23 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using osu.Framework.Audio.Sample;
 using osu.Framework.Audio.Track;
+using osu.Framework.Configuration;
+using osu.Framework.Platform;
 
 namespace osu.Framework.Backends.Audio
 {
     public class BassAudioBackend : AudioBackend
     {
-        public override void Initialise(IBackendProvider provider)
+        public override void Initialise(IGameHost host)
+        {
+        }
+
+        public override void Configure(ConfigManager<FrameworkSetting> config)
         {
         }
 

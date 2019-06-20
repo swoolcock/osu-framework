@@ -3,10 +3,13 @@
 
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using osu.Framework.Audio.Sample;
 using osu.Framework.Audio.Track;
+using osu.Framework.Configuration;
+using osu.Framework.Platform;
 
 namespace osu.Framework.Backends.Audio
 {
@@ -18,7 +21,8 @@ namespace osu.Framework.Backends.Audio
     {
         #region IAudio
 
-        public abstract void Initialise(IBackendProvider provider);
+        public abstract void Initialise(IGameHost host);
+        public abstract void Configure(ConfigManager<FrameworkSetting> config);
 
         public abstract Track CreateTrack(Stream data, bool quick);
 

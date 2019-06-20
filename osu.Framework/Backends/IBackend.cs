@@ -2,6 +2,9 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using System.Collections.Generic;
+using osu.Framework.Configuration;
+using osu.Framework.Platform;
 
 namespace osu.Framework.Backends
 {
@@ -12,10 +15,16 @@ namespace osu.Framework.Backends
     public interface IBackend : IDisposable
     {
         /// <summary>
-        /// Performs initialisation of the backend. Backends provided by the passed <see cref="IBackendProvider"/>
+        /// Performs initialisation of the backend. Backends provided by the passed <see cref="IGameHost"/>
         /// will never be null, but there is no guarantee they have been <see cref="Initialise"/>d.
         /// </summary>
-        /// <param name="provider">Provides uninitialised backends.</param>
-        void Initialise(IBackendProvider provider);
+        /// <param name="host">The calling <see cref="IGameHost"/>.</param>
+        void Initialise(IGameHost host);
+
+        /// <summary>
+        /// Configures the backend based on the passed framework configuration.
+        /// </summary>
+        /// <param name="config">The framework <see cref="ConfigManager{FrameworkSetting}"/>.</param>
+        void Configure(ConfigManager<FrameworkSetting> config);
     }
 }
