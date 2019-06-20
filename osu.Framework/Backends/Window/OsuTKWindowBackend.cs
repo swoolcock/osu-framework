@@ -27,6 +27,13 @@ namespace osu.Framework.Backends.Window
 
         #endregion
 
+        protected override IEnumerable<WindowMode> DefaultSupportedWindowModes => new[]
+        {
+            Configuration.WindowMode.Windowed,
+            Configuration.WindowMode.Borderless,
+            Configuration.WindowMode.Fullscreen,
+        };
+
         public OsuTKWindowBackend(IGameWindow implementation)
         {
             Implementation = implementation;

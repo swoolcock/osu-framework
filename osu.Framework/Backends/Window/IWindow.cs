@@ -4,6 +4,7 @@
 using System;
 using System.Drawing;
 using osu.Framework.Bindables;
+using osu.Framework.Configuration;
 using osu.Framework.Platform;
 using osuTK;
 
@@ -17,6 +18,8 @@ namespace osu.Framework.Backends.Window
 
         IBindable<bool> CursorInWindow { get; }
 
+        IBindableList<WindowMode> SupportedWindowModes { get; }
+
         #endregion
 
         #region Mutable Bindables
@@ -29,6 +32,8 @@ namespace osu.Framework.Backends.Window
 
         // NOTE: this will use our own WindowState enum in future
         Bindable<WindowState> WindowState { get; }
+
+        Bindable<WindowMode> WindowMode { get; }
 
         Bindable<string> Title { get; }
 

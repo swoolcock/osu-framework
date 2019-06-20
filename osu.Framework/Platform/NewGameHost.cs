@@ -484,7 +484,7 @@ namespace osu.Framework.Platform
         {
             var hostDefaults = new Dictionary<FrameworkSetting, object>
             {
-                // TODO: { FrameworkSetting.WindowMode, Window?.DefaultWindowMode ?? WindowMode.Windowed }
+                { FrameworkSetting.WindowMode, Window.WindowMode.Default }
             };
 
             // merge defaults provided by game into host defaults.
@@ -501,11 +501,8 @@ namespace osu.Framework.Platform
 
             windowMode.BindValueChanged(mode =>
             {
-                if (Window == null)
-                    return;
-
-                // TODO: if (!Window.SupportedWindowModes.Contains(mode.NewValue))
-                //     windowMode.Value = Window.DefaultWindowMode;
+                if (!Window.SupportedWindowModes.Contains(mode.NewValue))
+                    windowMode.SetDefault();
             }, true);
 
             activeGCMode = DebugConfig.GetBindable<GCLatencyMode>(DebugSetting.ActiveGCMode);

@@ -2,8 +2,10 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using osu.Framework.Bindables;
 using osu.Framework.Configuration;
 using osu.Framework.Platform;
@@ -26,6 +28,9 @@ namespace osu.Framework.Backends.Window
 
         public abstract IBindable<bool> CursorInWindow { get; }
 
+        private readonly BindableList<WindowMode> supportedWindowModes = new BindableList<WindowMode>();
+        public virtual IBindableList<WindowMode> SupportedWindowModes => supportedWindowModes;
+
         #endregion
 
         #region Mutable Bindables
@@ -38,9 +43,26 @@ namespace osu.Framework.Backends.Window
 
         public virtual Bindable<WindowState> WindowState { get; } = new Bindable<WindowState>();
 
+        public virtual Bindable<WindowMode> WindowMode { get; } = new Bindable<WindowMode>();
+
         public virtual Bindable<string> Title { get; } = new Bindable<string>();
 
         #endregion
+
+        #region Defaults
+
+        protected abstract IEnumerable<WindowMode> DefaultSupportedWindowModes { get; }
+
+        protected virtual WindowMode DefaultWindowMode => SupportedWindowModes.First();
+
+        #endregion
+
+        protected WindowBackend()
+        {
+            supportedWindowModes.AddRange(DefaultSupportedWindowModes);
+            WindowMode.Default = DefaultWindowMode;
+            WindowMode.SetDefault();
+        }
 
         #region Properties
 
