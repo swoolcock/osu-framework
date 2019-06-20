@@ -2,9 +2,11 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime;
 using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
 using osu.Framework.Allocation;
@@ -15,12 +17,17 @@ using osu.Framework.Backends.Storage;
 using osu.Framework.Backends.Video;
 using osu.Framework.Backends.Window;
 using osu.Framework.Bindables;
+using osu.Framework.Configuration;
 using osu.Framework.Development;
 using osu.Framework.Extensions.IEnumerableExtensions;
+using osu.Framework.Graphics.Containers;
+using osu.Framework.Input;
 using osu.Framework.IO.File;
 using osu.Framework.Logging;
 using osu.Framework.Statistics;
 using osu.Framework.Threading;
+using osu.Framework.Timing;
+using osuTK;
 
 namespace osu.Framework.Platform
 {
@@ -75,8 +82,6 @@ namespace osu.Framework.Platform
 
         public IBindable<bool> IsActive { get; } = new Bindable<bool>(true);
 
-        private readonly Bindable<bool> performanceLogging = new Bindable<bool>();
-
         #endregion
 
         #region Backend Creation
@@ -93,22 +98,36 @@ namespace osu.Framework.Platform
         /// </summary>
         protected virtual void CreateBackends()
         {
-            // create backends from virtual methods
             Window = CreateWindow();
             Input = CreateInput();
             Graphics = CreateGraphics();
             Audio = CreateAudio();
             Video = CreateVideo();
-            Storage = CreateStorage();
+            // Storage = CreateStorage();
+        }
 
-            // initialise backends
+        protected virtual void InitialiseBackends()
+        {
             Window.Initialise(this);
             Input.Initialise(this);
             Graphics.Initialise(this);
             Audio.Initialise(this);
             Video.Initialise(this);
-            Storage.Initialise(this);
+            // Storage.Initialise(this);
+        }
 
+        protected virtual void ConfigureBackends(ConfigManager<FrameworkSetting> config)
+        {
+            Window.Configure(config);
+            Input.Configure(config);
+            Graphics.Configure(config);
+            Audio.Configure(config);
+            Video.Configure(config);
+            // Storage.Configure(config);
+        }
+
+        private void connectBackends()
+        {
             // connect backend events to gamehost
             Window.CloseRequested += OnExitRequested;
             Window.Closed += OnExited;
@@ -127,6 +146,13 @@ namespace osu.Framework.Platform
 
         public DependencyContainer Dependencies { get; } = new DependencyContainer();
 
+        /// <summary>
+        /// The clock which is to be used by the scene graph (will be assigned to <see cref="Root"/>).
+        /// </summary>
+        protected virtual IFrameBasedClock SceneGraphClock => UpdateThread.Clock;
+
+        protected Container Root;
+
         public void Run(Game game)
         {
             DebugUtils.HostAssembly = game.GetType().Assembly;
@@ -140,6 +166,7 @@ namespace osu.Framework.Platform
                 TaskScheduler.UnobservedTaskException += unobservedExceptionHandler;
 
                 CreateBackends();
+                InitialiseBackends();
 
                 RegisterThread(DrawThread = new DrawThread(DrawFrame)
                 {
@@ -175,13 +202,52 @@ namespace osu.Framework.Platform
                 Dependencies.CacheAs(Graphics);
                 Dependencies.CacheAs(Audio);
                 Dependencies.CacheAs(Video);
-                Dependencies.CacheAs(Storage);
+                // Dependencies.CacheAs(Storage);
 
                 // TODO: SetupForRun();
 
                 ExecutionState = ExecutionState.Running;
 
-                // TODO: SetupConfig(game.GetFrameworkConfigDefaults());
+                SetupConfig(game.GetFrameworkConfigDefaults());
+                ConfigureBackends(Config);
+
+                connectBackends();
+
+                Window.Title.Value = $@"osu!framework (running ""{Name}"")";
+                // IsActive.BindTo(Window.IsActive);
+
+                // TODO: resetInputHandlers();
+
+                foreach (var t in threads)
+                    t.Start();
+
+                DrawThread.WaitUntilInitialized();
+                bootstrapSceneGraph(game);
+
+                try
+                {
+                    if (Window is OsuTKWindowBackend window)
+                    {
+                        window.Implementation.UpdateFrame += delegate
+                        {
+                            inputPerformanceCollectionPeriod?.Dispose();
+                            InputThread.RunUpdate();
+                            inputPerformanceCollectionPeriod = inputMonitor.BeginCollecting(PerformanceCollectionType.WndProc);
+                        };
+
+                        window.Implementation.Closed += delegate
+                        {
+                            //we need to ensure all threads have stopped before the window is closed (mainly the draw thread
+                            //to avoid GL operations running post-cleanup).
+                            stopAllThreads();
+                        };
+
+                        window.Implementation.Run();
+                    }
+                }
+                catch (OutOfMemoryException)
+                {
+                }
             }
             finally
             {
@@ -236,6 +302,164 @@ namespace osu.Framework.Platform
 
         protected virtual void DrawFrame()
         {
+        }
+
+        private void bootstrapSceneGraph(Game game)
+        {
+            var root = game.CreateUserInputManager();
+            root.Child = new PlatformActionContainer
+            {
+                Child = new FrameworkActionContainer
+                {
+                    Child = game
+                }
+            };
+
+            Dependencies.Cache(root);
+            Dependencies.CacheAs(game);
+
+            // TODO: game.SetHost(this);
+
+            try
+            {
+                root.Load(SceneGraphClock, Dependencies);
+            }
+            catch (DependencyInjectionException die)
+            {
+                die.DispatchInfo.Throw();
+            }
+
+            //publish bootstrapped scene graph to all threads.
+            Root = root;
+        }
+
+        #endregion
+
+        #region Config
+
+        protected FrameworkDebugConfigManager DebugConfig { get; private set; }
+
+        protected FrameworkConfigManager Config { get; private set; }
+
+        private InvokeOnDisposal inputPerformanceCollectionPeriod;
+
+        private Bindable<bool> bypassFrontToBackPass;
+
+        private Bindable<GCLatencyMode> activeGCMode;
+
+        private Bindable<FrameSync> frameSyncMode;
+
+        private Bindable<string> ignoredInputHandlers;
+
+        private Bindable<double> cursorSensitivity;
+        private readonly Bindable<bool> performanceLogging = new Bindable<bool>();
+
+        private Bindable<WindowMode> windowMode;
+
+        protected virtual void SetupConfig(IDictionary<FrameworkSetting, object> gameDefaults)
+        {
+            var hostDefaults = new Dictionary<FrameworkSetting, object>
+            {
+                // TODO: { FrameworkSetting.WindowMode, Window?.DefaultWindowMode ?? WindowMode.Windowed }
+            };
+
+            // merge defaults provided by game into host defaults.
+            if (gameDefaults != null)
+            {
+                foreach (var d in gameDefaults)
+                    hostDefaults[d.Key] = d.Value;
+            }
+
+            Dependencies.Cache(DebugConfig = new FrameworkDebugConfigManager());
+            // TODO: Dependencies.Cache(Config = new FrameworkConfigManager(Storage, hostDefaults));
+
+            windowMode = Config.GetBindable<WindowMode>(FrameworkSetting.WindowMode);
+
+            windowMode.BindValueChanged(mode =>
+            {
+                if (Window == null)
+                    return;
+
+                // TODO: if (!Window.SupportedWindowModes.Contains(mode.NewValue))
+                //     windowMode.Value = Window.DefaultWindowMode;
+            }, true);
+
+            activeGCMode = DebugConfig.GetBindable<GCLatencyMode>(DebugSetting.ActiveGCMode);
+            activeGCMode.ValueChanged += e => { GCSettings.LatencyMode = IsActive.Value ? e.NewValue : GCLatencyMode.Interactive; };
+
+            frameSyncMode = Config.GetBindable<FrameSync>(FrameworkSetting.FrameSync);
+            frameSyncMode.ValueChanged += e =>
+            {
+                float refreshRate = 0; // TODO: DisplayDevice.Default?.RefreshRate ?? 0;
+                // For invalid refresh rates let's assume 60 Hz as it is most common.
+                if (refreshRate <= 0)
+                    refreshRate = 60;
+
+                float drawLimiter = refreshRate;
+                float updateLimiter = drawLimiter * 2;
+
+                // TODO: setVSyncMode();
+
+                switch (e.NewValue)
+                {
+                    case FrameSync.VSync:
+                        drawLimiter = int.MaxValue;
+                        updateLimiter *= 2;
+                        break;
+
+                    case FrameSync.Limit2x:
+                        drawLimiter *= 2;
+                        updateLimiter *= 2;
+                        break;
+
+                    case FrameSync.Limit4x:
+                        drawLimiter *= 4;
+                        updateLimiter *= 4;
+                        break;
+
+                    case FrameSync.Limit8x:
+                        drawLimiter *= 8;
+                        updateLimiter *= 8;
+                        break;
+
+                    case FrameSync.Unlimited:
+                        drawLimiter = updateLimiter = int.MaxValue;
+                        break;
+                }
+
+                if (DrawThread != null) DrawThread.ActiveHz = drawLimiter;
+                if (UpdateThread != null) UpdateThread.ActiveHz = updateLimiter;
+            };
+
+            ignoredInputHandlers = Config.GetBindable<string>(FrameworkSetting.IgnoredInputHandlers);
+            ignoredInputHandlers.ValueChanged += e =>
+            {
+                var configIgnores = e.NewValue.Split(' ').Where(s => !string.IsNullOrWhiteSpace(s));
+
+                // for now, we always want at least one handler disabled (don't want raw and non-raw mouse at once).
+                bool restoreDefaults = !configIgnores.Any();
+
+                if (restoreDefaults)
+                {
+                    // TODO: resetInputHandlers();
+                    // TODO: ignoredInputHandlers.Value = string.Join(" ", AvailableInputHandlers.Where(h => !h.Enabled.Value).Select(h => h.ToString()));
+                }
+                else
+                {
+                    // TODO: foreach (var handler in AvailableInputHandlers)
+                    // {
+                    //     var handlerType = handler.ToString();
+                    //     handler.Enabled.Value = configIgnores.All(ch => ch != handlerType);
+                    // }
+                }
+            };
+
+            cursorSensitivity = Config.GetBindable<double>(FrameworkSetting.CursorSensitivity);
+
+            Config.BindWith(FrameworkSetting.PerformanceLogging, performanceLogging);
+            performanceLogging.BindValueChanged(logging => threads.ForEach(t => t.Monitor.EnablePerformanceProfiling = logging.NewValue), true);
+
+            bypassFrontToBackPass = DebugConfig.GetBindable<bool>(DebugSetting.BypassFrontToBackPass);
         }
 
         #endregion
