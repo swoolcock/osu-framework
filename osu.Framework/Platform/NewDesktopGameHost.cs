@@ -5,7 +5,6 @@ using System;
 using osu.Framework.Backends.Audio;
 using osu.Framework.Backends.Graphics;
 using osu.Framework.Backends.Input;
-using osu.Framework.Backends.Storage;
 using osu.Framework.Backends.Video;
 using osu.Framework.Backends.Window;
 
@@ -26,6 +25,6 @@ namespace osu.Framework.Platform
 
         protected override IVideo CreateVideo() => new FfmpegVideoBackend();
 
-        protected override IStorage CreateStorage() => throw new NotImplementedException();
+        public override Storage GetStorage(string baseName) => new DesktopStorage(baseName, this);
     }
 }

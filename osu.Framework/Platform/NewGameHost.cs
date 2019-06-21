@@ -15,7 +15,6 @@ using osu.Framework.Allocation;
 using osu.Framework.Backends.Audio;
 using osu.Framework.Backends.Graphics;
 using osu.Framework.Backends.Input;
-using osu.Framework.Backends.Storage;
 using osu.Framework.Backends.Video;
 using osu.Framework.Backends.Window;
 using osu.Framework.Bindables;
@@ -45,7 +44,6 @@ namespace osu.Framework.Platform
         public IGraphics Graphics { get; private set; }
         public IAudio Audio { get; private set; }
         public IVideo Video { get; private set; }
-        public IStorage Storage { get; private set; }
 
         #endregion
 
@@ -83,6 +81,12 @@ namespace osu.Framework.Platform
 
         #endregion
 
+        public virtual Clipboard GetClipboard() => null;
+
+        public abstract Storage GetStorage(string baseName);
+
+        public Storage Storage { get; protected set; }
+
         #region Bindables
 
         public IBindable<bool> IsActive { get; } = new Bindable<bool>(true);
@@ -96,7 +100,6 @@ namespace osu.Framework.Platform
         protected abstract IGraphics CreateGraphics();
         protected abstract IAudio CreateAudio();
         protected abstract IVideo CreateVideo();
-        protected abstract IStorage CreateStorage();
 
         /// <summary>
         /// Creates and initialises the backends for this <see cref="IGameHost"/>, and connects any events and bindables.
@@ -108,7 +111,6 @@ namespace osu.Framework.Platform
             Graphics = CreateGraphics();
             Audio = CreateAudio();
             Video = CreateVideo();
-            // Storage = CreateStorage();
         }
 
         protected virtual void InitialiseBackends()
@@ -118,7 +120,6 @@ namespace osu.Framework.Platform
             Graphics.Initialise(this);
             Audio.Initialise(this);
             Video.Initialise(this);
-            // Storage.Initialise(this);
         }
 
         protected virtual void ConfigureBackends(ConfigManager<FrameworkSetting> config)
@@ -128,7 +129,6 @@ namespace osu.Framework.Platform
             Graphics.Configure(config);
             Audio.Configure(config);
             Video.Configure(config);
-            // Storage.Configure(config);
         }
 
         private void connectBackends()
@@ -707,7 +707,6 @@ namespace osu.Framework.Platform
                     inputMonitor?.Dispose();
                     drawMonitor?.Dispose();
 
-                    Storage?.Dispose();
                     Video?.Dispose();
                     Audio?.Dispose();
                     Graphics?.Dispose();

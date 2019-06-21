@@ -51,6 +51,12 @@ namespace osu.Framework.Platform
 
         #endregion
 
+        Clipboard GetClipboard();
+
+        Storage GetStorage(string baseName);
+
+        Storage Storage { get; }
+
         #region Execution
 
         ExecutionState ExecutionState { get; }
