@@ -26,5 +26,10 @@ namespace osu.Framework.Platform
         protected override IVideo CreateVideo() => new FfmpegVideoBackend();
 
         public override Storage GetStorage(string baseName) => new DesktopStorage(baseName, this);
+
+        public override void OpenFileExternally(string filename)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

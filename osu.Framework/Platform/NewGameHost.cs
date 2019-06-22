@@ -87,6 +87,10 @@ namespace osu.Framework.Platform
 
         public Storage Storage { get; protected set; }
 
+        public virtual bool IsPortableInstallation { get; }
+
+        public abstract void OpenFileExternally(string filename);
+
         #region Bindables
 
         public IBindable<bool> IsActive { get; } = new Bindable<bool>(true);
@@ -212,7 +216,7 @@ namespace osu.Framework.Platform
                 Dependencies.CacheAs(Graphics);
                 Dependencies.CacheAs(Audio);
                 Dependencies.CacheAs(Video);
-                // Dependencies.CacheAs(Storage);
+                Dependencies.CacheAs(Storage = GetStorage(Name));
 
                 // TODO: SetupForRun();
 
@@ -493,7 +497,7 @@ namespace osu.Framework.Platform
             }
 
             Dependencies.Cache(DebugConfig = new FrameworkDebugConfigManager());
-            // TODO: Dependencies.Cache(Config = new FrameworkConfigManager(Storage, hostDefaults));
+            Dependencies.Cache(Config = new FrameworkConfigManager(Storage, hostDefaults));
 
             windowMode = Config.GetBindable<WindowMode>(FrameworkSetting.WindowMode);
 

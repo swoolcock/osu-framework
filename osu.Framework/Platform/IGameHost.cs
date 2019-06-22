@@ -40,6 +40,8 @@ namespace osu.Framework.Platform
 
         string Name { get; }
 
+        bool IsPortableInstallation { get; }
+
         #endregion
 
         #region Bindables
@@ -56,6 +58,12 @@ namespace osu.Framework.Platform
         Storage GetStorage(string baseName);
 
         Storage Storage { get; }
+
+        /// <summary>
+        /// Requests that a file be opened externally with an associated application, if available.
+        /// </summary>
+        /// <param name="filename">The absolute path to the file which should be opened.</param>
+        void OpenFileExternally(string filename);
 
         #region Execution
 
