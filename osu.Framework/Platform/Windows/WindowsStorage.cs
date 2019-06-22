@@ -9,11 +9,16 @@ namespace osu.Framework.Platform.Windows
 {
     public class WindowsStorage : DesktopStorage
     {
-        public WindowsStorage(string baseName, DesktopGameHost host)
+        public WindowsStorage(string baseName, IGameHost host)
             : base(baseName, host)
         {
             // allows traversal of long directory/filenames beyond the standard limitations (see https://stackoverflow.com/a/5188559)
             BasePath = Regex.Replace(BasePath, @"^([a-zA-Z]):\\", @"\\?\$1:\");
+        }
+
+        public WindowsStorage(string baseName, DesktopGameHost host)
+            : base(baseName, host)
+        {
         }
 
         public override void OpenInNativeExplorer() => Process.Start("explorer.exe", GetFullPath(string.Empty));

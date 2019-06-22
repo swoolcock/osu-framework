@@ -8,7 +8,7 @@ namespace osu.Framework.Platform
 {
     public class DesktopStorage : NativeStorage
     {
-        public DesktopStorage(string baseName, DesktopGameHost host)
+        public DesktopStorage(string baseName, IGameHost host)
             : base(baseName, host)
         {
             if (host.IsPortableInstallation || File.Exists(FrameworkConfigManager.FILENAME))
@@ -16,6 +16,11 @@ namespace osu.Framework.Platform
                 BasePath = "./";
                 BaseName = string.Empty;
             }
+        }
+
+        public DesktopStorage(string baseName, DesktopGameHost host)
+            : base(baseName, host)
+        {
         }
     }
 }

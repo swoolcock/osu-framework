@@ -11,12 +11,18 @@ namespace osu.Framework.Platform
 {
     public class NativeStorage : Storage
     {
-        private readonly GameHost host;
+        private readonly IGameHost host;
+
+        public NativeStorage(string baseName, IGameHost host = null)
+            : base(baseName)
+        {
+            this.host = host;
+        }
 
         public NativeStorage(string baseName, GameHost host = null)
             : base(baseName)
         {
-            this.host = host;
+            // this.host = host;
         }
 
         protected override string LocateBasePath() => @"./"; //use current directory by default
