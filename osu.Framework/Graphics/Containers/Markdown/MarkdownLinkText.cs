@@ -35,7 +35,7 @@ namespace osu.Framework.Graphics.Containers.Markdown
         }
 
         [BackgroundDependencyLoader]
-        private void load(GameHost host)
+        private void load(IGameHost host)
         {
             SpriteText spriteText;
             InternalChildren = new Drawable[]
@@ -44,7 +44,7 @@ namespace osu.Framework.Graphics.Containers.Markdown
                 {
                     AutoSizeAxes = Axes.Both,
                     Child = spriteText = CreateSpriteText(),
-                    Action = () => host.OpenUrlExternally(url)
+                    // TODO: Action = () => host.OpenUrlExternally(url)
                 }
             };
 

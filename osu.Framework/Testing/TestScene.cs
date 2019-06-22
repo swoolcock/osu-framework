@@ -32,14 +32,14 @@ namespace osu.Framework.Testing
 
         protected virtual ITestSceneTestRunner CreateRunner() => new TestSceneTestRunner();
 
-        private GameHost host;
+        private IGameHost host;
         private Task runTask;
         private ITestSceneTestRunner runner;
 
         [OneTimeSetUp]
         public void SetupGameHost()
         {
-            host = new HeadlessGameHost($"{GetType().Name}-{Guid.NewGuid()}", realtime: false);
+            // TODO: host = new HeadlessGameHost($"{GetType().Name}-{Guid.NewGuid()}", realtime: false);
             runner = CreateRunner();
 
             if (!(runner is Game game))
@@ -66,7 +66,7 @@ namespace osu.Framework.Testing
         [OneTimeTearDown]
         public void DestroyGameHost()
         {
-            host.Exit();
+            // TODO: host.Exit();
             runTask.Wait();
             host.Dispose();
 
