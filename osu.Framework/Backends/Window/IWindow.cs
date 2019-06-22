@@ -20,6 +20,8 @@ namespace osu.Framework.Backends.Window
 
         IBindableList<WindowMode> SupportedWindowModes { get; }
 
+        IBindable<bool> Visible { get; }
+
         #endregion
 
         #region Mutable Bindables

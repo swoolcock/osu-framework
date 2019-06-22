@@ -25,6 +25,9 @@ namespace osu.Framework.Backends.Window
         private readonly BindableBool cursorInWindow = new BindableBool();
         public override IBindable<bool> CursorInWindow => cursorInWindow;
 
+        private readonly BindableBool visible = new BindableBool();
+        public override IBindable<bool> Visible => visible;
+
         #endregion
 
         protected override IEnumerable<WindowMode> DefaultSupportedWindowModes => new[]
@@ -46,11 +49,13 @@ namespace osu.Framework.Backends.Window
             Implementation.WindowStateChanged += implementation_WindowStateChanged;
             Implementation.MouseEnter += (sender, e) => cursorInWindow.Value = true;
             Implementation.MouseLeave += (sender, e) => cursorInWindow.Value = false;
+            Implementation.VisibleChanged += implementation_VisibleChanged;
 
             Bounds.ValueChanged += bounds_ValueChanged;
             InternalSize.ValueChanged += internalSize_ValueChanged;
             WindowState.ValueChanged += windowState_ValueChanged;
             CursorState.ValueChanged += cursorState_ValueChanged;
+            Visible.ValueChanged += visible_ValueChanged;
         }
 
         public OsuTKWindowBackend(int width, int height)
@@ -71,6 +76,7 @@ namespace osu.Framework.Backends.Window
         private bool boundsChangingFromEvent;
         private bool boundsChangingFromBindable;
         private bool windowStateChanging;
+        private bool visibleChanging;
 
         private void implementation_MoveResize(object sender, EventArgs evt)
         {
@@ -137,6 +143,26 @@ namespace osu.Framework.Backends.Window
             windowStateChanging = true;
             Implementation.WindowState = evt.NewValue;
             windowStateChanging = false;
+        }
+
+        private void implementation_VisibleChanged(object sender, EventArgs evt)
+        {
+            if (visibleChanging)
+                return;
+
+            visibleChanging = true;
+            visible.Value = Implementation.Visible;
+            visibleChanging = false;
+        }
+
+        private void visible_ValueChanged(ValueChangedEvent<bool> evt)
+        {
+            if (visibleChanging)
+                return;
+
+            visibleChanging = true;
+            Implementation.Visible = evt.NewValue;
+            visibleChanging = false;
         }
 
         #endregion

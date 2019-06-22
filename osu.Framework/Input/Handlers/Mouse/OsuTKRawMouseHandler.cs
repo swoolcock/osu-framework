@@ -48,11 +48,10 @@ namespace osu.Framework.Input.Handlers.Mouse
                 {
                     host.InputThread.Scheduler.Add(scheduled = new ScheduledDelegate(delegate
                     {
-                        // TODO: fixme
-                        // if (!host.Window.Visible || host.Window.WindowState == WindowState.Minimized)
-                        //     return;
+                        if (!host.Window.Visible.Value || host.Window.WindowState.Value == WindowState.Minimized)
+                            return;
 
-                        if ((MouseInWindow || lastEachDeviceStates.Any(s => s != null && s.Buttons.HasAnyButtonPressed)) && true) // TODO: host.Window.Focused)
+                        if ((MouseInWindow || lastEachDeviceStates.Any(s => s != null && s.Buttons.HasAnyButtonPressed)) && host.Window.Focused.Value)
                         {
                             osuTK.Input.Mouse.GetStates(newRawStates);
 

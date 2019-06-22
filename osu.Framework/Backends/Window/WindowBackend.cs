@@ -31,6 +31,8 @@ namespace osu.Framework.Backends.Window
         private readonly BindableList<WindowMode> supportedWindowModes = new BindableList<WindowMode>();
         public virtual IBindableList<WindowMode> SupportedWindowModes => supportedWindowModes;
 
+        public abstract IBindable<bool> Visible { get; }
+
         #endregion
 
         #region Mutable Bindables

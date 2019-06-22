@@ -37,7 +37,7 @@ namespace osu.Framework.Platform
         protected override IWindow CreateWindow() => new OsuTKWindowBackend(default_window_width, default_window_height);
 
         protected DesktopGameHost(string gameName = @"", bool bindIPCPort = false, ToolkitOptions toolkitOptions = default, bool portableInstallation = false)
-            : base(gameName) // TODO:, toolkitOptions)
+            : base(gameName)
         {
             this.bindIPCPort = bindIPCPort;
             IsPortableInstallation = portableInstallation;
