@@ -3,26 +3,32 @@
 
 using System;
 using System.Collections.Generic;
+using osu.Framework.Bindables;
 using osu.Framework.Input.Handlers;
+using osuTK;
+using osuTK.Input;
 
 namespace osu.Framework.Backends.Input
 {
     /// <summary>
     /// Provides input events and instantiates <see cref="InputHandler"/>s for those events.
+    /// Currently uses osuTK's <see cref="KeyboardKeyEventArgs"/> and <see cref="MouseEventArgs"/>.
     /// </summary>
     public interface IInput : IBackend
     {
         #region Events
 
-        event Action KeyDown;
-        event Action KeyUp;
-        event Action KeyPress;
-        event Action MouseDown;
-        event Action MouseUp;
-        event Action MouseMove;
+        event EventHandler<KeyboardKeyEventArgs> KeyDown;
+        event EventHandler<KeyboardKeyEventArgs> KeyUp;
+        event EventHandler<KeyPressEventArgs> KeyPress;
+        event EventHandler<MouseEventArgs> MouseDown;
+        event EventHandler<MouseEventArgs> MouseUp;
+        event EventHandler<MouseEventArgs> MouseMove;
 
         #endregion
 
-        IEnumerable<InputHandler> CreateInputHandlers();
+        IBindableList<InputHandler> AvailableInputHandlers { get; }
+
+        void ResetInputHandlers();
     }
 }

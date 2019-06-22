@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using osu.Framework.Backends.Window;
+using osu.Framework.Bindables;
 using osu.Framework.Configuration;
 using osu.Framework.Input.Handlers;
 using osu.Framework.Input.Handlers.Joystick;
@@ -18,16 +19,18 @@ namespace osu.Framework.Backends.Input
     {
         public override void Initialise(IGameHost host)
         {
+            base.Initialise(host);
+
             if (!(host.Window is OsuTKWindowBackend window))
                 throw new Exception($"{nameof(OsuTKInputBackend)} requires a corresponding {nameof(OsuTKWindowBackend)}");
 
             // osuTK input events are triggered through the osuTK.GameWindow implementation
-            window.Implementation.KeyDown += (sender, e) => OnKeyDown();
-            window.Implementation.KeyUp += (sender, e) => OnKeyUp();
-            window.Implementation.KeyPress += (sender, e) => OnKeyPress();
-            window.Implementation.MouseDown += (sender, e) => OnMouseDown();
-            window.Implementation.MouseUp += (sender, e) => OnMouseUp();
-            window.Implementation.MouseMove += (sender, e) => OnMouseMove();
+            window.Implementation.KeyDown += (sender, e) => OnKeyDown(e);
+            window.Implementation.KeyUp += (sender, e) => OnKeyUp(e);
+            window.Implementation.KeyPress += (sender, e) => OnKeyPress(e);
+            window.Implementation.MouseDown += (sender, e) => OnMouseDown(e);
+            window.Implementation.MouseUp += (sender, e) => OnMouseUp(e);
+            window.Implementation.MouseMove += (sender, e) => OnMouseMove(e);
         }
 
         public override void Configure(ConfigManager<FrameworkSetting> config)

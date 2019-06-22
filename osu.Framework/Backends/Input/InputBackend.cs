@@ -3,9 +3,12 @@
 
 using System;
 using System.Collections.Generic;
+using osu.Framework.Bindables;
 using osu.Framework.Configuration;
 using osu.Framework.Input.Handlers;
 using osu.Framework.Platform;
+using osuTK;
+using osuTK.Input;
 
 namespace osu.Framework.Backends.Input
 {
@@ -17,35 +20,69 @@ namespace osu.Framework.Backends.Input
     {
         #region Events
 
-        public event Action KeyDown;
-        public event Action KeyUp;
-        public event Action KeyPress;
-        public event Action MouseDown;
-        public event Action MouseUp;
-        public event Action MouseMove;
+        public event EventHandler<KeyboardKeyEventArgs> KeyDown;
+        public event EventHandler<KeyboardKeyEventArgs> KeyUp;
+        public event EventHandler<KeyPressEventArgs> KeyPress;
+        public event EventHandler<MouseEventArgs> MouseDown;
+        public event EventHandler<MouseEventArgs> MouseUp;
+        public event EventHandler<MouseEventArgs> MouseMove;
 
         #endregion
 
         #region Event Invocation
 
-        protected virtual void OnKeyDown() => KeyDown?.Invoke();
+        protected virtual void OnKeyDown(KeyboardKeyEventArgs args) => KeyDown?.Invoke(this, args);
 
-        protected virtual void OnKeyUp() => KeyUp?.Invoke();
+        protected virtual void OnKeyUp(KeyboardKeyEventArgs args) => KeyUp?.Invoke(this, args);
 
-        protected virtual void OnKeyPress() => KeyPress?.Invoke();
+        protected virtual void OnKeyPress(KeyPressEventArgs args) => KeyPress?.Invoke(this, args);
 
-        protected virtual void OnMouseDown() => MouseDown?.Invoke();
+        protected virtual void OnMouseDown(MouseEventArgs args) => MouseDown?.Invoke(this, args);
 
-        protected virtual void OnMouseUp() => MouseUp?.Invoke();
+        protected virtual void OnMouseUp(MouseEventArgs args) => MouseUp?.Invoke(this, args);
 
-        protected virtual void OnMouseMove() => MouseMove?.Invoke();
+        protected virtual void OnMouseMove(MouseEventArgs args) => MouseMove?.Invoke(this, args);
 
         #endregion
 
+        protected IGameHost Host { get; private set; }
+
         public abstract IEnumerable<InputHandler> CreateInputHandlers();
+
+        private readonly BindableList<InputHandler> availableInputHandlers = new BindableList<InputHandler>();
+
+        public virtual IBindableList<InputHandler> AvailableInputHandlers => availableInputHandlers;
+
         public abstract void Configure(ConfigManager<FrameworkSetting> config);
 
-        public abstract void Initialise(IGameHost host);
+        public virtual void Initialise(IGameHost host)
+        {
+            Host = host;
+            ResetInputHandlers();
+        }
+
+        public void ResetInputHandlers()
+        {
+            foreach (var h in availableInputHandlers)
+                h.Dispose();
+
+            availableInputHandlers.Clear();
+
+            var newHandlers = CreateInputHandlers();
+
+            foreach (var handler in newHandlers)
+            {
+                if (!handler.Initialize(Host))
+                {
+                    handler.Enabled.Value = false;
+                    break;
+                }
+
+                // TODO: (handler as IHasCursorSensitivity)?.Sensitivity.BindTo(cursorSensitivity);
+            }
+
+            availableInputHandlers.AddRange(newHandlers);
+        }
 
         #region IDisposable
 

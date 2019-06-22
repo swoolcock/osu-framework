@@ -298,7 +298,7 @@ namespace osu.Framework.Platform
         protected virtual void DrawInitialize()
         {
             Window.MakeCurrent();
-            GLWrapper.Initialize(this);
+            // TODO: (remove) GLWrapper.Initialize(this);
 
             setVSyncMode();
 
@@ -571,22 +571,23 @@ namespace osu.Framework.Platform
 
         private void resetInputHandlers()
         {
-            if (AvailableInputHandlers != null)
-                foreach (var h in AvailableInputHandlers)
-                    h.Dispose();
-
-            AvailableInputHandlers = CreateAvailableInputHandlers();
-
-            foreach (var handler in AvailableInputHandlers)
-            {
-                if (!handler.Initialize(this))
-                {
-                    handler.Enabled.Value = false;
-                    break;
-                }
-
-                (handler as IHasCursorSensitivity)?.Sensitivity.BindTo(cursorSensitivity);
-            }
+            // TODO: fixme
+            // if (AvailableInputHandlers != null)
+            //     foreach (var h in AvailableInputHandlers)
+            //         h.Dispose();
+            //
+            // AvailableInputHandlers = CreateAvailableInputHandlers();
+            //
+            // foreach (var handler in AvailableInputHandlers)
+            // {
+            //     if (!handler.Initialize(this))
+            //     {
+            //         handler.Enabled.Value = false;
+            //         break;
+            //     }
+            //
+            //     (handler as IHasCursorSensitivity)?.Sensitivity.BindTo(cursorSensitivity);
+            // }
         }
 
         /// <summary>
@@ -608,7 +609,7 @@ namespace osu.Framework.Platform
             Dependencies.Cache(root);
             Dependencies.CacheAs(game);
 
-            game.SetHost(this);
+            // TODO: (remove) game.SetHost(this);
 
             try
             {

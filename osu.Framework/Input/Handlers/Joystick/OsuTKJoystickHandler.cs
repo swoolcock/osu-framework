@@ -23,7 +23,7 @@ namespace osu.Framework.Input.Handlers.Joystick
         private readonly List<JoystickDevice> devices = new List<JoystickDevice>();
         private readonly List<osuTK.Input.JoystickState> rawStates = new List<osuTK.Input.JoystickState>();
 
-        public override bool Initialize(GameHost host)
+        public override bool Initialize(IGameHost host)
         {
             Enabled.BindValueChanged(e =>
             {

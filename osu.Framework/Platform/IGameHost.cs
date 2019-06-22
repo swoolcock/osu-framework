@@ -8,6 +8,8 @@ using osu.Framework.Allocation;
 using osu.Framework.Backends;
 using osu.Framework.Backends.Window;
 using osu.Framework.Bindables;
+using osu.Framework.Graphics.Textures;
+using osu.Framework.IO.Stores;
 using osu.Framework.Threading;
 
 namespace osu.Framework.Platform
@@ -64,6 +66,13 @@ namespace osu.Framework.Platform
         /// </summary>
         /// <param name="filename">The absolute path to the file which should be opened.</param>
         void OpenFileExternally(string filename);
+
+        /// <summary>
+        /// Create a texture loader store based on an underlying data store.
+        /// </summary>
+        /// <param name="underlyingStore">The underlying provider of texture data (in arbitrary image formats).</param>
+        /// <returns>A texture loader store.</returns>
+        IResourceStore<TextureUpload> CreateTextureLoaderStore(IResourceStore<byte[]> underlyingStore);
 
         #region Execution
 

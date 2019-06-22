@@ -67,7 +67,7 @@ namespace osu.Framework.Testing.Input
 
         private class ManualInputHandler : InputHandler
         {
-            public override bool Initialize(GameHost host) => true;
+            public override bool Initialize(IGameHost host) => true;
             public override bool IsActive => true;
             public override int Priority => 0;
 

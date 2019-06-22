@@ -25,10 +25,10 @@ namespace osu.Framework.Tests
             };
         }
 
-        public override void SetHost(GameHost host)
+        public override void SetHost(IGameHost host)
         {
             base.SetHost(host);
-            host.Window.CursorState |= CursorState.Hidden;
+            // TODO: host.Window.CursorState |= CursorState.Hidden;
         }
     }
 }

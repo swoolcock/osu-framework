@@ -11,9 +11,9 @@ namespace osu.Framework.Input
 {
     public class UserInputManager : PassThroughInputManager
     {
-        protected override IEnumerable<InputHandler> InputHandlers => Host.AvailableInputHandlers;
+        protected override IEnumerable<InputHandler> InputHandlers => Host.Input.AvailableInputHandlers;
 
-        protected override bool HandleHoverEvents => Host.Window?.CursorInWindow ?? true;
+        protected override bool HandleHoverEvents => Host.Window.CursorInWindow.Value;
 
         protected internal override bool ShouldBeAlive => true;
 
@@ -31,12 +31,12 @@ namespace osu.Framework.Input
                 case MousePositionChangeEvent mousePositionChange:
                     var mouse = mousePositionChange.State.Mouse;
                     // confine cursor
-                    if (Host.Window != null && Host.Window.CursorState.HasFlag(CursorState.Confined))
-                        mouse.Position = Vector2.Clamp(mouse.Position, Vector2.Zero, new Vector2(Host.Window.Width, Host.Window.Height));
+                    if (Host.Window != null && Host.Window.CursorState.Value.HasFlag(CursorState.Confined))
+                        mouse.Position = Vector2.Clamp(mouse.Position, Vector2.Zero, new Vector2(Host.Window.InternalSize.Value.Width, Host.Window.InternalSize.Value.Height));
                     break;
 
                 case MouseScrollChangeEvent _:
-                    if (Host.Window != null && !Host.Window.CursorInWindow)
+                    if (Host.Window != null && !Host.Window.CursorInWindow.Value)
                         return;
 
                     break;

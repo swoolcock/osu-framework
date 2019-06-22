@@ -20,19 +20,19 @@ namespace osu.Framework.Input.Handlers.Keyboard
         private TkKeyboardState lastEventState;
         private KeyboardState? lastRawState;
 
-        public override bool Initialize(GameHost host)
+        public override bool Initialize(IGameHost host)
         {
             Enabled.BindValueChanged(e =>
             {
                 if (e.NewValue)
                 {
-                    host.Window.KeyDown += handleKeyboardEvent;
-                    host.Window.KeyUp += handleKeyboardEvent;
+                    host.Input.KeyDown += handleKeyboardEvent;
+                    host.Input.KeyUp += handleKeyboardEvent;
                 }
                 else
                 {
-                    host.Window.KeyDown -= handleKeyboardEvent;
-                    host.Window.KeyUp -= handleKeyboardEvent;
+                    host.Input.KeyDown -= handleKeyboardEvent;
+                    host.Input.KeyUp -= handleKeyboardEvent;
                     lastRawState = null;
                     lastEventState = null;
                 }

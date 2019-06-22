@@ -10,16 +10,17 @@ namespace osu.Framework.Input.Handlers.Mouse
 {
     internal abstract class OsuTKMouseHandlerBase : InputHandler
     {
-        protected GameHost Host;
+        protected IGameHost Host;
         protected bool MouseInWindow;
 
-        public override bool Initialize(GameHost host)
+        public override bool Initialize(IGameHost host)
         {
             Host = host;
 
-            MouseInWindow = host.Window.CursorInWindow;
-            Host.Window.MouseLeave += (s, e) => MouseInWindow = false;
-            Host.Window.MouseEnter += (s, e) => MouseInWindow = true;
+            // TODO:
+            // MouseInWindow = host.Window.CursorInWindow;
+            // Host.Window.MouseLeave += (s, e) => MouseInWindow = false;
+            // Host.Window.MouseEnter += (s, e) => MouseInWindow = true;
 
             return true;
         }

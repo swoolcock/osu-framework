@@ -37,7 +37,7 @@ namespace osu.Framework.Input
         private const int repeat_tick_rate = 70;
 
         [Resolved(CanBeNull = true)]
-        protected GameHost Host { get; private set; }
+        protected IGameHost Host { get; private set; }
 
         /// <summary>
         /// The currently focused <see cref="Drawable"/>. Null if there is no current focus.

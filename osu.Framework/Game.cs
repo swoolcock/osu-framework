@@ -7,6 +7,7 @@ using System.Linq;
 using osuTK;
 using osu.Framework.Allocation;
 using osu.Framework.Audio;
+using osu.Framework.Backends.Window;
 using osu.Framework.Bindables;
 using osu.Framework.Configuration;
 using osu.Framework.Graphics;
@@ -25,13 +26,13 @@ namespace osu.Framework
 {
     public abstract class Game : Container, IKeyBindingHandler<FrameworkAction>
     {
-        public IWindowDeprecated Window => Host?.Window;
+        public IWindow Window => Host?.Window;
 
         public ResourceStore<byte[]> Resources { get; private set; }
 
         public TextureStore Textures { get; private set; }
 
-        protected GameHost Host { get; private set; }
+        protected IGameHost Host { get; private set; }
 
         private readonly Bindable<bool> isActive = new Bindable<bool>(true);
 
@@ -100,10 +101,10 @@ namespace osu.Framework
         /// As Load is run post host creation, you can override this method to alter properties of the host before it makes itself visible to the user.
         /// </summary>
         /// <param name="host"></param>
-        public virtual void SetHost(GameHost host)
+        public virtual void SetHost(IGameHost host)
         {
             Host = host;
-            host.Exiting += OnExiting;
+            // TODO: host.Exiting += OnExiting;
             host.Activated += () => isActive.Value = true;
             host.Deactivated += () => isActive.Value = false;
         }
@@ -224,7 +225,7 @@ namespace osu.Framework
                     return true;
 
                 case FrameworkAction.ToggleFullscreen:
-                    Window?.CycleMode();
+                    // TODO: Window?.CycleMode();
                     return true;
             }
 
@@ -238,7 +239,7 @@ namespace osu.Framework
             if (Host == null)
                 throw new InvalidOperationException("Attempted to exit a game which has not yet been run");
 
-            Host.Exit();
+            // TODO: Host.Exit();
         }
 
         protected virtual bool OnExiting() => false;

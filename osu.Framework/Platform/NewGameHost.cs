@@ -24,8 +24,10 @@ using osu.Framework.Extensions.IEnumerableExtensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.OpenGL;
+using osu.Framework.Graphics.Textures;
 using osu.Framework.Input;
 using osu.Framework.IO.File;
+using osu.Framework.IO.Stores;
 using osu.Framework.Logging;
 using osu.Framework.Statistics;
 using osu.Framework.Threading;
@@ -90,6 +92,9 @@ namespace osu.Framework.Platform
         public virtual bool IsPortableInstallation { get; }
 
         public abstract void OpenFileExternally(string filename);
+
+        public virtual IResourceStore<TextureUpload> CreateTextureLoaderStore(IResourceStore<byte[]> underlyingStore)
+            => new TextureLoaderStore(underlyingStore);
 
         #region Bindables
 
@@ -179,9 +184,6 @@ namespace osu.Framework.Platform
                 AppDomain.CurrentDomain.UnhandledException += unhandledExceptionHandler;
                 TaskScheduler.UnobservedTaskException += unobservedExceptionHandler;
 
-                CreateBackends();
-                InitialiseBackends();
-
                 RegisterThread(DrawThread = new DrawThread(DrawFrame)
                 {
                     OnThreadStart = DrawInitialize,
@@ -195,6 +197,9 @@ namespace osu.Framework.Platform
 
                 RegisterThread(InputThread = new InputThread());
                 RegisterThread(AudioThread = new AudioThread());
+
+                CreateBackends();
+                InitialiseBackends();
 
                 Trace.Listeners.Clear();
                 Trace.Listeners.Add(new ThrowingTraceListener());
@@ -356,7 +361,7 @@ namespace osu.Framework.Platform
                 return;
 
             window.Implementation.MakeCurrent();
-            // TODO: GLWrapper.Initialize(this);
+            GLWrapper.Initialize(this);
 
             setVSyncMode();
 
@@ -444,7 +449,7 @@ namespace osu.Framework.Platform
             Dependencies.Cache(root);
             Dependencies.CacheAs(game);
 
-            // TODO: game.SetHost(this);
+            game.SetHost(this);
 
             try
             {

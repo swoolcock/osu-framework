@@ -63,16 +63,16 @@ namespace osu.Framework.Graphics.OpenGL
 
         public static bool IsInitialized { get; private set; }
 
-        private static WeakReference<GameHost> host;
+        private static WeakReference<IGameHost> host;
 
-        internal static void Initialize(GameHost host)
+        internal static void Initialize(IGameHost host)
         {
             if (IsInitialized) return;
 
-            if (host.Window is GameWindow win)
-                isEmbedded = win.IsEmbedded;
+            // if (host.Window is GameWindow win)
+            //     isEmbedded = win.IsEmbedded;
 
-            GLWrapper.host = new WeakReference<GameHost>(host);
+            GLWrapper.host = new WeakReference<IGameHost>(host);
             reset_scheduler.SetCurrentThread();
 
             MaxTextureSize = Math.Min(4096, GL.GetInteger(GetPName.MaxTextureSize));
@@ -88,7 +88,7 @@ namespace osu.Framework.Graphics.OpenGL
         {
             int frameCount = 0;
 
-            if (host != null && host.TryGetTarget(out GameHost h))
+            if (host != null && host.TryGetTarget(out IGameHost h))
                 h.UpdateThread.Scheduler.Add(scheduleNextDisposal);
             else
                 disposalAction.Invoke();
