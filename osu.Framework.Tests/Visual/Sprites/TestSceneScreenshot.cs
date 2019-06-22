@@ -15,7 +15,7 @@ namespace osu.Framework.Tests.Visual.Sprites
     public class TestSceneScreenshot : FrameworkTestScene
     {
         [Resolved]
-        private GameHost host { get; set; }
+        private IGameHost host { get; set; }
 
         private Sprite display;
 

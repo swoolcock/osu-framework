@@ -114,7 +114,7 @@ namespace osu.Framework.Testing
         private Bindable<bool> showLogOverlay;
 
         [BackgroundDependencyLoader]
-        private void load(Storage storage, GameHost host, FrameworkConfigManager frameworkConfig, FontStore fonts, Game game)
+        private void load(Storage storage, IGameHost host, FrameworkConfigManager frameworkConfig, FontStore fonts, Game game)
         {
             interactive = host.Window != null;
             config = new TestBrowserConfig(storage);

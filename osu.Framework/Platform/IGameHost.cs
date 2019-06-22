@@ -4,6 +4,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using osu.Framework.Allocation;
 using osu.Framework.Backends;
 using osu.Framework.Backends.Window;
@@ -11,6 +12,8 @@ using osu.Framework.Bindables;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.IO.Stores;
 using osu.Framework.Threading;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace osu.Framework.Platform
 {
@@ -75,6 +78,8 @@ namespace osu.Framework.Platform
         IResourceStore<TextureUpload> CreateTextureLoaderStore(IResourceStore<byte[]> underlyingStore);
 
         void Exit();
+
+        Task<Image<Rgba32>> TakeScreenshotAsync();
 
         #region Execution
 

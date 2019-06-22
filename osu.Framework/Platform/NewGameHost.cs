@@ -34,6 +34,9 @@ using osu.Framework.Threading;
 using osu.Framework.Timing;
 using osuTK;
 using osuTK.Graphics.ES30;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using Image = osuTK.Image;
 
 namespace osu.Framework.Platform
 {
@@ -148,6 +151,11 @@ namespace osu.Framework.Platform
         }
 
         #endregion
+
+        public async Task<Image<Rgba32>> TakeScreenshotAsync()
+        {
+            return new Image<Rgba32>(10, 10);
+        }
 
         protected NewGameHost(string gameName = @"")
         {

@@ -59,7 +59,7 @@ namespace osu.Framework.Testing
         private readonly TestBrowser browser;
 
         [Resolved]
-        private GameHost host { get; set; }
+        private IGameHost host { get; set; }
 
         private void runNext()
         {

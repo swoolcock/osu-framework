@@ -838,7 +838,7 @@ namespace osu.Framework.Platform
             isDisposed = true;
 
             if (ExecutionState > ExecutionState.Stopping)
-                throw new InvalidOperationException($"{nameof(Exit)} must be called before the {nameof(GameHost)} is disposed.");
+                throw new InvalidOperationException($"{nameof(Exit)} must be called before the {nameof(IGameHost)} is disposed.");
 
             // Delay disposal until the game has exited
             while (ExecutionState > ExecutionState.Stopped)

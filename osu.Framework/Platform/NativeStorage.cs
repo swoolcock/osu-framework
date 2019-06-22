@@ -19,12 +19,6 @@ namespace osu.Framework.Platform
             this.host = host;
         }
 
-        public NativeStorage(string baseName, GameHost host = null)
-            : base(baseName)
-        {
-            // this.host = host;
-        }
-
         protected override string LocateBasePath() => @"./"; //use current directory by default
 
         public override bool Exists(string path) => File.Exists(GetFullPath(path));

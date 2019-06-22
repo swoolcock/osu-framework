@@ -21,7 +21,7 @@ namespace osu.Framework.Tests.Visual.Sprites
 
         protected override IReadOnlyDependencyContainer CreateChildDependencies(IReadOnlyDependencyContainer parent)
         {
-            var host = parent.Get<GameHost>();
+            var host = parent.Get<IGameHost>();
 
             normalStore = new TextureStore(host.CreateTextureLoaderStore(new OnlineStore()));
             largeStore = new LargeTextureStore(host.CreateTextureLoaderStore(new OnlineStore()));

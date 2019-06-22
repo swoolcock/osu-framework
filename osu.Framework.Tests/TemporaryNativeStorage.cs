@@ -8,7 +8,7 @@ namespace osu.Framework.Tests
 {
     public class TemporaryNativeStorage : NativeStorage, IDisposable
     {
-        public TemporaryNativeStorage(string name, GameHost host = null)
+        public TemporaryNativeStorage(string name, IGameHost host = null)
             : base(name, host)
         {
         }

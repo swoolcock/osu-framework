@@ -37,7 +37,7 @@ namespace osu.Framework.Testing
             private double volumeAtStartup;
 
             [Resolved]
-            private GameHost host { get; set; }
+            private IGameHost host { get; set; }
 
             public TestRunner()
             {
