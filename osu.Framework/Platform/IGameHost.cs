@@ -28,7 +28,7 @@ namespace osu.Framework.Platform
         /// </summary>
         event Action Deactivated;
 
-        event Func<bool> ExitRequested;
+        event Func<bool> Exiting;
         event Action Exited;
 
         /// <summary>
@@ -73,6 +73,8 @@ namespace osu.Framework.Platform
         /// <param name="underlyingStore">The underlying provider of texture data (in arbitrary image formats).</param>
         /// <returns>A texture loader store.</returns>
         IResourceStore<TextureUpload> CreateTextureLoaderStore(IResourceStore<byte[]> underlyingStore);
+
+        void Exit();
 
         #region Execution
 

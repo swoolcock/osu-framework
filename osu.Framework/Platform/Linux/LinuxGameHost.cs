@@ -18,13 +18,13 @@ namespace osu.Framework.Platform.Linux
         {
             base.SetupForRun();
 
-            Window = new LinuxGameWindow();
+            // TODO: Window = new LinuxGameWindow();
 
             // required for the time being to address libbass_fx.so load failures (see https://github.com/ppy/osu/issues/2852)
             Library.Load("libbass.so", Library.LoadFlags.RTLD_LAZY | Library.LoadFlags.RTLD_GLOBAL);
         }
 
-        protected override Storage GetStorage(string baseName) => new LinuxStorage(baseName, this);
+        public override Storage GetStorage(string baseName) => new LinuxStorage(baseName, this);
 
         public override Clipboard GetClipboard()
         {

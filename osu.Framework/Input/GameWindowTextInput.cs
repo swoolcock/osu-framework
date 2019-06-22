@@ -2,19 +2,21 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using osu.Framework.Backends.Input;
+using osu.Framework.Backends.Window;
 using osu.Framework.Platform;
 
 namespace osu.Framework.Input
 {
     public class GameWindowTextInput : ITextInputSource
     {
-        private readonly IWindowDeprecated window;
+        private readonly IInput input;
 
         private string pending = string.Empty;
 
-        public GameWindowTextInput(IWindowDeprecated window)
+        public GameWindowTextInput(IInput input)
         {
-            this.window = window;
+            this.input = input;
         }
 
         protected virtual void HandleKeyPress(object sender, osuTK.KeyPressEventArgs e) => pending += e.KeyChar;
@@ -35,12 +37,12 @@ namespace osu.Framework.Input
 
         public void Deactivate(object sender)
         {
-            window.KeyPress -= HandleKeyPress;
+            input.KeyPress -= HandleKeyPress;
         }
 
         public void Activate(object sender)
         {
-            window.KeyPress += HandleKeyPress;
+            input.KeyPress += HandleKeyPress;
         }
 
         private void imeCompose()

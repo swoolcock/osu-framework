@@ -18,12 +18,12 @@ namespace osu.Framework.Platform.MacOS
         protected override void SetupForRun()
         {
             base.SetupForRun();
-            Window = new MacOSGameWindow();
+            // TODO: Window = new MacOSGameWindow();
         }
 
-        protected override Storage GetStorage(string baseName) => new MacOSStorage(baseName, this);
+        public override Storage GetStorage(string baseName) => new MacOSStorage(baseName, this);
 
-        public override ITextInputSource GetTextInput() => Window == null ? null : new MacOSTextInput(Window);
+        public override ITextInputSource GetTextInput() => new MacOSTextInput(Input);
 
         public override Clipboard GetClipboard() => new MacOSClipboard();
 

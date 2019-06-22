@@ -16,6 +16,11 @@ using osuTK.Graphics;
 using osuTK.Graphics.ES30;
 using osuTK.Input;
 using osu.Framework.Allocation;
+using osu.Framework.Backends.Audio;
+using osu.Framework.Backends.Graphics;
+using osu.Framework.Backends.Input;
+using osu.Framework.Backends.Video;
+using osu.Framework.Backends.Window;
 using osu.Framework.Bindables;
 using osu.Framework.Configuration;
 using osu.Framework.Development;
@@ -40,9 +45,61 @@ using osu.Framework.IO.Stores;
 
 namespace osu.Framework.Platform
 {
-    public abstract class GameHost : IIpcHost, IDisposable
+    public abstract class GameHost : IGameHost, IIpcHost
     {
-        public IWindowDeprecated Window { get; protected set; }
+        #region IBackendProvider
+
+        public IWindow Window { get; private set; }
+        public IInput Input { get; private set; }
+        public IGraphics Graphics { get; private set; }
+        public IAudio Audio { get; private set; }
+        public IVideo Video { get; private set; }
+
+        #endregion
+
+        #region Backend Creation
+
+        protected abstract IWindow CreateWindow();
+        protected abstract IInput CreateInput();
+        protected abstract IGraphics CreateGraphics();
+        protected abstract IAudio CreateAudio();
+        protected abstract IVideo CreateVideo();
+
+        protected virtual void CreateBackends()
+        {
+            Window = CreateWindow();
+            Input = CreateInput();
+            Graphics = CreateGraphics();
+            Audio = CreateAudio();
+            Video = CreateVideo();
+        }
+
+        protected virtual void InitialiseBackends()
+        {
+            Window.Initialise(this);
+            Input.Initialise(this);
+            Graphics.Initialise(this);
+            Audio.Initialise(this);
+            Video.Initialise(this);
+        }
+
+        protected virtual void ConfigureBackends(ConfigManager<FrameworkSetting> config)
+        {
+            Window.Configure(config);
+            Input.Configure(config);
+            Graphics.Configure(config);
+            Audio.Configure(config);
+            Video.Configure(config);
+        }
+
+        private void connectBackends()
+        {
+            // connect backend events to gamehost
+            Window.CloseRequested += OnExitRequested;
+            Window.Closed += OnExited;
+        }
+
+        #endregion
 
         protected FrameworkDebugConfigManager DebugConfig { get; private set; }
 
@@ -51,9 +108,11 @@ namespace osu.Framework.Platform
         /// <summary>
         /// Whether the <see cref="IWindow"/> is active (in the foreground).
         /// </summary>
-        public readonly IBindable<bool> IsActive = new Bindable<bool>(true);
+        public IBindable<bool> IsActive { get; } = new Bindable<bool>(true);
 
         public bool IsPrimaryInstance { get; protected set; } = true;
+
+        public virtual bool IsPortableInstallation { get; protected set; }
 
         /// <summary>
         /// Invoked when the game window is activated. Always invoked from the update thread.
@@ -104,7 +163,7 @@ namespace osu.Framework.Platform
 
         public virtual Clipboard GetClipboard() => null;
 
-        protected abstract Storage GetStorage(string baseName);
+        public abstract Storage GetStorage(string baseName);
 
         public Storage Storage { get; protected set; }
 
@@ -142,10 +201,10 @@ namespace osu.Framework.Platform
             thread.UnhandledException = null;
         }
 
-        public GameThread DrawThread;
-        public GameThread UpdateThread;
-        public InputThread InputThread;
-        public AudioThread AudioThread;
+        public GameThread DrawThread { get; private set; }
+        public GameThread UpdateThread { get; private set; }
+        public InputThread InputThread { get; private set; }
+        public AudioThread AudioThread { get; private set; }
 
         private double maximumUpdateHz;
 
@@ -180,17 +239,12 @@ namespace osu.Framework.Platform
 
         public string FullPath => fullPathBacking.Value;
 
-        protected string Name { get; }
+        public string Name { get; }
 
         public DependencyContainer Dependencies { get; } = new DependencyContainer();
 
-        private Toolkit toolkit;
-
-        private readonly ToolkitOptions toolkitOptions;
-
-        protected GameHost(string gameName = @"", ToolkitOptions toolkitOptions = default)
+        protected GameHost(string gameName = @"")
         {
-            this.toolkitOptions = toolkitOptions;
             Name = gameName;
         }
 
@@ -274,8 +328,8 @@ namespace osu.Framework.Platform
                 var windowedSize = Config.Get<Size>(FrameworkSetting.WindowedSize);
                 Root.Size = new Vector2(windowedSize.Width, windowedSize.Height);
             }
-            else if (Window.WindowState != WindowState.Minimized)
-                Root.Size = new Vector2(Window.ClientSize.Width, Window.ClientSize.Height);
+            else if (Window.WindowState.Value != WindowState.Minimized)
+                Root.Size = new Vector2(Window.InternalSize.Value.Width, Window.InternalSize.Value.Height);
 
             // Ensure we maintain a valid size for any children immediately scaling by the window size
             Root.Size = Vector2.ComponentMax(Vector2.One, Root.Size);
@@ -297,12 +351,17 @@ namespace osu.Framework.Platform
 
         protected virtual void DrawInitialize()
         {
-            Window.MakeCurrent();
-            // TODO: (remove) GLWrapper.Initialize(this);
+            // TODO: use backends
+
+            if (!(Window is OsuTKWindowBackend window))
+                return;
+
+            window.Implementation.MakeCurrent();
+            GLWrapper.Initialize(this);
 
             setVSyncMode();
 
-            GLWrapper.Reset(new Vector2(Window.ClientSize.Width, Window.ClientSize.Height));
+            GLWrapper.Reset(new Vector2(Window.InternalSize.Value.Width, Window.InternalSize.Value.Height));
         }
 
         private long lastDrawFrameId;
@@ -324,7 +383,7 @@ namespace osu.Framework.Platform
                     }
 
                     using (drawMonitor.BeginCollecting(PerformanceCollectionType.GLReset))
-                        GLWrapper.Reset(new Vector2(Window.ClientSize.Width, Window.ClientSize.Height));
+                        GLWrapper.Reset(new Vector2(Window.InternalSize.Value.Width, Window.InternalSize.Value.Height));
 
                     if (!bypassFrontToBackPass.Value)
                     {
@@ -360,12 +419,16 @@ namespace osu.Framework.Platform
 
             using (drawMonitor.BeginCollecting(PerformanceCollectionType.SwapBuffer))
             {
-                Window.SwapBuffers();
+                // TODO: use backends
+                if (Window is OsuTKWindowBackend window)
+                {
+                    window.Implementation.SwapBuffers();
 
-                if (Window.VSync == VSyncMode.On)
-                    // without glFinish, vsync is basically unplayable due to the extra latency introduced.
-                    // we will likely want to give the user control over this in the future as an advanced setting.
+                    // if (window.Implementation.VSync == VSyncMode.On)
+                    //     // without glFinish, vsync is basically unplayable due to the extra latency introduced.
+                    //     // we will likely want to give the user control over this in the future as an advanced setting.
                     GL.Finish();
+                }
             }
         }
 
@@ -377,7 +440,7 @@ namespace osu.Framework.Platform
         {
             if (Window == null) throw new NullReferenceException(nameof(Window));
 
-            var image = new Image<Rgba32>(Window.ClientSize.Width, Window.ClientSize.Height);
+            var image = new Image<Rgba32>(Window.InternalSize.Value.Width, Window.InternalSize.Value.Height);
 
             bool complete = false;
 
@@ -446,7 +509,7 @@ namespace osu.Framework.Platform
 
             try
             {
-                toolkit = toolkitOptions != null ? Toolkit.Init(toolkitOptions) : Toolkit.Init();
+                // TODO: toolkit = toolkitOptions != null ? Toolkit.Init(toolkitOptions) : Toolkit.Init();
 
                 AppDomain.CurrentDomain.UnhandledException += unhandledExceptionHandler;
                 TaskScheduler.UnobservedTaskException += unobservedExceptionHandler;
@@ -465,6 +528,9 @@ namespace osu.Framework.Platform
                 RegisterThread(InputThread = new InputThread());
                 RegisterThread(AudioThread = new AudioThread());
 
+                CreateBackends();
+                InitialiseBackends();
+
                 Trace.Listeners.Clear();
                 Trace.Listeners.Add(new ThrowingTraceListener());
 
@@ -479,7 +545,12 @@ namespace osu.Framework.Platform
                 if (assemblyPath != null)
                     Environment.CurrentDirectory = assemblyPath;
 
-                Dependencies.CacheAs(this);
+                Dependencies.CacheAs<IGameHost>(this);
+                Dependencies.CacheAs(Window);
+                Dependencies.CacheAs(Input);
+                Dependencies.CacheAs(Graphics);
+                Dependencies.CacheAs(Audio);
+                Dependencies.CacheAs(Video);
                 Dependencies.CacheAs(Storage = GetStorage(Name));
 
                 SetupForRun();
@@ -487,16 +558,15 @@ namespace osu.Framework.Platform
                 ExecutionState = ExecutionState.Running;
 
                 SetupConfig(game.GetFrameworkConfigDefaults());
+                ConfigureBackends(Config);
 
-                if (Window != null)
-                {
-                    Window.SetupWindow(Config);
-                    Window.Title = $@"osu!framework (running ""{Name}"")";
+                connectBackends();
 
-                    IsActive.BindTo(Window.IsActive);
-                }
+                // TODO: Window.SetupWindow(Config);
+                Window.Title.Value = $@"osu!framework (running ""{Name}"")";
+                // TODO: IsActive.BindTo(Window.IsActive);
 
-                resetInputHandlers();
+                Input.ResetInputHandlers();
 
                 foreach (var t in threads)
                     t.Start();
@@ -519,33 +589,23 @@ namespace osu.Framework.Platform
 
                 try
                 {
-                    if (Window != null)
+                    if (Window is OsuTKWindowBackend window)
                     {
-                        Window.KeyDown += window_KeyDown;
-
-                        Window.ExitRequested += OnExitRequested;
-                        Window.Exited += OnExited;
-
-                        Window.UpdateFrame += delegate
+                        window.Implementation.UpdateFrame += delegate
                         {
                             inputPerformanceCollectionPeriod?.Dispose();
                             InputThread.RunUpdate();
                             inputPerformanceCollectionPeriod = inputMonitor.BeginCollecting(PerformanceCollectionType.WndProc);
                         };
 
-                        Window.Closed += delegate
+                        window.Implementation.Closed += delegate
                         {
                             //we need to ensure all threads have stopped before the window is closed (mainly the draw thread
                             //to avoid GL operations running post-cleanup).
                             stopAllThreads();
                         };
 
-                        Window.Run();
-                    }
-                    else
-                    {
-                        while (ExecutionState != ExecutionState.Stopped)
-                            InputThread.RunUpdate();
+                        window.Implementation.Run();
                     }
                 }
                 catch (OutOfMemoryException)
@@ -569,27 +629,6 @@ namespace osu.Framework.Platform
         {
         }
 
-        private void resetInputHandlers()
-        {
-            // TODO: fixme
-            // if (AvailableInputHandlers != null)
-            //     foreach (var h in AvailableInputHandlers)
-            //         h.Dispose();
-            //
-            // AvailableInputHandlers = CreateAvailableInputHandlers();
-            //
-            // foreach (var handler in AvailableInputHandlers)
-            // {
-            //     if (!handler.Initialize(this))
-            //     {
-            //         handler.Enabled.Value = false;
-            //         break;
-            //     }
-            //
-            //     (handler as IHasCursorSensitivity)?.Sensitivity.BindTo(cursorSensitivity);
-            // }
-        }
-
         /// <summary>
         /// The clock which is to be used by the scene graph (will be assigned to <see cref="Root"/>).
         /// </summary>
@@ -609,7 +648,7 @@ namespace osu.Framework.Platform
             Dependencies.Cache(root);
             Dependencies.CacheAs(game);
 
-            // TODO: (remove) game.SetHost(this);
+            game.SetHost(this);
 
             try
             {
@@ -675,7 +714,7 @@ namespace osu.Framework.Platform
         {
             var hostDefaults = new Dictionary<FrameworkSetting, object>
             {
-                { FrameworkSetting.WindowMode, Window?.DefaultWindowMode ?? WindowMode.Windowed }
+                { FrameworkSetting.WindowMode, Window.WindowMode.Default }
             };
 
             // merge defaults provided by game into host defaults.
@@ -696,7 +735,7 @@ namespace osu.Framework.Platform
                     return;
 
                 if (!Window.SupportedWindowModes.Contains(mode.NewValue))
-                    windowMode.Value = Window.DefaultWindowMode;
+                    windowMode.SetDefault();
             }, true);
 
             activeGCMode = DebugConfig.GetBindable<GCLatencyMode>(DebugSetting.ActiveGCMode);
@@ -757,12 +796,12 @@ namespace osu.Framework.Platform
 
                 if (restoreDefaults)
                 {
-                    resetInputHandlers();
-                    ignoredInputHandlers.Value = string.Join(" ", AvailableInputHandlers.Where(h => !h.Enabled.Value).Select(h => h.ToString()));
+                    Input.ResetInputHandlers();
+                    ignoredInputHandlers.Value = string.Join(" ", Input.AvailableInputHandlers.Where(h => !h.Enabled.Value).Select(h => h.ToString()));
                 }
                 else
                 {
-                    foreach (var handler in AvailableInputHandlers)
+                    foreach (var handler in Input.AvailableInputHandlers)
                     {
                         var handlerType = handler.ToString();
                         handler.Enabled.Value = configIgnores.All(ch => ch != handlerType);
@@ -782,12 +821,8 @@ namespace osu.Framework.Platform
         {
             if (Window == null) return;
 
-            DrawThread.Scheduler.Add(() => Window.VSync = frameSyncMode.Value == FrameSync.VSync ? VSyncMode.On : VSyncMode.Off);
+            // TODO: DrawThread.Scheduler.Add(() => Window.VSync = frameSyncMode.Value == FrameSync.VSync ? VSyncMode.On : VSyncMode.Off);
         }
-
-        protected abstract IEnumerable<InputHandler> CreateAvailableInputHandlers();
-
-        public IEnumerable<InputHandler> AvailableInputHandlers { get; private set; }
 
         public abstract ITextInputSource GetTextInput();
 
@@ -818,9 +853,13 @@ namespace osu.Framework.Platform
             Config?.Dispose();
             DebugConfig?.Dispose();
 
+            Video?.Dispose();
+            Audio?.Dispose();
+            Graphics?.Dispose();
+            Input?.Dispose();
             Window?.Dispose();
 
-            toolkit?.Dispose();
+            // TODO: toolkit?.Dispose();
 
             Logger.Flush();
         }

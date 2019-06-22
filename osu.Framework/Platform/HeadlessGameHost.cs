@@ -2,6 +2,11 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System.Collections.Generic;
+using osu.Framework.Backends.Audio;
+using osu.Framework.Backends.Graphics;
+using osu.Framework.Backends.Input;
+using osu.Framework.Backends.Video;
+using osu.Framework.Backends.Window;
 using osu.Framework.Input.Handlers;
 using osu.Framework.Logging;
 using osu.Framework.Timing;
@@ -24,7 +29,13 @@ namespace osu.Framework.Platform
 
         public override void OpenUrlExternally(string url) => Logger.Log($"Application has requested URL \"{url}\" to be opened.");
 
-        protected override Storage GetStorage(string baseName) => new DesktopStorage($"headless-{baseName}", this);
+        public override Storage GetStorage(string baseName) => new DesktopStorage($"headless-{baseName}", this);
+
+        protected override IWindow CreateWindow() => null; // TODO: headless window
+        protected override IAudio CreateAudio() => null; // TODO: headless audio
+        protected override IGraphics CreateGraphics() => null; // TODO: headless graphics
+        protected override IInput CreateInput() => null; // TODO: headless input
+        protected override IVideo CreateVideo() => null; // TODO: headless video
 
         public HeadlessGameHost(string gameName = @"", bool bindIPC = false, bool realtime = true, bool portableInstallation = false)
             : base(gameName, bindIPC, portableInstallation: portableInstallation)
@@ -58,8 +69,6 @@ namespace osu.Framework.Platform
 
             base.UpdateFrame();
         }
-
-        protected override IEnumerable<InputHandler> CreateAvailableInputHandlers() => new InputHandler[] { };
 
         private class FastClock : IClock
         {

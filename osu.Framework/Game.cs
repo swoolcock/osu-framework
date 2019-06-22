@@ -104,7 +104,7 @@ namespace osu.Framework
         public virtual void SetHost(IGameHost host)
         {
             Host = host;
-            // TODO: host.Exiting += OnExiting;
+            host.Exiting += OnExiting;
             host.Activated += () => isActive.Value = true;
             host.Deactivated += () => isActive.Value = false;
         }
@@ -239,7 +239,7 @@ namespace osu.Framework
             if (Host == null)
                 throw new InvalidOperationException("Attempted to exit a game which has not yet been run");
 
-            // TODO: Host.Exit();
+            Host.Exit();
         }
 
         protected virtual bool OnExiting() => false;

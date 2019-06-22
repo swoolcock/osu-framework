@@ -3,6 +3,7 @@
 
 using System;
 using osu.Framework.Allocation;
+using osu.Framework.Backends.Window;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -21,7 +22,8 @@ namespace osu.Framework.Tests.Visual.Platform
         private readonly Box box;
         private readonly SpriteText textbox;
 
-        private IWindowDeprecated window;
+        [Resolved]
+        private IWindow window { get; set; }
 
         public TestSceneSafeArea()
         {
@@ -58,15 +60,12 @@ namespace osu.Framework.Tests.Visual.Platform
         }
 
         [BackgroundDependencyLoader]
-        private void load(GameHost host)
+        private void load()
         {
-            window = host.Window;
-
-            if (window == null) return;
-
-            safeAreaPadding.ValueChanged += e => updatePadding(e.NewValue);
-            safeAreaPadding.BindTo(window.SafeAreaPadding);
-            updatePadding(window.SafeAreaPadding.Value);
+            // TODO:
+            // safeAreaPadding.ValueChanged += e => updatePadding(e.NewValue);
+            // safeAreaPadding.BindTo(window.SafeAreaPadding);
+            // updatePadding(window.SafeAreaPadding.Value);
         }
 
         private void updatePadding(MarginPadding padding)
@@ -81,7 +80,7 @@ namespace osu.Framework.Tests.Visual.Platform
 
             if (window == null) return;
 
-            var size = new Vector2(window.Width, window.Height);
+            var size = new Vector2(window.InternalSize.Value.Width, window.InternalSize.Value.Height);
             var scale = Vector2.Divide(Content.DrawSize, size);
             container.Size = box.Size = size;
             container.Scale = box.Scale = new Vector2(Math.Min(scale.X, scale.Y) * 0.9f);

@@ -4,6 +4,7 @@
 using System.Drawing;
 using System.Linq;
 using osu.Framework.Allocation;
+using osu.Framework.Backends.Window;
 using osu.Framework.Bindables;
 using osu.Framework.Configuration;
 using osu.Framework.Graphics.Containers;
@@ -19,7 +20,9 @@ namespace osu.Framework.Tests.Visual.Platform
         private readonly SpriteText currentDisplay = new SpriteText();
         private readonly SpriteText supportedWindowModes = new SpriteText();
 
-        private IWindowDeprecated window;
+        [Resolved]
+        private IWindow window { get; set; }
+
         private readonly BindableSize sizeFullscreen = new BindableSize();
         private readonly Bindable<WindowMode> windowMode = new Bindable<WindowMode>();
 
@@ -49,15 +52,11 @@ namespace osu.Framework.Tests.Visual.Platform
         }
 
         [BackgroundDependencyLoader]
-        private void load(FrameworkConfigManager config, GameHost host)
+        private void load(FrameworkConfigManager config)
         {
-            window = host.Window;
             config.BindWith(FrameworkSetting.SizeFullscreen, sizeFullscreen);
             config.BindWith(FrameworkSetting.WindowMode, windowMode);
             currentWindowMode.Text = $"Window Mode: {windowMode}";
-
-            if (window == null)
-                return;
 
             supportedWindowModes.Text = $"Supported Window Modes: {string.Join(", ", window.SupportedWindowModes)}";
 
@@ -94,8 +93,8 @@ namespace osu.Framework.Tests.Visual.Platform
         {
             base.Update();
 
-            currentActualSize.Text = $"Window size: {window?.Bounds.Size}";
-            currentDisplay.Text = $"Current display device: {window?.CurrentDisplay}";
+            currentActualSize.Text = $"Window size: {window.Bounds.Value.Size}";
+            // TODO: currentDisplay.Text = $"Current display device: {window?.CurrentDisplay}";
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+using osu.Framework.Backends.Input;
 using osu.Framework.Input;
 using osu.Framework.Platform.MacOS.Native;
 
@@ -16,8 +17,8 @@ namespace osu.Framework.Platform.MacOS
 
         private static bool isCapsLockOn => (Cocoa.CGEventSourceFlagsState(event_source_state_hid_system_state) & event_flag_mask_alpha_shift) != 0;
 
-        public MacOSTextInput(IWindowDeprecated window)
-            : base(window)
+        public MacOSTextInput(IInput input)
+            : base(input)
         {
         }
 

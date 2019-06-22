@@ -2,6 +2,7 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using osu.Framework.Backends.Window;
 using osu.Framework.Platform.Windows.Native;
 using osuTK;
 
@@ -13,7 +14,7 @@ namespace osu.Framework.Platform.Windows
 
         public override Clipboard GetClipboard() => new WindowsClipboard();
 
-        protected override Storage GetStorage(string baseName) => new WindowsStorage(baseName, this);
+        public override Storage GetStorage(string baseName) => new WindowsStorage(baseName, this);
 
         public override bool CapsLockEnabled => Console.CapsLock;
 
@@ -31,7 +32,7 @@ namespace osu.Framework.Platform.Windows
 
             timePeriod = new TimePeriod(1) { Active = true };
 
-            Window = new WindowsGameWindow();
+            // Window = new WindowsGameWindow();
         }
 
         protected override void Dispose(bool isDisposing)

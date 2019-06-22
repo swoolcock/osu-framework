@@ -6,6 +6,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using osu.Framework.Backends.Audio;
+using osu.Framework.Backends.Graphics;
+using osu.Framework.Backends.Input;
+using osu.Framework.Backends.Video;
+using osu.Framework.Backends.Window;
 using osu.Framework.Input;
 using osu.Framework.Input.Handlers;
 using osu.Framework.Input.Handlers.Joystick;
@@ -18,12 +23,21 @@ namespace osu.Framework.Platform
 {
     public abstract class DesktopGameHost : GameHost
     {
+        private const int default_window_width = 1366;
+        private const int default_window_height = 768;
+
         private TcpIpcProvider ipcProvider;
         private readonly bool bindIPCPort;
         private Thread ipcThread;
 
+        protected override IGraphics CreateGraphics() => new OsuTKGraphicsBackend();
+        protected override IAudio CreateAudio() => new BassAudioBackend();
+        protected override IVideo CreateVideo() => new FfmpegVideoBackend();
+        protected override IInput CreateInput() => new OsuTKInputBackend();
+        protected override IWindow CreateWindow() => new OsuTKWindowBackend(default_window_width, default_window_height);
+
         protected DesktopGameHost(string gameName = @"", bool bindIPCPort = false, ToolkitOptions toolkitOptions = default, bool portableInstallation = false)
-            : base(gameName, toolkitOptions)
+            : base(gameName) // TODO:, toolkitOptions)
         {
             this.bindIPCPort = bindIPCPort;
             IsPortableInstallation = portableInstallation;
@@ -63,8 +77,6 @@ namespace osu.Framework.Platform
             }
         }
 
-        public bool IsPortableInstallation { get; }
-
         public override void OpenFileExternally(string filename) => openUsingShellExecute(filename);
 
         public override void OpenUrlExternally(string url) => openUsingShellExecute(url);
@@ -75,27 +87,7 @@ namespace osu.Framework.Platform
             UseShellExecute = true //see https://github.com/dotnet/corefx/issues/10361
         });
 
-        public override ITextInputSource GetTextInput() => Window == null ? null : new GameWindowTextInput(Window);
-
-        protected override IEnumerable<InputHandler> CreateAvailableInputHandlers()
-        {
-            var defaultEnabled = new InputHandler[]
-            {
-                new OsuTKMouseHandler(),
-                new OsuTKKeyboardHandler(),
-                new OsuTKJoystickHandler(),
-            };
-
-            var defaultDisabled = new InputHandler[]
-            {
-                new OsuTKRawMouseHandler(),
-            };
-
-            foreach (var h in defaultDisabled)
-                h.Enabled.Value = false;
-
-            return defaultEnabled.Concat(defaultDisabled);
-        }
+        public override ITextInputSource GetTextInput() => new GameWindowTextInput(Input);
 
         public override Task SendMessageAsync(IpcMessage message) => ipcProvider.SendMessageAsync(message);
 

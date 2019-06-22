@@ -55,7 +55,7 @@ namespace osu.Framework.Platform
 
         public event Action Deactivated;
 
-        public event Func<bool> ExitRequested;
+        public event Func<bool> Exiting;
 
         public event Action Exited;
 
@@ -69,7 +69,7 @@ namespace osu.Framework.Platform
 
         protected virtual void OnDeactivated() => UpdateThread.Scheduler.Add(() => Deactivated?.Invoke());
 
-        protected virtual bool OnExitRequested() => ExitRequested?.Invoke() ?? false;
+        protected virtual bool OnExitRequested() => Exiting?.Invoke() ?? false;
 
         protected virtual void OnExited() => Exited?.Invoke();
 
