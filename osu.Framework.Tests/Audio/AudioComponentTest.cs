@@ -27,7 +27,7 @@ namespace osu.Framework.Tests.Audio
             thread = new AudioThread();
             store = new NamespacedResourceStore<byte[]>(new DllResourceStore(@"osu.Framework.dll"), @"Resources");
 
-            manager = new AudioManager(thread, store, store);
+            // TODO: manager = new AudioManager(thread, store, store);
 
             thread.Start();
         }

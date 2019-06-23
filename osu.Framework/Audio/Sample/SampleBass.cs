@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace osu.Framework.Audio.Sample
 {
-    internal sealed class SampleBass : Sample, IBassAudio
+    internal sealed class SampleBass : Sample, IUpdateableAudio
     {
         private volatile int sampleId;
 
@@ -30,7 +30,7 @@ namespace osu.Framework.Audio.Sample
             base.Dispose(disposing);
         }
 
-        void IBassAudio.UpdateDevice(int deviceIndex)
+        void IUpdateableAudio.UpdateDevice(int deviceIndex)
         {
             if (IsLoaded)
                 // counter-intuitively, this is the correct API to use to migrate a sample to a new device.

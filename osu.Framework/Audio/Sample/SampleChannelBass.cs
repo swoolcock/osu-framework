@@ -6,7 +6,7 @@ using ManagedBass;
 
 namespace osu.Framework.Audio.Sample
 {
-    public sealed class SampleChannelBass : SampleChannel, IBassAudio
+    public sealed class SampleChannelBass : SampleChannel, IUpdateableAudio
     {
         private volatile int channel;
         private volatile bool playing;
@@ -20,7 +20,7 @@ namespace osu.Framework.Audio.Sample
         {
         }
 
-        void IBassAudio.UpdateDevice(int deviceIndex)
+        void IUpdateableAudio.UpdateDevice(int deviceIndex)
         {
             // Channels created from samples can not be migrated, so we need to ensure
             // a new channel is created after switching the device. We do not need to

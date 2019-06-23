@@ -14,7 +14,7 @@ using osu.Framework.Audio.Callbacks;
 
 namespace osu.Framework.Audio.Track
 {
-    public sealed class TrackBass : Track, IBassAudio, IHasPitchAdjust
+    public sealed class TrackBass : Track, IUpdateableAudio, IHasPitchAdjust
     {
         public const int BYTES_PER_SAMPLE = 4;
 
@@ -137,7 +137,7 @@ namespace osu.Framework.Audio.Track
             InvalidateState();
         }
 
-        void IBassAudio.UpdateDevice(int deviceIndex)
+        void IUpdateableAudio.UpdateDevice(int deviceIndex)
         {
             Bass.ChannelSetDevice(activeStream, deviceIndex);
             Trace.Assert(Bass.LastError == Errors.OK);

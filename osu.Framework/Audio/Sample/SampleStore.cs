@@ -10,13 +10,14 @@ using osu.Framework.Statistics;
 using System.Linq;
 using System.Threading.Tasks;
 using osu.Framework.Audio.Track;
+using osu.Framework.Backends.Audio;
 
 namespace osu.Framework.Audio.Sample
 {
     internal class SampleStore : AudioCollectionManager<AdjustableAudioComponent>, ISampleStore
     {
         private readonly IResourceStore<byte[]> store;
-
+        private readonly IAudio audioBackend;
         private readonly ConcurrentDictionary<string, Sample> sampleCache = new ConcurrentDictionary<string, Sample>();
 
         /// <summary>
@@ -24,9 +25,10 @@ namespace osu.Framework.Audio.Sample
         /// </summary>
         public int PlaybackConcurrency { get; set; } = Sample.DEFAULT_CONCURRENCY;
 
-        internal SampleStore(IResourceStore<byte[]> store)
+        internal SampleStore(IResourceStore<byte[]> store, IAudio audioBackend)
         {
             this.store = store;
+            this.audioBackend = audioBackend;
         }
 
         public SampleChannel Get(string name)
@@ -42,12 +44,12 @@ namespace osu.Framework.Audio.Sample
                 if (!sampleCache.TryGetValue(name, out Sample sample))
                 {
                     byte[] data = store.Get(name);
-                    sample = sampleCache[name] = data == null ? null : new SampleBass(data, PendingActions, PlaybackConcurrency);
+                    sample = sampleCache[name] = data == null ? null : audioBackend.CreateSample(data, PendingActions, PlaybackConcurrency);
                 }
 
                 if (sample != null)
                 {
-                    channel = new SampleChannelBass(sample, AddItem);
+                    channel = audioBackend.CreateSampleChannel(sample, AddItem);
                 }
 
                 return channel;
@@ -58,7 +60,7 @@ namespace osu.Framework.Audio.Sample
 
         public override void UpdateDevice(int deviceIndex)
         {
-            foreach (var sample in sampleCache.Values.OfType<IBassAudio>())
+            foreach (var sample in sampleCache.Values.OfType<IUpdateableAudio>())
                 sample.UpdateDevice(deviceIndex);
 
             base.UpdateDevice(deviceIndex);

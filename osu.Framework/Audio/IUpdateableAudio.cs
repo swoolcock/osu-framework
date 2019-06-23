@@ -3,7 +3,7 @@
 
 namespace osu.Framework.Audio
 {
-    internal interface IBassAudio
+    internal interface IUpdateableAudio
     {
         void UpdateDevice(int deviceIndex);
     }
