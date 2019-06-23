@@ -5,6 +5,7 @@ using System;
 using System.Drawing;
 using osu.Framework.Bindables;
 using osu.Framework.Configuration;
+using osu.Framework.Input;
 using osu.Framework.Platform;
 using osuTK;
 
@@ -37,6 +38,8 @@ namespace osu.Framework.Backends.Window
 
         Bindable<WindowMode> WindowMode { get; }
 
+        Bindable<ConfineMouseMode> ConfineMouseMode { get; }
+
         Bindable<string> Title { get; }
 
         #endregion
@@ -60,6 +63,10 @@ namespace osu.Framework.Backends.Window
         #region Methods
 
         void Close();
+
+        Point PointToClient(Point point);
+
+        Point PointToScreen(Point point);
 
         #endregion
     }

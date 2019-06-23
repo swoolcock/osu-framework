@@ -8,6 +8,7 @@ using System.Drawing;
 using System.Linq;
 using osu.Framework.Bindables;
 using osu.Framework.Configuration;
+using osu.Framework.Input;
 using osu.Framework.Platform;
 using osuTK;
 
@@ -46,6 +47,8 @@ namespace osu.Framework.Backends.Window
         public virtual Bindable<WindowState> WindowState { get; } = new Bindable<WindowState>();
 
         public virtual Bindable<WindowMode> WindowMode { get; } = new Bindable<WindowMode>();
+
+        public virtual Bindable<ConfineMouseMode> ConfineMouseMode { get; } = new Bindable<ConfineMouseMode>();
 
         public virtual Bindable<string> Title { get; } = new Bindable<string>();
 
@@ -92,6 +95,10 @@ namespace osu.Framework.Backends.Window
         #region Methods
 
         public abstract void Close();
+
+        public abstract Point PointToClient(Point point);
+
+        public abstract Point PointToScreen(Point point);
 
         #endregion
 

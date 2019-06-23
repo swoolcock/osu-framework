@@ -33,7 +33,7 @@ namespace osu.Framework.Input.Handlers.Mouse
                     host.InputThread.Scheduler.Add(scheduled = new ScheduledDelegate(delegate
                         {
                             // we should be getting events if the mouse is inside the window.
-                            // TODO: if (MouseInWindow || !host.Window.Visible || host.Window.WindowState == WindowState.Minimized) return;
+                            if (MouseInWindow.Value || !host.Window.Visible.Value || host.Window.WindowState.Value == WindowState.Minimized) return;
 
                             var cursorState = osuTK.Input.Mouse.GetCursorState();
 
@@ -41,7 +41,7 @@ namespace osu.Framework.Input.Handlers.Mouse
 
                             lastCursorState = cursorState;
 
-                            var mapped = new Point(cursorState.X, cursorState.Y); // TODO: host.Window.PointToClient(new Point(cursorState.X, cursorState.Y));
+                            var mapped = host.Window.PointToClient(new Point(cursorState.X, cursorState.Y));
 
                             var newState = new OsuTKPollMouseState(cursorState, host.IsActive.Value, new Vector2(mapped.X, mapped.Y));
                             HandleState(newState, lastPollState, true);
@@ -67,7 +67,7 @@ namespace osu.Framework.Input.Handlers.Mouse
 
         private void handleMouseEvent(object sender, osuTK.Input.MouseEventArgs e)
         {
-            if (!MouseInWindow)
+            if (!MouseInWindow.Value)
                 return;
 
             if (e.Mouse.X < 0 || e.Mouse.Y < 0)

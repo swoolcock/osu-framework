@@ -171,6 +171,10 @@ namespace osu.Framework.Backends.Window
 
         public override void Close() => Implementation.Close();
 
+        public override Point PointToClient(Point point) => Implementation.PointToClient(point);
+
+        public override Point PointToScreen(Point point) => Implementation.PointToScreen(point);
+
         #endregion
 
         #region IDisposable

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+using osu.Framework.Bindables;
 using osu.Framework.Input.StateChanges;
 using osu.Framework.Platform;
 using osu.Framework.Statistics;
@@ -11,17 +12,12 @@ namespace osu.Framework.Input.Handlers.Mouse
     internal abstract class OsuTKMouseHandlerBase : InputHandler
     {
         protected IGameHost Host;
-        protected bool MouseInWindow;
+        protected readonly IBindable<bool> MouseInWindow = new Bindable<bool>();
 
         public override bool Initialize(IGameHost host)
         {
             Host = host;
-
-            // TODO:
-            // MouseInWindow = host.Window.CursorInWindow;
-            // Host.Window.MouseLeave += (s, e) => MouseInWindow = false;
-            // Host.Window.MouseEnter += (s, e) => MouseInWindow = true;
-
+            MouseInWindow.BindTo(host.Window.CursorInWindow);
             return true;
         }
 
