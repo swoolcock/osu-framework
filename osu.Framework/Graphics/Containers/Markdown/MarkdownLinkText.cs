@@ -44,7 +44,7 @@ namespace osu.Framework.Graphics.Containers.Markdown
                 {
                     AutoSizeAxes = Axes.Both,
                     Child = spriteText = CreateSpriteText(),
-                    // TODO: Action = () => host.OpenUrlExternally(url)
+                    Action = () => host.OpenUrlExternally(url)
                 }
             };
 

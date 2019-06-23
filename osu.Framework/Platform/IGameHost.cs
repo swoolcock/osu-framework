@@ -10,6 +10,8 @@ using osu.Framework.Backends;
 using osu.Framework.Backends.Window;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics.Textures;
+using osu.Framework.Input;
+using osu.Framework.Input.Bindings;
 using osu.Framework.IO.Stores;
 using osu.Framework.Threading;
 using SixLabors.ImageSharp;
@@ -79,7 +81,13 @@ namespace osu.Framework.Platform
 
         void Exit();
 
+        void OpenUrlExternally(string url);
+
         Task<Image<Rgba32>> TakeScreenshotAsync();
+
+        IEnumerable<KeyBinding> PlatformKeyBindings { get; }
+
+        ITextInputSource GetTextInput(); // TODO: move to IInput
 
         #region Execution
 

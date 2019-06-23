@@ -24,6 +24,7 @@ namespace osu.Framework.Backends.Input
         event EventHandler<MouseEventArgs> MouseDown;
         event EventHandler<MouseEventArgs> MouseUp;
         event EventHandler<MouseEventArgs> MouseMove;
+        event EventHandler<MouseWheelEventArgs> MouseWheel;
 
         #endregion
 

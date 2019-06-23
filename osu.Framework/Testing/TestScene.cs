@@ -66,7 +66,7 @@ namespace osu.Framework.Testing
         [OneTimeTearDown]
         public void DestroyGameHost()
         {
-            // TODO: host.Exit();
+            host.Exit();
             runTask.Wait();
             host.Dispose();
 

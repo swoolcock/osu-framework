@@ -26,6 +26,7 @@ namespace osu.Framework.Backends.Input
         public event EventHandler<MouseEventArgs> MouseDown;
         public event EventHandler<MouseEventArgs> MouseUp;
         public event EventHandler<MouseEventArgs> MouseMove;
+        public event EventHandler<MouseWheelEventArgs> MouseWheel;
 
         #endregion
 
@@ -42,6 +43,8 @@ namespace osu.Framework.Backends.Input
         protected virtual void OnMouseUp(MouseEventArgs args) => MouseUp?.Invoke(this, args);
 
         protected virtual void OnMouseMove(MouseEventArgs args) => MouseMove?.Invoke(this, args);
+
+        protected virtual void OnMouseWheel(MouseWheelEventArgs args) => MouseWheel?.Invoke(this, args);
 
         #endregion
 

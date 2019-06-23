@@ -158,7 +158,7 @@ namespace osu.Framework.Graphics.UserInterface
         [BackgroundDependencyLoader]
         private void load(IGameHost host)
         {
-            // TODO: textInput = host.GetTextInput();
+            textInput = host.GetTextInput(); // TODO: move to IInput
             clipboard = host.GetClipboard();
 
             if (textInput != null)

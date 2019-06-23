@@ -26,7 +26,7 @@ namespace osu.Framework.Input.Handlers.Mouse
                     host.Input.MouseMove += handleMouseEvent;
                     host.Input.MouseDown += handleMouseEvent;
                     host.Input.MouseUp += handleMouseEvent;
-                    // TODO: host.Input.MouseWheel += handleMouseEvent;
+                    host.Input.MouseWheel += handleMouseEvent;
 
                     // polling is used to keep a valid mouse position when we aren't receiving events.
                     osuTK.Input.MouseState? lastCursorState = null;
@@ -55,7 +55,7 @@ namespace osu.Framework.Input.Handlers.Mouse
                     host.Input.MouseMove -= handleMouseEvent;
                     host.Input.MouseDown -= handleMouseEvent;
                     host.Input.MouseUp -= handleMouseEvent;
-                    // TODO: host.Input.MouseWheel -= handleMouseEvent;
+                    host.Input.MouseWheel -= handleMouseEvent;
 
                     lastPollState = null;
                     lastEventState = null;

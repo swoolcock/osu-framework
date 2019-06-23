@@ -31,6 +31,7 @@ namespace osu.Framework.Backends.Input
             window.Implementation.MouseDown += (sender, e) => OnMouseDown(e);
             window.Implementation.MouseUp += (sender, e) => OnMouseUp(e);
             window.Implementation.MouseMove += (sender, e) => OnMouseMove(e);
+            window.Implementation.MouseWheel += (sender, e) => OnMouseWheel(e);
         }
 
         public override void Configure(ConfigManager<FrameworkSetting> config)
