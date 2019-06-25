@@ -3,7 +3,6 @@
 
 using System;
 using osu.Framework.Graphics.OpenGL.Buffers;
-using osuTK.Graphics.ES30;
 using osu.Framework.Graphics.OpenGL.Vertices;
 
 namespace osu.Framework.Graphics.Batches
@@ -11,14 +10,14 @@ namespace osu.Framework.Graphics.Batches
     public class LinearBatch<T> : VertexBatch<T>
         where T : struct, IEquatable<T>, IVertex
     {
-        private readonly PrimitiveType type;
+        private readonly BatchPrimitiveType type;
 
-        public LinearBatch(int size, int maxBuffers, PrimitiveType type)
+        public LinearBatch(int size, int maxBuffers, BatchPrimitiveType type)
             : base(size, maxBuffers)
         {
             this.type = type;
         }
 
-        protected override VertexBuffer<T> CreateVertexBuffer() => new LinearVertexBuffer<T>(Size, type, BufferUsageHint.DynamicDraw);
+        protected override VertexBuffer<T> CreateVertexBuffer() => new LinearVertexBuffer<T>(Size, type);
     }
 }

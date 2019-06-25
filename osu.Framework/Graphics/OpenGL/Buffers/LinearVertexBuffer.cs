@@ -2,6 +2,7 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using osu.Framework.Graphics.Batches;
 using osu.Framework.Graphics.OpenGL.Vertices;
 using osuTK.Graphics.ES30;
 
@@ -26,11 +27,11 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
     {
         private readonly int amountVertices;
 
-        internal LinearVertexBuffer(int amountVertices, PrimitiveType type, BufferUsageHint usage)
-            : base(amountVertices, usage)
+        internal LinearVertexBuffer(int amountVertices, BatchPrimitiveType type)
+            : base(amountVertices)
         {
             this.amountVertices = amountVertices;
-            Type = type;
+            Type = type.ToOpenGL();
         }
 
         protected override void Initialise()

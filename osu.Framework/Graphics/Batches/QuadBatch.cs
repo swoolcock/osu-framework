@@ -3,7 +3,6 @@
 
 using System;
 using osu.Framework.Graphics.OpenGL.Buffers;
-using osuTK.Graphics.ES30;
 using osu.Framework.Graphics.OpenGL.Vertices;
 
 namespace osu.Framework.Graphics.Batches
@@ -16,6 +15,6 @@ namespace osu.Framework.Graphics.Batches
         {
         }
 
-        protected override VertexBuffer<T> CreateVertexBuffer() => new QuadVertexBuffer<T>(Size, BufferUsageHint.DynamicDraw);
+        protected override VertexBuffer<T> CreateVertexBuffer() => new QuadVertexBuffer<T>(Size);
     }
 }

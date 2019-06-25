@@ -16,15 +16,11 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
 
         private readonly DepthWrappingVertex<T>[] vertices;
 
-        private readonly BufferUsageHint usage;
-
         private bool isInitialised;
         private int vboId;
 
-        protected VertexBuffer(int amountVertices, BufferUsageHint usage)
+        protected VertexBuffer(int amountVertices)
         {
-            this.usage = usage;
-
             vertices = new DepthWrappingVertex<T>[amountVertices];
         }
 
@@ -61,7 +57,7 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
             if (GLWrapper.BindBuffer(BufferTarget.ArrayBuffer, vboId))
                 VertexUtils<DepthWrappingVertex<T>>.Bind();
 
-            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(vertices.Length * STRIDE), IntPtr.Zero, usage);
+            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)(vertices.Length * STRIDE), IntPtr.Zero, BufferUsageHint.DynamicDraw);
         }
 
         ~VertexBuffer()

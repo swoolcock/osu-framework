@@ -190,7 +190,7 @@ namespace osu.Framework.Graphics.Containers
                 if (mayHaveOwnVertexBatch(clampedAmountChildren) && (triangleBatch == null || triangleBatch.Size < clampedAmountChildren))
                 {
                     // The same general idea as updateQuadBatch(), except that each child draws up to 3 vertices * 6 triangles after quad-quad intersection
-                    triangleBatch = new LinearBatch<TexturedVertex2D>(clampedAmountChildren * 2 * 3, 500, PrimitiveType.Triangles);
+                    triangleBatch = new LinearBatch<TexturedVertex2D>(clampedAmountChildren * 2 * 3, 500, BatchPrimitiveType.Triangles);
                 }
             }
 
