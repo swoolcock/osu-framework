@@ -301,7 +301,7 @@ namespace osu.Framework.Platform
             if (response ?? false)
                 return true;
 
-            Exit();
+            // Exit(); TODO: see if this is required, since it breaks Rider when manually closing the game window
             return false;
         }
 
