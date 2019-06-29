@@ -84,19 +84,6 @@ namespace osu.Framework
             });
         }
 
-        private void addDebugTools()
-        {
-            LoadComponentAsync(drawVisualiser = new DrawVisualiser
-            {
-                Depth = float.MinValue / 2,
-            }, AddInternal);
-
-            LoadComponentAsync(logOverlay = new LogOverlay
-            {
-                Depth = float.MinValue / 2,
-            }, AddInternal);
-        }
-
         /// <summary>
         /// As Load is run post host creation, you can override this method to alter properties of the host before it makes itself visible to the user.
         /// </summary>
@@ -148,11 +135,11 @@ namespace osu.Framework
             dependencies.Cache(Shaders);
 
             // base store is for user fonts
-            Fonts = new FontStore();
+            Fonts = new FontStore(useAtlas: true);
 
             // nested store for framework provided fonts.
             // note that currently this means there could be two async font load operations.
-            Fonts.AddStore(localFonts = new FontStore());
+            Fonts.AddStore(localFonts = new FontStore(useAtlas: false));
 
             localFonts.AddStore(new GlyphStore(Resources, @"Fonts/OpenSans/OpenSans"));
             localFonts.AddStore(new GlyphStore(Resources, @"Fonts/OpenSans/OpenSans-Bold"));
@@ -188,8 +175,6 @@ namespace osu.Framework
             }, AddInternal);
 
             FrameStatistics.BindValueChanged(e => performanceOverlay.State = e.NewValue, true);
-
-            addDebugTools();
         }
 
         protected readonly Bindable<FrameStatisticsMode> FrameStatistics = new Bindable<FrameStatisticsMode>();
@@ -217,10 +202,27 @@ namespace osu.Framework
                     return true;
 
                 case FrameworkAction.ToggleDrawVisualiser:
+
+                    if (drawVisualiser == null)
+                    {
+                        LoadComponentAsync(drawVisualiser = new DrawVisualiser
+                        {
+                            Depth = float.MinValue / 2,
+                        }, AddInternal);
+                    }
+
                     drawVisualiser.ToggleVisibility();
                     return true;
 
                 case FrameworkAction.ToggleLogOverlay:
+                    if (logOverlay == null)
+                    {
+                        LoadComponentAsync(logOverlay = new LogOverlay
+                        {
+                            Depth = float.MinValue / 2,
+                        }, AddInternal);
+                    }
+
                     logOverlay.ToggleVisibility();
                     return true;
 
