@@ -820,9 +820,11 @@ namespace osu.Framework.Platform
 
         private void setVSyncMode()
         {
-            if (Window == null) return;
-
-            // TODO: DrawThread.Scheduler.Add(() => Window.VSync = frameSyncMode.Value == FrameSync.VSync ? VSyncMode.On : VSyncMode.Off);
+            // TODO: not hardcode to osuTK
+            if (Window is OsuTKWindowBackend window && window.Implementation is osuTK.GameWindow gameWindow)
+            {
+                DrawThread.Scheduler.Add(() => gameWindow.VSync = frameSyncMode.Value == FrameSync.VSync ? VSyncMode.On : VSyncMode.Off);
+            }
         }
 
         public abstract ITextInputSource GetTextInput();
