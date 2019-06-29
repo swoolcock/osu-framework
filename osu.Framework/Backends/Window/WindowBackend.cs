@@ -80,7 +80,10 @@ namespace osu.Framework.Backends.Window
         #region Events
 
         public event Func<bool> CloseRequested;
+
         public event Action Closed;
+
+        public event Action Update;
 
         #endregion
 
@@ -90,9 +93,13 @@ namespace osu.Framework.Backends.Window
 
         protected virtual void OnClosed() => Closed?.Invoke();
 
+        protected virtual void OnUpdate() => Update?.Invoke();
+
         #endregion
 
         #region Methods
+
+        public abstract void Run();
 
         public abstract void Close();
 

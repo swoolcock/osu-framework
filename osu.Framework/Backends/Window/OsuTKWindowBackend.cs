@@ -41,6 +41,7 @@ namespace osu.Framework.Backends.Window
         {
             Implementation = implementation;
 
+            Implementation.UpdateFrame += (sender, e) => OnUpdate();
             Implementation.Closing += (sender, e) => e.Cancel = OnCloseRequested();
             Implementation.Closed += (sender, e) => OnClosed();
             Implementation.FocusedChanged += (sender, e) => focused.Value = Implementation.Focused;
@@ -56,6 +57,7 @@ namespace osu.Framework.Backends.Window
             WindowState.ValueChanged += windowState_ValueChanged;
             CursorState.ValueChanged += cursorState_ValueChanged;
             Visible.ValueChanged += visible_ValueChanged;
+            Title.ValueChanged += e => Implementation.Title = e.NewValue;
         }
 
         public OsuTKWindowBackend(int width, int height)
@@ -168,6 +170,8 @@ namespace osu.Framework.Backends.Window
         #endregion
 
         #region Methods
+
+        public override void Run() => Implementation.Run();
 
         public override void Close() => Implementation.Close();
 

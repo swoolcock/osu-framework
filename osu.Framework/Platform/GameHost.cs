@@ -29,7 +29,6 @@ using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.OpenGL;
 using osu.Framework.Input;
 using osu.Framework.Input.Bindings;
-using osu.Framework.Input.Handlers;
 using osu.Framework.Logging;
 using osu.Framework.Statistics;
 using osu.Framework.Threading;
@@ -598,24 +597,18 @@ namespace osu.Framework.Platform
 
                 try
                 {
-                    if (Window is OsuTKWindowBackend window)
+                    Window.Update += () =>
                     {
-                        window.Implementation.UpdateFrame += delegate
-                        {
-                            inputPerformanceCollectionPeriod?.Dispose();
-                            InputThread.RunUpdate();
-                            inputPerformanceCollectionPeriod = inputMonitor.BeginCollecting(PerformanceCollectionType.WndProc);
-                        };
+                        inputPerformanceCollectionPeriod?.Dispose();
+                        InputThread.RunUpdate();
+                        inputPerformanceCollectionPeriod = inputMonitor.BeginCollecting(PerformanceCollectionType.WndProc);
+                    };
 
-                        window.Implementation.Closed += delegate
-                        {
-                            //we need to ensure all threads have stopped before the window is closed (mainly the draw thread
-                            //to avoid GL operations running post-cleanup).
-                            stopAllThreads();
-                        };
+                    //we need to ensure all threads have stopped before the window is closed (mainly the draw thread
+                    //to avoid GL operations running post-cleanup).
+                    Window.Closed += stopAllThreads;
 
-                        window.Implementation.Run();
-                    }
+                    Window.Run();
                 }
                 catch (OutOfMemoryException)
                 {

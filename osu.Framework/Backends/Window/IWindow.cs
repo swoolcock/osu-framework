@@ -58,9 +58,16 @@ namespace osu.Framework.Backends.Window
 
         event Action Closed;
 
+        event Action Update;
+
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Triggers the backend's runloop.
+        /// </summary>
+        void Run();
 
         void Close();
 
