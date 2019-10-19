@@ -7,6 +7,7 @@ using osu.Framework.Graphics.OpenGL.Vertices;
 using osuTK.Graphics.ES30;
 using osu.Framework.Statistics;
 using osu.Framework.Development;
+using osu.Framework.Graphics.Batches;
 using osu.Framework.Platform;
 using SixLabors.Memory;
 
@@ -25,7 +26,7 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
         private bool isInitialised;
         private int vboId;
 
-        protected VertexBuffer(int amountVertices)
+        protected VertexBuffer(int amountVertices, BufferUsageHint usage)
         {
             this.usage = usage;
 
@@ -132,7 +133,7 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
 
         protected virtual int ToElementIndex(int vertexIndex) => vertexIndex;
 
-        protected abstract PrimitiveType Type { get; }
+        protected abstract BatchPrimitiveType Type { get; }
 
         public void Draw()
         {
@@ -144,7 +145,7 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
             Bind(true);
 
             int amountVertices = endIndex - startIndex;
-            GL.DrawElements(Type, ToElements(amountVertices), DrawElementsType.UnsignedShort, (IntPtr)(ToElementIndex(startIndex) * sizeof(ushort)));
+            GL.DrawElements(Type.ToOpenGL(), ToElements(amountVertices), DrawElementsType.UnsignedShort, (IntPtr)(ToElementIndex(startIndex) * sizeof(ushort)));
 
             Unbind();
         }

@@ -451,7 +451,7 @@ namespace osu.Framework.Platform
 
             using (var completionEvent = new ManualResetEventSlim(false))
             {
-                var image = new Image<Rgba32>(Window.ClientSize.Width, Window.ClientSize.Height);
+                var image = new Image<Rgba32>(Window.InternalSize.Value.Width, Window.InternalSize.Value.Height);
 
                 DrawThread.Scheduler.Add(() =>
                 {

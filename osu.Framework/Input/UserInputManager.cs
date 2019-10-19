@@ -38,7 +38,7 @@ namespace osu.Framework.Input
                     break;
 
                 case ButtonStateChangeEvent<MouseButton> buttonChange:
-                    if (buttonChange.Kind == ButtonStateChangeKind.Pressed && Host.Window?.CursorInWindow == false)
+                    if (buttonChange.Kind == ButtonStateChangeKind.Pressed && Host.Window?.CursorInWindow.Value == false)
                         return;
 
                     break;

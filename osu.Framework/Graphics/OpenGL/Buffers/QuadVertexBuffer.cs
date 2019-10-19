@@ -2,6 +2,7 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using osu.Framework.Graphics.Batches;
 using osu.Framework.Graphics.OpenGL.Textures;
 using osu.Framework.Graphics.OpenGL.Vertices;
 using osuTK.Graphics.ES30;
@@ -69,6 +70,6 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
 
         protected override int ToElementIndex(int vertexIndex) => 3 * vertexIndex / 2;
 
-        protected override PrimitiveType Type => PrimitiveType.Triangles;
+        protected override BatchPrimitiveType Type => BatchPrimitiveType.Triangles;
     }
 }

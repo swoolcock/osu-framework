@@ -6,6 +6,7 @@ using System.IO;
 using osu.Framework.Configuration;
 using osu.Framework.Graphics.Video;
 using osu.Framework.Platform;
+using osu.Framework.Threading;
 
 namespace osu.Framework.Backends.Video
 {
@@ -19,6 +20,6 @@ namespace osu.Framework.Backends.Video
         {
         }
 
-        public override VideoDecoder CreateVideoDecoder(Stream stream) => new VideoDecoder(stream);
+        public override VideoDecoder CreateVideoDecoder(Stream stream, Scheduler scheduler) => new VideoDecoder(stream, scheduler);
     }
 }

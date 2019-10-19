@@ -3,6 +3,7 @@
 
 using System.IO;
 using osu.Framework.Graphics.Video;
+using osu.Framework.Threading;
 
 namespace osu.Framework.Backends.Video
 {
@@ -12,6 +13,6 @@ namespace osu.Framework.Backends.Video
     /// </summary>
     public interface IVideo : IBackend
     {
-        VideoDecoder CreateVideoDecoder(Stream stream);
+        VideoDecoder CreateVideoDecoder(Stream stream, Scheduler scheduler);
     }
 }

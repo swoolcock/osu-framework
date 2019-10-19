@@ -27,11 +27,11 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
     {
         private readonly int amountVertices;
 
-        internal LinearVertexBuffer(int amountVertices, BatchPrimitiveType type)
-            : base(amountVertices)
+        internal LinearVertexBuffer(int amountVertices, BatchPrimitiveType type, BufferUsageHint usage)
+            : base(amountVertices, usage)
         {
             this.amountVertices = amountVertices;
-            Type = type.ToOpenGL();
+            Type = type;
         }
 
         protected override void Initialise()
@@ -60,6 +60,6 @@ namespace osu.Framework.Graphics.OpenGL.Buffers
                 GLWrapper.BindBuffer(BufferTarget.ElementArrayBuffer, LinearIndexData.EBO_ID);
         }
 
-        protected override PrimitiveType Type { get; }
+        protected override BatchPrimitiveType Type { get; }
     }
 }

@@ -36,10 +36,10 @@ namespace osu.Framework.Graphics.Containers
         }
 
         [BackgroundDependencyLoader]
-        private void load(GameHost host)
+        private void load(IGameHost host)
         {
-            if (!usesCustomBinding && host.Window != null)
-                safeArea.BindTo(host.Window.SafeAreaPadding);
+            // if (!usesCustomBinding && host.Window != null)
+            //     safeArea.BindTo(host.Window.SafeAreaPadding);
         }
 
         #region ISafeArea Implementation
