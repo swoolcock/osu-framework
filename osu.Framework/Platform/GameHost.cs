@@ -377,7 +377,8 @@ namespace osu.Framework.Platform
 
         protected virtual void DrawFrame()
         {
-            if (Root == null)
+            // TODO: use graphics backend
+            if (true) //Root == null)
                 return;
 
             while (ExecutionState > ExecutionState.Stopping)
@@ -745,7 +746,7 @@ namespace osu.Framework.Platform
             frameSyncMode = Config.GetBindable<FrameSync>(FrameworkSetting.FrameSync);
             frameSyncMode.ValueChanged += e =>
             {
-                float refreshRate = DisplayDevice.Default?.RefreshRate ?? 0;
+                float refreshRate = 0; // FIXME: DisplayDevice.Default?.RefreshRate ?? 0;
                 // For invalid refresh rates let's assume 60 Hz as it is most common.
                 if (refreshRate <= 0)
                     refreshRate = 60;
