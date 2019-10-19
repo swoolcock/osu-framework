@@ -19,6 +19,7 @@ using System.Threading.Tasks;
 using System.Threading;
 using NUnit.Framework.Internal;
 using osu.Framework.Development;
+using osu.Framework.Graphics.Sprites;
 
 namespace osu.Framework.Testing
 {
@@ -159,13 +160,19 @@ namespace osu.Framework.Testing
                         Width = steps_width,
                         Depth = float.MinValue,
                         RelativeSizeAxes = Axes.Y,
-                        Padding = new MarginPadding(5),
                         Child = StepsContainer = new FillFlowContainer<Drawable>
                         {
                             Direction = FillDirection.Vertical,
-                            Spacing = new Vector2(5),
+                            Spacing = new Vector2(3),
                             RelativeSizeAxes = Axes.X,
                             AutoSizeAxes = Axes.Y,
+                            Padding = new MarginPadding(10),
+                            Child = new SpriteText
+                            {
+                                Font = FrameworkFont.Condensed.With(size: 16),
+                                Text = Name,
+                                Margin = new MarginPadding { Bottom = 5 },
+                            }
                         },
                     },
                     new Container
@@ -223,8 +230,7 @@ namespace osu.Framework.Testing
             {
                 if (loadableStep != null)
                 {
-                    if (loadableStep.IsMaskedAway)
-                        scroll.ScrollTo(loadableStep);
+                    scroll.ScrollIntoView(loadableStep);
                     loadableStep.PerformStep();
                 }
             }
@@ -320,10 +326,6 @@ namespace osu.Framework.Testing
             });
         });
 
-        [Obsolete("Parameter order didn't match other methods – switch order to fix")]
-        protected void AddUntilStep(Func<bool> waitUntilTrueDelegate, string description = null)
-            => AddUntilStep(description, waitUntilTrueDelegate);
-
         protected void AddUntilStep(string description, Func<bool> waitUntilTrueDelegate) => schedule(() =>
         {
             StepsContainer.Add(new UntilStepButton(waitUntilTrueDelegate)
@@ -331,10 +333,6 @@ namespace osu.Framework.Testing
                 Text = description ?? @"Until",
             });
         });
-
-        [Obsolete("Parameter order didn't match other methods – switch order to fix")]
-        protected void AddWaitStep(int waitCount, string description = null)
-            => AddWaitStep(description, waitCount);
 
         protected void AddWaitStep(string description, int waitCount) => schedule(() =>
         {

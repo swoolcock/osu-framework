@@ -16,7 +16,6 @@ using osu.Framework.Input.Handlers;
 using osu.Framework.Input.Handlers.Joystick;
 using osu.Framework.Input.Handlers.Keyboard;
 using osu.Framework.Input.Handlers.Mouse;
-using osu.Framework.Logging;
 using osuTK;
 
 namespace osu.Framework.Platform
@@ -47,8 +46,6 @@ namespace osu.Framework.Platform
         {
             //todo: yeah.
             Architecture.SetIncludePath();
-
-            Logger.Storage = Storage.GetStorageForDirectory("logs");
 
             if (bindIPCPort)
                 startIPC();

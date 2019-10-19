@@ -278,8 +278,10 @@ namespace osu.Framework.Graphics
 
         ~DrawNode()
         {
-            Dispose(false);
+            GLWrapper.ScheduleDisposal(() => Dispose(false));
         }
+
+        protected internal bool IsDisposed { get; private set; }
 
         public void Dispose()
         {
@@ -293,6 +295,7 @@ namespace osu.Framework.Graphics
         protected virtual void Dispose(bool isDisposing)
         {
             Source = null;
+            IsDisposed = true;
         }
     }
 }

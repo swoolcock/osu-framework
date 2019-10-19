@@ -3,9 +3,11 @@
 
 using System.Collections.Generic;
 using osu.Framework.Input.Handlers;
+using osu.Framework.Input.StateChanges;
 using osu.Framework.Input.StateChanges.Events;
 using osu.Framework.Platform;
 using osuTK;
+using osuTK.Input;
 
 namespace osu.Framework.Input
 {
@@ -35,8 +37,14 @@ namespace osu.Framework.Input
                         mouse.Position = Vector2.Clamp(mouse.Position, Vector2.Zero, new Vector2(Host.Window.InternalSize.Value.Width, Host.Window.InternalSize.Value.Height));
                     break;
 
+                case ButtonStateChangeEvent<MouseButton> buttonChange:
+                    if (buttonChange.Kind == ButtonStateChangeKind.Pressed && Host.Window?.CursorInWindow == false)
+                        return;
+
+                    break;
+
                 case MouseScrollChangeEvent _:
-                    if (Host.Window != null && !Host.Window.CursorInWindow.Value)
+                    if (Host.Window?.CursorInWindow.Value == false)
                         return;
 
                     break;
