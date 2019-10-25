@@ -5,11 +5,10 @@ using osu.Framework.Graphics.OpenGL;
 
 namespace osu.Framework.Graphics.Shaders
 {
-    internal class GlobalUniform<T> : IUniformWithValue<T>
+    internal abstract class GlobalUniform<T> : IUniformWithValue<T>
         where T : struct
     {
-        public Shader Owner { get; }
-        public int Location { get; }
+        public IShader Owner { get; }
         public string Name { get; }
 
         /// <summary>
@@ -17,17 +16,16 @@ namespace osu.Framework.Graphics.Shaders
         /// </summary>
         public UniformMapping<T> PendingChange;
 
-        public GlobalUniform(Shader owner, string name, int uniformLocation)
+        protected GlobalUniform(IShader owner, string name)
         {
             Owner = owner;
             Name = name;
-            Location = uniformLocation;
         }
 
         internal void UpdateValue(UniformMapping<T> global)
         {
             PendingChange = global;
-            if (Owner.IsBound)
+            if (CanUpdate())
                 Update();
         }
 
@@ -36,10 +34,12 @@ namespace osu.Framework.Graphics.Shaders
             if (PendingChange == null)
                 return;
 
-            GLWrapper.SetUniform(this);
+            UpdateUniform();
             PendingChange = null;
         }
 
+        protected abstract void UpdateUniform();
+        protected abstract bool CanUpdate();
         ref T IUniformWithValue<T>.GetValueByRef() => ref PendingChange.Value;
         T IUniformWithValue<T>.GetValue() => PendingChange.Value;
     }

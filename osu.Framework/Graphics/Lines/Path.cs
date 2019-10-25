@@ -26,7 +26,7 @@ namespace osu.Framework.Graphics.Lines
         }
 
         [BackgroundDependencyLoader]
-        private void load(ShaderManager shaders)
+        private void load(IShaderManager shaders)
         {
             RoundedTextureShader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE_ROUNDED);
             TextureShader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE);

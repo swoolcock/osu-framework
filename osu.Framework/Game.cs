@@ -44,7 +44,7 @@ namespace osu.Framework
 
         public AudioManager Audio { get; private set; }
 
-        public ShaderManager Shaders { get; private set; }
+        public IShaderManager Shaders { get; private set; }
 
         public FontStore Fonts { get; private set; }
 
@@ -132,8 +132,8 @@ namespace osu.Framework
             config.BindWith(FrameworkSetting.VolumeEffect, Audio.VolumeSample);
             config.BindWith(FrameworkSetting.VolumeMusic, Audio.VolumeTrack);
 
-            Shaders = new ShaderManager(new NamespacedResourceStore<byte[]>(Resources, @"Shaders"));
-            dependencies.Cache(Shaders);
+            Shaders = Host.Graphics.CreateShaderManager(new NamespacedResourceStore<byte[]>(Resources, @"Shaders"));
+            dependencies.CacheAs(Shaders);
 
             var cacheStorage = Host.Storage.GetStorageForDirectory(Path.Combine("cache", "fonts"));
 

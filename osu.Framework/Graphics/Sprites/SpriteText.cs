@@ -45,7 +45,7 @@ namespace osu.Framework.Graphics.Sprites
         }
 
         [BackgroundDependencyLoader]
-        private void load(ShaderManager shaders)
+        private void load(IShaderManager shaders)
         {
             localisedText = localisation.GetLocalisedString(text);
             localisedText.BindValueChanged(str =>

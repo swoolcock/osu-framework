@@ -29,14 +29,14 @@ namespace osu.Framework.Platform
         private readonly bool bindIPCPort;
         private Thread ipcThread;
 
-        // protected override IGraphics CreateGraphics() => new OsuTKGraphicsBackend();
-        protected override IGraphics CreateGraphics() => new VeldridGraphicsBackend();
+        protected override IGraphics CreateGraphics() => new OsuTKGraphicsBackend();
+        // protected override IGraphics CreateGraphics() => new VeldridGraphicsBackend();
         protected override IAudio CreateAudio() => new BassAudioBackend();
         protected override IVideo CreateVideo() => new FfmpegVideoBackend();
-        protected override IInput CreateInput() => new VeldridInputBackend();
-        // protected override IInput CreateInput() => new OsuTKInputBackend();
-        // protected override IWindow CreateWindow() => new OsuTKWindowBackend(default_window_width, default_window_height);
-        protected override IWindow CreateWindow() => new VeldridWindowBackend();
+        // protected override IInput CreateInput() => new VeldridInputBackend();
+        protected override IInput CreateInput() => new OsuTKInputBackend();
+        protected override IWindow CreateWindow() => new OsuTKWindowBackend(default_window_width, default_window_height);
+        // protected override IWindow CreateWindow() => new VeldridWindowBackend();
 
         protected DesktopGameHost(string gameName = @"", bool bindIPCPort = false, ToolkitOptions toolkitOptions = default, bool portableInstallation = false)
             : base(gameName)

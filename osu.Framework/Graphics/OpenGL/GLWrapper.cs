@@ -5,6 +5,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using osu.Framework.Backends.Graphics.OsuTK;
 using osu.Framework.Development;
 using osu.Framework.Graphics.Batches;
 using osu.Framework.Graphics.OpenGL.Textures;
@@ -235,10 +236,10 @@ namespace osu.Framework.Graphics.OpenGL
         /// Enqueues the compile of a shader.
         /// </summary>
         /// <param name="shader">The shader to compile.</param>
-        public static void EnqueueShaderCompile(Shader shader)
+        public static void EnqueueShaderCompile(IShader shader)
         {
-            if (host != null)
-                expensive_operations_queue.Enqueue(shader.EnsureLoaded);
+            if (host != null && shader is OsuTKShader osuTKShader)
+                expensive_operations_queue.Enqueue(osuTKShader.EnsureLoaded);
         }
 
         private static readonly int[] last_bound_buffers = new int[2];
@@ -725,45 +726,47 @@ namespace osu.Framework.Graphics.OpenGL
         internal static void SetUniform<T>(IUniformWithValue<T> uniform)
             where T : struct
         {
-            if (uniform.Owner == currentShader)
+            if (uniform.Owner is OsuTKShader shader && shader == currentShader)
                 FlushCurrentBatch();
+
+            int location = (uniform as IOsuTKUniform)?.Location ?? -1;
 
             switch (uniform)
             {
                 case IUniformWithValue<bool> b:
-                    GL.Uniform1(uniform.Location, b.GetValue() ? 1 : 0);
+                    GL.Uniform1(location, b.GetValue() ? 1 : 0);
                     break;
 
                 case IUniformWithValue<int> i:
-                    GL.Uniform1(uniform.Location, i.GetValue());
+                    GL.Uniform1(location, i.GetValue());
                     break;
 
                 case IUniformWithValue<float> f:
-                    GL.Uniform1(uniform.Location, f.GetValue());
+                    GL.Uniform1(location, f.GetValue());
                     break;
 
                 case IUniformWithValue<Vector2> v2:
-                    GL.Uniform2(uniform.Location, ref v2.GetValueByRef());
+                    GL.Uniform2(location, ref v2.GetValueByRef());
                     break;
 
                 case IUniformWithValue<Vector3> v3:
-                    GL.Uniform3(uniform.Location, ref v3.GetValueByRef());
+                    GL.Uniform3(location, ref v3.GetValueByRef());
                     break;
 
                 case IUniformWithValue<Vector4> v4:
-                    GL.Uniform4(uniform.Location, ref v4.GetValueByRef());
+                    GL.Uniform4(location, ref v4.GetValueByRef());
                     break;
 
                 case IUniformWithValue<Matrix2> m2:
-                    GL.UniformMatrix2(uniform.Location, false, ref m2.GetValueByRef());
+                    GL.UniformMatrix2(location, false, ref m2.GetValueByRef());
                     break;
 
                 case IUniformWithValue<Matrix3> m3:
-                    GL.UniformMatrix3(uniform.Location, false, ref m3.GetValueByRef());
+                    GL.UniformMatrix3(location, false, ref m3.GetValueByRef());
                     break;
 
                 case IUniformWithValue<Matrix4> m4:
-                    GL.UniformMatrix4(uniform.Location, false, ref m4.GetValueByRef());
+                    GL.UniformMatrix4(location, false, ref m4.GetValueByRef());
                     break;
             }
         }

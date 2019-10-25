@@ -53,7 +53,7 @@ namespace osu.Framework.Graphics.Sprites
         protected override DrawNode CreateDrawNode() => new SpriteDrawNode(this);
 
         [BackgroundDependencyLoader]
-        private void load(ShaderManager shaders)
+        private void load(IShaderManager shaders)
         {
             TextureShader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE);
             RoundedTextureShader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE_ROUNDED);

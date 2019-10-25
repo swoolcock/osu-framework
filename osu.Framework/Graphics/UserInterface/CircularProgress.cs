@@ -56,7 +56,7 @@ namespace osu.Framework.Graphics.UserInterface
             => this.TransformBindableTo(Current, newValue, duration, easing);
 
         [BackgroundDependencyLoader]
-        private void load(ShaderManager shaders)
+        private void load(IShaderManager shaders)
         {
             RoundedTextureShader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE_ROUNDED);
             TextureShader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE);

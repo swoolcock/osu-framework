@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading;
 using osu.Framework.Allocation;
 using osu.Framework.Audio.Track;
+using osu.Framework.Backends.Graphics.OsuTK;
 using osu.Framework.Graphics.Batches;
 using osu.Framework.Graphics.OpenGL.Vertices;
 using osu.Framework.Graphics.Primitives;
@@ -35,7 +36,7 @@ namespace osu.Framework.Graphics.Audio
         }
 
         [BackgroundDependencyLoader]
-        private void load(ShaderManager shaders)
+        private void load(IShaderManager shaders)
         {
             shader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE_ROUNDED);
         }

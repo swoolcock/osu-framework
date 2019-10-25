@@ -4,8 +4,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using osu.Framework.Backends.Graphics.OsuTK;
 using osu.Framework.Backends.Window;
 using osu.Framework.Configuration;
+using osu.Framework.Graphics.Shaders;
+using osu.Framework.IO.Stores;
 using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osuTK.Graphics;
@@ -82,5 +85,7 @@ namespace osu.Framework.Backends.Graphics
 
             throw new ArgumentException(nameof(version));
         }
+
+        public override IShaderManager CreateShaderManager(ResourceStore<byte[]> store) => new OsuTKShaderManager(store);
     }
 }

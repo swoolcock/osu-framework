@@ -4,6 +4,8 @@
 using System;
 using osu.Framework.Backends.Window;
 using osu.Framework.Configuration;
+using osu.Framework.Graphics.Shaders;
+using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
 using Veldrid;
 using Veldrid.Sdl2;
@@ -26,5 +28,7 @@ namespace osu.Framework.Backends.Graphics
         public override void Configure(ConfigManager<FrameworkSetting> config)
         {
         }
+
+        public override IShaderManager CreateShaderManager(ResourceStore<byte[]> store) => throw new NotImplementedException();
     }
 }

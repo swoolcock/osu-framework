@@ -1,7 +1,8 @@
-﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
+// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using osu.Framework.IO.Stores;
@@ -9,19 +10,26 @@ using osuTK.Graphics.ES30;
 
 namespace osu.Framework.Graphics.Shaders
 {
-    public class ShaderManager
+    public abstract class ShaderManager<S, P> : IShaderManager
+        where S : Shader<P>
+        where P : ShaderPart
     {
         private const string shader_prefix = @"sh_";
 
-        private readonly ConcurrentDictionary<string, ShaderPart> partCache = new ConcurrentDictionary<string, ShaderPart>();
-        private readonly ConcurrentDictionary<(string, string), Shader> shaderCache = new ConcurrentDictionary<(string, string), Shader>();
+        private readonly ConcurrentDictionary<string, P> partCache = new ConcurrentDictionary<string, P>();
+        private readonly ConcurrentDictionary<(string, string), S> shaderCache = new ConcurrentDictionary<(string, string), S>();
 
-        private readonly ResourceStore<byte[]> store;
+        protected readonly ResourceStore<byte[]> Store;
 
-        public ShaderManager(ResourceStore<byte[]> store)
+        protected ShaderManager(ResourceStore<byte[]> store)
         {
-            this.store = store;
+            Store = store;
         }
+
+        internal abstract S CreateShader(string name, List<P> parts);
+        internal abstract P CreateShaderPart(string name, byte[] data, ShaderType type);
+
+        public byte[] LoadRaw(string name) => Store.Get(name);
 
         private string getFileEnding(ShaderType type)
         {
@@ -48,18 +56,16 @@ namespace osu.Framework.Graphics.Shaders
             return name + ending;
         }
 
-        internal byte[] LoadRaw(string name) => store.Get(name);
-
-        private ShaderPart createShaderPart(string name, ShaderType type, bool bypassCache = false)
+        private P createShaderPart(string name, ShaderType type, bool bypassCache = false)
         {
             name = ensureValidName(name, type);
 
-            if (!bypassCache && partCache.TryGetValue(name, out ShaderPart part))
+            if (!bypassCache && partCache.TryGetValue(name, out P part))
                 return part;
 
             byte[] rawData = LoadRaw(name);
 
-            part = new ShaderPart(name, rawData, type, this);
+            part = CreateShaderPart(name, rawData, type);
 
             //cache even on failure so we don't try and fail every time.
             partCache[name] = part;
@@ -70,16 +76,14 @@ namespace osu.Framework.Graphics.Shaders
         {
             var tuple = (vertex, fragment);
 
-            if (shaderCache.TryGetValue(tuple, out Shader shader))
+            if (shaderCache.TryGetValue(tuple, out S shader))
                 return shader;
 
-            List<ShaderPart> parts = new List<ShaderPart>
+            return shaderCache[tuple] = CreateShader($"{vertex}/{fragment}", new List<P>
             {
                 createShaderPart(vertex, ShaderType.VertexShader),
                 createShaderPart(fragment, ShaderType.FragmentShader)
-            };
-
-            return shaderCache[tuple] = new Shader($"{vertex}/{fragment}", parts);
+            });
         }
     }
 

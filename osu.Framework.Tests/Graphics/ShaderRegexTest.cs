@@ -3,6 +3,7 @@
 
 using System.Text.RegularExpressions;
 using NUnit.Framework;
+using osu.Framework.Backends.Graphics.OsuTK;
 using osu.Framework.Graphics.Shaders;
 
 namespace osu.Framework.Tests.Graphics
@@ -10,7 +11,7 @@ namespace osu.Framework.Tests.Graphics
     [TestFixture]
     public class ShaderRegexTest
     {
-        private readonly Regex shaderAttributeRegex = new Regex(ShaderPart.SHADER_ATTRIBUTE_PATTERN);
+        private readonly Regex shaderAttributeRegex = new Regex(OsuTKShaderPart.SHADER_ATTRIBUTE_PATTERN);
 
         [Test]
         public void TestComment()

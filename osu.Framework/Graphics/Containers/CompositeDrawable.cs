@@ -205,7 +205,7 @@ namespace osu.Framework.Graphics.Containers
         }
 
         [BackgroundDependencyLoader(true)]
-        private void load(ShaderManager shaders, CancellationToken? cancellation)
+        private void load(IShaderManager shaders, CancellationToken? cancellation)
         {
             if (Shader == null)
                 Shader = shaders?.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE_ROUNDED);
