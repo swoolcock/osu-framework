@@ -8,6 +8,7 @@ using osuTK;
 using osu.Framework.Graphics.Shaders;
 using osu.Framework.Allocation;
 using System.Collections.Generic;
+using osu.Framework.Backends.Graphics;
 using osu.Framework.Caching;
 using osuTK.Graphics;
 using osuTK.Graphics.ES30;
@@ -276,7 +277,7 @@ namespace osu.Framework.Graphics.Lines
 
         private readonly BufferedDrawNodeSharedData sharedData = new BufferedDrawNodeSharedData(new[] { RenderbufferInternalFormat.DepthComponent16 });
 
-        protected override DrawNode CreateDrawNode() => new BufferedDrawNode(this, new PathDrawNode(this), sharedData);
+        protected override DrawNode CreateDrawNode(IGraphics graphics) => new BufferedDrawNode(this, graphics, new PathDrawNode(this, graphics), sharedData);
 
         protected override void Dispose(bool isDisposing)
         {

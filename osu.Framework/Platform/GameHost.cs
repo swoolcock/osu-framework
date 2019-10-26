@@ -355,7 +355,7 @@ namespace osu.Framework.Platform
             Root.UpdateSubTreeMasking(Root, Root.ScreenSpaceDrawQuad.AABBFloat);
 
             using (var buffer = DrawRoots.Get(UsageType.Write))
-                buffer.Object = Root.GenerateDrawNodeSubtree(frameCount, buffer.Index, false);
+                buffer.Object = Root.GenerateDrawNodeSubtree(frameCount, buffer.Index, false, Graphics);
         }
 
         protected virtual void DrawInitialize()
@@ -402,7 +402,7 @@ namespace osu.Framework.Platform
                         GLWrapper.PushDepthInfo(DepthInfo.Default);
 
                         // Front pass
-                        buffer.Object.DrawOpaqueInteriorSubTree(depthValue, null, Graphics);
+                        buffer.Object.DrawOpaqueInteriorSubTree(depthValue, null);
 
                         GLWrapper.PopDepthInfo();
 
@@ -416,7 +416,7 @@ namespace osu.Framework.Platform
                     }
 
                     // Back pass
-                    buffer.Object.Draw(null, Graphics);
+                    buffer.Object.Draw(null);
 
                     GLWrapper.PopDepthInfo();
 

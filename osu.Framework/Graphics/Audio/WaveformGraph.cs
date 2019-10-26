@@ -183,7 +183,7 @@ namespace osu.Framework.Graphics.Audio
             cancelSource = null;
         }
 
-        protected override DrawNode CreateDrawNode() => new WaveformDrawNode(this);
+        protected override DrawNode CreateDrawNode(IGraphics graphics) => new WaveformDrawNode(this, graphics);
 
         protected override void Dispose(bool isDisposing)
         {
@@ -211,8 +211,8 @@ namespace osu.Framework.Graphics.Audio
 
             protected new WaveformGraph Source => (WaveformGraph)base.Source;
 
-            public WaveformDrawNode(WaveformGraph source)
-                : base(source)
+            public WaveformDrawNode(WaveformGraph source, IGraphics graphics)
+                : base(source, graphics)
             {
             }
 
@@ -239,9 +239,9 @@ namespace osu.Framework.Graphics.Audio
 
             private readonly QuadBatch<TexturedVertex2D> vertexBatch = new QuadBatch<TexturedVertex2D>(1000, 10);
 
-            public override void Draw(Action<TexturedVertex2D> vertexAction, IGraphics graphics)
+            public override void Draw(Action<TexturedVertex2D> vertexAction)
             {
-                base.Draw(vertexAction, graphics);
+                base.Draw(vertexAction);
 
                 if (texture?.Available != true || points == null || points.Count == 0)
                     return;

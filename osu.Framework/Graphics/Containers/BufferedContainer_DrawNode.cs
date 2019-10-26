@@ -8,6 +8,7 @@ using osuTK.Graphics;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Shaders;
 using System;
+using osu.Framework.Backends.Graphics;
 using osu.Framework.Graphics.Buffers;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.MathUtils;
@@ -36,8 +37,8 @@ namespace osu.Framework.Graphics.Containers
 
             private IShader blurShader;
 
-            public BufferedContainerDrawNode(BufferedContainer<T> source, BufferedContainerDrawNodeSharedData sharedData)
-                : base(source, new CompositeDrawableDrawNode(source), sharedData)
+            public BufferedContainerDrawNode(BufferedContainer<T> source, IGraphics graphics, BufferedContainerDrawNodeSharedData sharedData)
+                : base(source, graphics, new CompositeDrawableDrawNode(source, graphics), sharedData)
             {
             }
 

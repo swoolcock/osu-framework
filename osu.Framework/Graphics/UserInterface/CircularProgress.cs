@@ -3,6 +3,7 @@
 
 using System;
 using osu.Framework.Allocation;
+using osu.Framework.Backends.Graphics;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics.Shaders;
 using osu.Framework.Graphics.Textures;
@@ -50,7 +51,7 @@ namespace osu.Framework.Graphics.UserInterface
 
         #endregion
 
-        protected override DrawNode CreateDrawNode() => new CircularProgressDrawNode(this);
+        protected override DrawNode CreateDrawNode(IGraphics graphics) => new CircularProgressDrawNode(this, graphics);
 
         public TransformSequence<CircularProgress> FillTo(double newValue, double duration = 0, Easing easing = Easing.None)
             => this.TransformBindableTo(Current, newValue, duration, easing);

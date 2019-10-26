@@ -36,11 +36,11 @@ namespace osu.Framework.Graphics
                 drawNodeValidationIds[treeIndex] = frame;
             }
 
-            protected override DrawNode CreateDrawNode() => new ProxyDrawNode(this);
+            protected override DrawNode CreateDrawNode(IGraphics graphics) => new ProxyDrawNode(this, graphics);
 
-            internal override DrawNode GenerateDrawNodeSubtree(ulong frame, int treeIndex, bool forceNewDrawNode)
+            internal override DrawNode GenerateDrawNodeSubtree(ulong frame, int treeIndex, bool forceNewDrawNode, IGraphics graphics)
             {
-                var node = (ProxyDrawNode)base.GenerateDrawNodeSubtree(frame, treeIndex, forceNewDrawNode);
+                var node = (ProxyDrawNode)base.GenerateDrawNodeSubtree(frame, treeIndex, forceNewDrawNode, graphics);
 
                 node.DrawNodeIndex = treeIndex;
                 node.FrameCount = frame;
@@ -84,16 +84,16 @@ namespace osu.Framework.Graphics
 
                 protected new ProxyDrawable Source => (ProxyDrawable)base.Source;
 
-                public ProxyDrawNode(ProxyDrawable proxyDrawable)
-                    : base(proxyDrawable)
+                public ProxyDrawNode(ProxyDrawable proxyDrawable, IGraphics graphics)
+                    : base(proxyDrawable, graphics)
                 {
                 }
 
-                internal override void DrawOpaqueInteriorSubTree(DepthValue depthValue, Action<TexturedVertex2D> vertexAction, IGraphics graphics)
-                    => getCurrentFrameSource()?.DrawOpaqueInteriorSubTree(depthValue, vertexAction, graphics);
+                internal override void DrawOpaqueInteriorSubTree(DepthValue depthValue, Action<TexturedVertex2D> vertexAction)
+                    => getCurrentFrameSource()?.DrawOpaqueInteriorSubTree(depthValue, vertexAction);
 
-                public override void Draw(Action<TexturedVertex2D> vertexAction, IGraphics graphics)
-                    => getCurrentFrameSource()?.Draw(vertexAction, graphics);
+                public override void Draw(Action<TexturedVertex2D> vertexAction)
+                    => getCurrentFrameSource()?.Draw(vertexAction);
 
                 protected internal override bool CanDrawOpaqueInterior => getCurrentFrameSource()?.CanDrawOpaqueInterior ?? false;
 

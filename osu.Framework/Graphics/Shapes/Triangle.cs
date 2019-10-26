@@ -2,6 +2,7 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using osu.Framework.Backends.Graphics;
 using osu.Framework.Graphics.Textures;
 using osuTK;
 using osu.Framework.Graphics.Primitives;
@@ -32,12 +33,12 @@ namespace osu.Framework.Graphics.Shapes
 
         public override bool Contains(Vector2 screenSpacePos) => toTriangle(ScreenSpaceDrawQuad).Contains(screenSpacePos);
 
-        protected override DrawNode CreateDrawNode() => new TriangleDrawNode(this);
+        protected override DrawNode CreateDrawNode(IGraphics graphics) => new TriangleDrawNode(this, graphics);
 
         private class TriangleDrawNode : SpriteDrawNode
         {
-            public TriangleDrawNode(Triangle source)
-                : base(source)
+            public TriangleDrawNode(Triangle source, IGraphics graphics)
+                : base(source, graphics)
             {
             }
 

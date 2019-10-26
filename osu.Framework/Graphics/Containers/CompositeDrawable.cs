@@ -20,6 +20,7 @@ using osu.Framework.Caching;
 using osu.Framework.Threading;
 using osu.Framework.Statistics;
 using System.Threading.Tasks;
+using osu.Framework.Backends.Graphics;
 using osu.Framework.Development;
 using osu.Framework.Extensions.ExceptionExtensions;
 using osu.Framework.Graphics.Effects;
@@ -958,7 +959,7 @@ namespace osu.Framework.Graphics.Containers
 
         internal IShader Shader { get; private set; }
 
-        protected override DrawNode CreateDrawNode() => new CompositeDrawableDrawNode(this);
+        protected override DrawNode CreateDrawNode(IGraphics graphics) => new CompositeDrawableDrawNode(this, graphics);
 
         private bool forceLocalVertexBatch;
 
@@ -1001,7 +1002,7 @@ namespace osu.Framework.Graphics.Containers
         /// <param name="j">The running index into the target List.</param>
         /// <param name="parentComposite">The <see cref="CompositeDrawable"/> whose children's <see cref="DrawNode"/>s to add.</param>
         /// <param name="target">The target list to fill with DrawNodes.</param>
-        private static void addFromComposite(ulong frame, int treeIndex, bool forceNewDrawNode, ref int j, CompositeDrawable parentComposite, List<DrawNode> target)
+        private static void addFromComposite(ulong frame, int treeIndex, bool forceNewDrawNode, ref int j, CompositeDrawable parentComposite, List<DrawNode> target, IGraphics graphics)
         {
             SortedList<Drawable> children = parentComposite.aliveInternalChildren;
 
@@ -1024,12 +1025,12 @@ namespace osu.Framework.Graphics.Containers
 
                     if (composite?.CanBeFlattened == true)
                     {
-                        addFromComposite(frame, treeIndex, forceNewDrawNode, ref j, composite, target);
+                        addFromComposite(frame, treeIndex, forceNewDrawNode, ref j, composite, target, graphics);
                         continue;
                     }
                 }
 
-                DrawNode next = drawable.GenerateDrawNodeSubtree(frame, treeIndex, forceNewDrawNode);
+                DrawNode next = drawable.GenerateDrawNodeSubtree(frame, treeIndex, forceNewDrawNode, graphics);
                 if (next == null)
                     continue;
 
@@ -1046,13 +1047,13 @@ namespace osu.Framework.Graphics.Containers
             }
         }
 
-        internal override DrawNode GenerateDrawNodeSubtree(ulong frame, int treeIndex, bool forceNewDrawNode)
+        internal override DrawNode GenerateDrawNodeSubtree(ulong frame, int treeIndex, bool forceNewDrawNode, IGraphics graphics)
         {
             // No need for a draw node at all if there are no children and we are not glowing.
             if (aliveInternalChildren.Count == 0 && CanBeFlattened)
                 return null;
 
-            DrawNode node = base.GenerateDrawNodeSubtree(frame, treeIndex, forceNewDrawNode);
+            DrawNode node = base.GenerateDrawNodeSubtree(frame, treeIndex, forceNewDrawNode, graphics);
 
             if (!(node is ICompositeDrawNode cNode))
                 return null;
@@ -1063,7 +1064,7 @@ namespace osu.Framework.Graphics.Containers
             if (cNode.AddChildDrawNodes)
             {
                 int j = 0;
-                addFromComposite(frame, treeIndex, forceNewDrawNode, ref j, this, cNode.Children);
+                addFromComposite(frame, treeIndex, forceNewDrawNode, ref j, this, cNode.Children, graphics);
 
                 if (j < cNode.Children.Count)
                     cNode.Children.RemoveRange(j, cNode.Children.Count - j);

@@ -26,8 +26,8 @@ namespace osu.Framework.Graphics.Sprites
 
         protected new Sprite Source => (Sprite)base.Source;
 
-        public SpriteDrawNode(Sprite source)
-            : base(source)
+        public SpriteDrawNode(Sprite source, IGraphics graphics)
+            : base(source, graphics)
         {
         }
 
@@ -48,9 +48,9 @@ namespace osu.Framework.Graphics.Sprites
                 new Vector2(InflationAmount.X / DrawRectangle.Width, InflationAmount.Y / DrawRectangle.Height));
         }
 
-        public override void Draw(Action<TexturedVertex2D> vertexAction, IGraphics graphics)
+        public override void Draw(Action<TexturedVertex2D> vertexAction)
         {
-            base.Draw(vertexAction, graphics);
+            base.Draw(vertexAction);
 
             if (Texture?.Available != true)
                 return;

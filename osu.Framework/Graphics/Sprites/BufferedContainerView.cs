@@ -40,7 +40,7 @@ namespace osu.Framework.Graphics.Sprites
             RoundedTextureShader = shaders?.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.TEXTURE_ROUNDED);
         }
 
-        protected override DrawNode CreateDrawNode() => new BufferSpriteDrawNode(this);
+        protected override DrawNode CreateDrawNode(IGraphics graphics) => new BufferSpriteDrawNode(this, graphics);
 
         private bool synchronisedDrawQuad;
 
@@ -116,8 +116,8 @@ namespace osu.Framework.Graphics.Sprites
             private BlendingParameters sourceEffectBlending;
             private EffectPlacement sourceEffectPlacement;
 
-            public BufferSpriteDrawNode(BufferedContainerView<T> source)
-                : base(source)
+            public BufferSpriteDrawNode(BufferedContainerView<T> source, IGraphics graphics)
+                : base(source, graphics)
             {
             }
 
@@ -135,9 +135,9 @@ namespace osu.Framework.Graphics.Sprites
                 sourceEffectPlacement = Source.container.EffectPlacement;
             }
 
-            public override void Draw(Action<TexturedVertex2D> vertexAction, IGraphics graphics)
+            public override void Draw(Action<TexturedVertex2D> vertexAction)
             {
-                base.Draw(vertexAction, graphics);
+                base.Draw(vertexAction);
 
                 if (shared?.MainBuffer?.Texture?.Available != true || shared.DrawVersion == -1)
                     return;

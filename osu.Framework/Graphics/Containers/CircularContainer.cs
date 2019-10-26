@@ -2,6 +2,7 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using osu.Framework.Backends.Graphics;
 
 namespace osu.Framework.Graphics.Containers
 {
@@ -10,13 +11,13 @@ namespace osu.Framework.Graphics.Containers
     /// </summary>
     public class CircularContainer : Container
     {
-        internal override DrawNode GenerateDrawNodeSubtree(ulong frame, int treeIndex, bool forceNewDrawNode)
+        internal override DrawNode GenerateDrawNodeSubtree(ulong frame, int treeIndex, bool forceNewDrawNode, IGraphics graphics)
         {
             // this shouldn't have to be done here, but it's the only place it works correctly.
             // see https://github.com/ppy/osu-framework/pull/1666
             CornerRadius = Math.Min(DrawSize.X, DrawSize.Y) / 2f;
 
-            return base.GenerateDrawNodeSubtree(frame, treeIndex, forceNewDrawNode);
+            return base.GenerateDrawNodeSubtree(frame, treeIndex, forceNewDrawNode, graphics);
         }
     }
 }

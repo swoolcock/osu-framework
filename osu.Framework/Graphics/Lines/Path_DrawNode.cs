@@ -38,8 +38,8 @@ namespace osu.Framework.Graphics.Lines
             private readonly LinearBatch<TexturedVertex3D> halfCircleBatch = new LinearBatch<TexturedVertex3D>(MAX_RES * 100 * 3, 10, BatchPrimitiveType.Triangles);
             private readonly QuadBatch<TexturedVertex3D> quadBatch = new QuadBatch<TexturedVertex3D>(200, 10);
 
-            public PathDrawNode(Path source)
-                : base(source)
+            public PathDrawNode(Path source, IGraphics graphics)
+                : base(source, graphics)
             {
             }
 
@@ -202,9 +202,9 @@ namespace osu.Framework.Graphics.Lines
                     addLineQuads(segment, texRect);
             }
 
-            public override void Draw(Action<TexturedVertex2D> vertexAction, IGraphics graphics)
+            public override void Draw(Action<TexturedVertex2D> vertexAction)
             {
-                base.Draw(vertexAction, graphics);
+                base.Draw(vertexAction);
 
                 if (texture?.Available != true || segments.Count == 0)
                     return;

@@ -34,7 +34,7 @@ namespace osu.Framework.Graphics.Shapes
             set => throw new InvalidOperationException($"The texture of a {nameof(Box)} cannot be set.");
         }
 
-        protected override DrawNode CreateDrawNode() => new BoxDrawNode(this);
+        protected override DrawNode CreateDrawNode(IGraphics graphics) => new BoxDrawNode(this, graphics);
 
         protected override Quad ComputeScreenSpaceDrawQuad()
         {
@@ -49,8 +49,8 @@ namespace osu.Framework.Graphics.Shapes
             private Quad conservativeScreenSpaceDrawQuad;
             private bool hasOpaqueInterior;
 
-            public BoxDrawNode(Box source)
-                : base(source)
+            public BoxDrawNode(Box source, IGraphics graphics)
+                : base(source, graphics)
             {
             }
 
@@ -65,9 +65,9 @@ namespace osu.Framework.Graphics.Shapes
                                     && DrawColourInfo.Colour.HasSingleColour;
             }
 
-            protected override void DrawOpaqueInterior(Action<TexturedVertex2D> vertexAction, IGraphics graphics)
+            protected override void DrawOpaqueInterior(Action<TexturedVertex2D> vertexAction)
             {
-                base.DrawOpaqueInterior(vertexAction, graphics);
+                base.DrawOpaqueInterior(vertexAction);
 
                 TextureShader.Bind();
                 Texture.TextureGL.WrapMode = WrapTexture ? TextureWrapMode.Repeat : TextureWrapMode.ClampToEdge;
