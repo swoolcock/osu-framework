@@ -85,11 +85,11 @@ namespace osu.Framework.Graphics
         /// <param name="vertexAction">The action to be performed on each vertex of the draw node in order to draw it if required. This is primarily used by textured sprites.</param>
         public virtual void Draw(Action<TexturedVertex2D> vertexAction, IGraphics graphics)
         {
-            GLWrapper.SetBlend(DrawColourInfo.Blending);
+            graphics.SetBlend(DrawColourInfo.Blending);
 
             // This is the back-to-front (BTF) pass. The back-buffer depth test function used is GL_LESS.
             // The depth test will fail for samples that overlap the opaque interior of this <see cref="DrawNode"/> and any <see cref="DrawNode"/>s above this one.
-            GLWrapper.SetDrawDepth(drawDepth);
+            graphics.SetDrawDepth(drawDepth);
         }
 
         /// <summary>
@@ -133,8 +133,8 @@ namespace osu.Framework.Graphics
         /// <param name="vertexAction">The action to be performed on each vertex of the draw node in order to draw it if required. This is primarily used by textured sprites.</param>
         protected virtual void DrawOpaqueInterior(Action<TexturedVertex2D> vertexAction, IGraphics graphics)
         {
-            GLWrapper.SetBlend(DrawColourInfo.Blending);
-            GLWrapper.SetDrawDepth(drawDepth);
+            graphics.SetBlend(DrawColourInfo.Blending);
+            graphics.SetDrawDepth(drawDepth);
         }
 
         /// <summary>
@@ -279,6 +279,7 @@ namespace osu.Framework.Graphics
 
         ~DrawNode()
         {
+            // TODO: schedule disposal another way
             GLWrapper.ScheduleDisposal(() => Dispose(false));
         }
 
@@ -289,6 +290,7 @@ namespace osu.Framework.Graphics
             if (referenceCount.Decrement() != 0)
                 return;
 
+            // TODO: schedule disposal another way
             GLWrapper.ScheduleDisposal(() => Dispose(true));
             GC.SuppressFinalize(this);
         }

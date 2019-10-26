@@ -2,8 +2,8 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
-using System.Collections.Generic;
 using osu.Framework.Configuration;
+using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shaders;
 using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
@@ -18,8 +18,17 @@ namespace osu.Framework.Backends.Graphics
     {
         public abstract void Initialise(IGameHost host);
         public abstract void Configure(ConfigManager<FrameworkSetting> config);
+
         public abstract void ResetState();
+        public abstract void SetBlend(BlendingParameters blendingParameters);
+        public abstract void SetDrawDepth(float drawDepth);
+
         public abstract IShaderManager CreateShaderManager(ResourceStore<byte[]> store);
+
+        public void PushMaskingInfo(MaskingInfo maskingInfo, bool overwritePreviousScissor = false)
+        {
+            // TODO
+        }
 
         #region IDisposable
 

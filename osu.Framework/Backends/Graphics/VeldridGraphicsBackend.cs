@@ -4,11 +4,11 @@
 using System;
 using osu.Framework.Backends.Window;
 using osu.Framework.Configuration;
+using osu.Framework.Graphics;
 using osu.Framework.Graphics.Shaders;
 using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
 using Veldrid;
-using Veldrid.Sdl2;
 using Veldrid.StartupUtilities;
 
 namespace osu.Framework.Backends.Graphics
@@ -29,8 +29,12 @@ namespace osu.Framework.Backends.Graphics
         {
         }
 
+        public override IShaderManager CreateShaderManager(ResourceStore<byte[]> store) => throw new NotImplementedException();
+
         public override void ResetState() => throw new NotImplementedException();
 
-        public override IShaderManager CreateShaderManager(ResourceStore<byte[]> store) => throw new NotImplementedException();
+        public override void SetBlend(BlendingParameters blendingParameters) => throw new NotImplementedException();
+
+        public override void SetDrawDepth(float drawDepth) => throw new NotImplementedException();
     }
 }
