@@ -7,10 +7,12 @@ using System.Linq;
 using osu.Framework.Backends.Graphics.OsuTK;
 using osu.Framework.Backends.Window;
 using osu.Framework.Configuration;
+using osu.Framework.Graphics.OpenGL;
 using osu.Framework.Graphics.Shaders;
 using osu.Framework.IO.Stores;
 using osu.Framework.Logging;
 using osu.Framework.Platform;
+using osuTK;
 using osuTK.Graphics;
 using osuTK.Graphics.ES30;
 
@@ -23,6 +25,8 @@ namespace osu.Framework.Backends.Graphics
     {
         private IGraphicsContext context;
 
+        private OsuTKWindowBackend windowBackend;
+
         internal Version GLVersion { get; private set; }
 
         internal Version GLSLVersion { get; private set; }
@@ -33,6 +37,8 @@ namespace osu.Framework.Backends.Graphics
         {
             if (!(host.Window is OsuTKWindowBackend window))
                 throw new Exception($"{nameof(OsuTKGraphicsBackend)} requires a corresponding {nameof(OsuTKWindowBackend)}");
+
+            windowBackend = window;
 
             if (window.Implementation is osuTK.GameWindow impl)
                 context = impl.Context;
@@ -84,6 +90,11 @@ namespace osu.Framework.Backends.Graphics
             if (result != null) return result;
 
             throw new ArgumentException(nameof(version));
+        }
+
+        public override void ResetState()
+        {
+            GLWrapper.Reset(new Vector2(windowBackend.InternalSize.Value.Width, windowBackend.InternalSize.Value.Height));
         }
 
         public override IShaderManager CreateShaderManager(ResourceStore<byte[]> store) => new OsuTKShaderManager(store);

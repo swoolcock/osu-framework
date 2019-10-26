@@ -11,6 +11,7 @@ namespace osu.Framework.Backends.Graphics
     /// </summary>
     public interface IGraphics : IBackend
     {
+        void ResetState();
         IShaderManager CreateShaderManager(ResourceStore<byte[]> store);
     }
 }

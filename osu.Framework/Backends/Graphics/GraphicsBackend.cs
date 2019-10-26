@@ -18,6 +18,7 @@ namespace osu.Framework.Backends.Graphics
     {
         public abstract void Initialise(IGameHost host);
         public abstract void Configure(ConfigManager<FrameworkSetting> config);
+        public abstract void ResetState();
         public abstract IShaderManager CreateShaderManager(ResourceStore<byte[]> store);
 
         #region IDisposable

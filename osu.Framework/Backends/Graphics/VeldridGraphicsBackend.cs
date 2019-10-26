@@ -29,6 +29,8 @@ namespace osu.Framework.Backends.Graphics
         {
         }
 
+        public override void ResetState() => throw new NotImplementedException();
+
         public override IShaderManager CreateShaderManager(ResourceStore<byte[]> store) => throw new NotImplementedException();
     }
 }

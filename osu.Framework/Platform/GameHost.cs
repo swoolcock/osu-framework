@@ -370,7 +370,7 @@ namespace osu.Framework.Platform
 
             setVSyncMode();
 
-            GLWrapper.Reset(new Vector2(Window.InternalSize.Value.Width, Window.InternalSize.Value.Height));
+            Graphics.ResetState();
         }
 
         private long lastDrawFrameId;
@@ -393,7 +393,7 @@ namespace osu.Framework.Platform
                     }
 
                     using (drawMonitor.BeginCollecting(PerformanceCollectionType.GLReset))
-                        GLWrapper.Reset(new Vector2(Window.InternalSize.Value.Width, Window.InternalSize.Value.Height));
+                        Graphics.ResetState();
 
                     if (!bypassFrontToBackPass.Value)
                     {
