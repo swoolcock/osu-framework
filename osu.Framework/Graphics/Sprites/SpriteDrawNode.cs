@@ -3,6 +3,7 @@
 
 using osuTK;
 using System;
+using osu.Framework.Backends.Graphics;
 using osu.Framework.Graphics.OpenGL.Vertices;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Textures;
@@ -47,9 +48,9 @@ namespace osu.Framework.Graphics.Sprites
                 new Vector2(InflationAmount.X / DrawRectangle.Width, InflationAmount.Y / DrawRectangle.Height));
         }
 
-        public override void Draw(Action<TexturedVertex2D> vertexAction)
+        public override void Draw(Action<TexturedVertex2D> vertexAction, IGraphics graphics)
         {
-            base.Draw(vertexAction);
+            base.Draw(vertexAction, graphics);
 
             if (Texture?.Available != true)
                 return;

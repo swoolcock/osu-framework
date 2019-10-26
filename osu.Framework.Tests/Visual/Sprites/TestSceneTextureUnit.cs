@@ -3,6 +3,7 @@
 
 using System;
 using osu.Framework.Allocation;
+using osu.Framework.Backends.Graphics;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.OpenGL.Vertices;
@@ -115,7 +116,7 @@ namespace osu.Framework.Tests.Visual.Sprites
                     blueTex = Source.blueTex;
                 }
 
-                public override void Draw(Action<TexturedVertex2D> vertexAction)
+                public override void Draw(Action<TexturedVertex2D> vertexAction, IGraphics graphics)
                 {
                     redTex.TextureGL.Bind(TextureUnit.Texture1);
                     greenTex.TextureGL.Bind(TextureUnit.Texture2);
@@ -124,7 +125,7 @@ namespace osu.Framework.Tests.Visual.Sprites
                     int unitId = unit - TextureUnit.Texture0;
                     Shader.GetUniform<int>("m_Sampler").UpdateValue(ref unitId);
 
-                    base.Draw(vertexAction);
+                    base.Draw(vertexAction, graphics);
 
                     unitId = 0;
                     Shader.GetUniform<int>("m_Sampler").UpdateValue(ref unitId);

@@ -5,6 +5,7 @@ using osu.Framework.Graphics.Textures;
 using osuTK.Graphics.ES30;
 using osuTK;
 using System;
+using osu.Framework.Backends.Graphics;
 using osu.Framework.Graphics.Batches;
 using osu.Framework.Graphics.Primitives;
 using osuTK.Graphics;
@@ -140,9 +141,9 @@ namespace osu.Framework.Graphics.UserInterface
             }
         }
 
-        public override void Draw(Action<TexturedVertex2D> vertexAction)
+        public override void Draw(Action<TexturedVertex2D> vertexAction, IGraphics graphics)
         {
-            base.Draw(vertexAction);
+            base.Draw(vertexAction, graphics);
 
             if (texture?.Available != true)
                 return;

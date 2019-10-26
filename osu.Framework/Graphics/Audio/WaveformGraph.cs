@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading;
 using osu.Framework.Allocation;
 using osu.Framework.Audio.Track;
+using osu.Framework.Backends.Graphics;
 using osu.Framework.Backends.Graphics.OsuTK;
 using osu.Framework.Graphics.Batches;
 using osu.Framework.Graphics.OpenGL.Vertices;
@@ -239,9 +240,9 @@ namespace osu.Framework.Graphics.Audio
 
             private readonly QuadBatch<TexturedVertex2D> vertexBatch = new QuadBatch<TexturedVertex2D>(1000, 10);
 
-            public override void Draw(Action<TexturedVertex2D> vertexAction)
+            public override void Draw(Action<TexturedVertex2D> vertexAction, IGraphics graphics)
             {
-                base.Draw(vertexAction);
+                base.Draw(vertexAction, graphics);
 
                 if (texture?.Available != true || points == null || points.Count == 0)
                     return;

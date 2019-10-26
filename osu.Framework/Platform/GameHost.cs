@@ -402,7 +402,7 @@ namespace osu.Framework.Platform
                         GLWrapper.PushDepthInfo(DepthInfo.Default);
 
                         // Front pass
-                        buffer.Object.DrawOpaqueInteriorSubTree(depthValue, null);
+                        buffer.Object.DrawOpaqueInteriorSubTree(depthValue, null, Graphics);
 
                         GLWrapper.PopDepthInfo();
 
@@ -416,7 +416,7 @@ namespace osu.Framework.Platform
                     }
 
                     // Back pass
-                    buffer.Object.Draw(null);
+                    buffer.Object.Draw(null, Graphics);
 
                     GLWrapper.PopDepthInfo();
 

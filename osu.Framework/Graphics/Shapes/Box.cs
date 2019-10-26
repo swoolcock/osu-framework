@@ -2,6 +2,7 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using osu.Framework.Backends.Graphics;
 using osu.Framework.Graphics.OpenGL;
 using osu.Framework.Graphics.OpenGL.Vertices;
 using osu.Framework.Graphics.Primitives;
@@ -64,9 +65,9 @@ namespace osu.Framework.Graphics.Shapes
                                     && DrawColourInfo.Colour.HasSingleColour;
             }
 
-            protected override void DrawOpaqueInterior(Action<TexturedVertex2D> vertexAction)
+            protected override void DrawOpaqueInterior(Action<TexturedVertex2D> vertexAction, IGraphics graphics)
             {
-                base.DrawOpaqueInterior(vertexAction);
+                base.DrawOpaqueInterior(vertexAction, graphics);
 
                 TextureShader.Bind();
                 Texture.TextureGL.WrapMode = WrapTexture ? TextureWrapMode.Repeat : TextureWrapMode.ClampToEdge;

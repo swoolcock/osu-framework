@@ -4,6 +4,7 @@
 using osu.Framework.Graphics.OpenGL;
 using System;
 using System.Runtime.CompilerServices;
+using osu.Framework.Backends.Graphics;
 using osu.Framework.Graphics.Batches;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.OpenGL.Buffers;
@@ -82,7 +83,7 @@ namespace osu.Framework.Graphics
         /// Subclasses must invoke <code>base.Draw()</code> prior to drawing vertices.
         /// </remarks>
         /// <param name="vertexAction">The action to be performed on each vertex of the draw node in order to draw it if required. This is primarily used by textured sprites.</param>
-        public virtual void Draw(Action<TexturedVertex2D> vertexAction)
+        public virtual void Draw(Action<TexturedVertex2D> vertexAction, IGraphics graphics)
         {
             GLWrapper.SetBlend(DrawColourInfo.Blending);
 
@@ -103,7 +104,7 @@ namespace osu.Framework.Graphics
         /// </remarks>
         /// <param name="depthValue">The previous depth value.</param>
         /// <param name="vertexAction">The action to be performed on each vertex of the draw node in order to draw it if required. This is primarily used by textured sprites.</param>
-        internal virtual void DrawOpaqueInteriorSubTree(DepthValue depthValue, Action<TexturedVertex2D> vertexAction)
+        internal virtual void DrawOpaqueInteriorSubTree(DepthValue depthValue, Action<TexturedVertex2D> vertexAction, IGraphics graphics)
         {
             if (!depthValue.CanIncrement || !CanDrawOpaqueInterior)
             {
@@ -118,7 +119,7 @@ namespace osu.Framework.Graphics
             // Furthermore, a back-to-front-drawn object above the box will be visible since it will be drawn with a depth of (X - increment), satisfying the depth test
             drawDepth = depthValue.Increment();
 
-            DrawOpaqueInterior(vertexAction);
+            DrawOpaqueInterior(vertexAction, graphics);
         }
 
         /// <summary>
@@ -130,7 +131,7 @@ namespace osu.Framework.Graphics
         /// Subclasses must invoke <code>base.DrawOpaqueInterior()</code> prior to drawing vertices.
         /// </remarks>
         /// <param name="vertexAction">The action to be performed on each vertex of the draw node in order to draw it if required. This is primarily used by textured sprites.</param>
-        protected virtual void DrawOpaqueInterior(Action<TexturedVertex2D> vertexAction)
+        protected virtual void DrawOpaqueInterior(Action<TexturedVertex2D> vertexAction, IGraphics graphics)
         {
             GLWrapper.SetBlend(DrawColourInfo.Blending);
             GLWrapper.SetDrawDepth(drawDepth);
