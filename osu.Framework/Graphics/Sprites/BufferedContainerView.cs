@@ -163,7 +163,7 @@ namespace osu.Framework.Graphics.Sprites
                 if (!sourceDrawsOriginal && shouldDrawEffectBuffer)
                     return;
 
-                GLWrapper.SetBlend(DrawColourInfo.Blending);
+                Graphics.SetBlend(DrawColourInfo.Blending);
                 DrawFrameBuffer(shared.MainBuffer, screenSpaceDrawQuad, DrawColourInfo.Colour, vertexAction);
             }
 
@@ -172,7 +172,7 @@ namespace osu.Framework.Graphics.Sprites
                 if (!shouldDrawEffectBuffer)
                     return;
 
-                GLWrapper.SetBlend(sourceEffectBlending);
+                Graphics.SetBlend(sourceEffectBlending);
                 ColourInfo finalEffectColour = DrawColourInfo.Colour;
                 finalEffectColour.ApplyChild(sourceEffectColour);
 

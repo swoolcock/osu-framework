@@ -92,12 +92,12 @@ namespace osu.Framework.Graphics
                     {
                         // We need to draw children as if they were zero-based to the top-left of the texture.
                         // We can do this by adding a translation component to our (orthogonal) projection matrix.
-                        GLWrapper.PushOrtho(screenSpaceDrawRectangle);
-                        GLWrapper.Clear(new ClearInfo(backgroundColour));
+                        Graphics.PushOrtho(screenSpaceDrawRectangle);
+                        Graphics.Clear(new ClearInfo(backgroundColour));
 
                         Child.Draw(vertexAction);
 
-                        GLWrapper.PopOrtho();
+                        Graphics.PopOrtho();
                     }
 
                     PopulateContents();
@@ -152,7 +152,7 @@ namespace osu.Framework.Graphics
             // in the frame buffer and helps with cached buffers being re-used.
             RectangleI screenSpaceMaskingRect = new RectangleI((int)Math.Floor(screenSpaceDrawRectangle.X), (int)Math.Floor(screenSpaceDrawRectangle.Y), (int)frameBufferSize.X + 1, (int)frameBufferSize.Y + 1);
 
-            GLWrapper.PushMaskingInfo(new MaskingInfo
+            Graphics.PushMaskingInfo(new MaskingInfo
             {
                 ScreenSpaceAABB = screenSpaceMaskingRect,
                 MaskingRect = screenSpaceDrawRectangle,
@@ -162,15 +162,15 @@ namespace osu.Framework.Graphics
             }, true);
 
             // Match viewport to FrameBuffer such that we don't draw unnecessary pixels.
-            GLWrapper.PushViewport(new RectangleI(0, 0, (int)frameBufferSize.X, (int)frameBufferSize.Y));
+            Graphics.PushViewport(new RectangleI(0, 0, (int)frameBufferSize.X, (int)frameBufferSize.Y));
 
             return new ValueInvokeOnDisposal(returnViewport);
         }
 
         private void returnViewport()
         {
-            GLWrapper.PopViewport();
-            GLWrapper.PopMaskingInfo();
+            Graphics.PopViewport();
+            Graphics.PopMaskingInfo();
         }
 
         protected override void Dispose(bool isDisposing)

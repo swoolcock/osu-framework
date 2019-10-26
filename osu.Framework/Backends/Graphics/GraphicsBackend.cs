@@ -4,9 +4,11 @@
 using System;
 using osu.Framework.Configuration;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Shaders;
 using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
+using osuTK;
 
 namespace osu.Framework.Backends.Graphics
 {
@@ -25,10 +27,24 @@ namespace osu.Framework.Backends.Graphics
 
         public abstract IShaderManager CreateShaderManager(ResourceStore<byte[]> store);
 
-        public void PushMaskingInfo(MaskingInfo maskingInfo, bool overwritePreviousScissor = false)
-        {
-            // TODO
-        }
+        public virtual MaskingInfo CurrentMaskingInfo { get; private set; }
+        public virtual RectangleI Viewport { get; private set; }
+        public virtual RectangleF Ortho { get; private set; }
+        public virtual Matrix4 ProjectionMatrix { get; private set; }
+        public virtual DepthInfo CurrentDepthInfo { get; private set; }
+        public virtual bool IsMaskingActive { get; }
+
+        public abstract void PushViewport(RectangleI viewport);
+        public abstract void PopViewport();
+        public abstract void PushOrtho(RectangleF ortho);
+        public abstract void PopOrtho();
+        public abstract void PushMaskingInfo(MaskingInfo maskingInfo, bool overwritePreviousScissor = false);
+        public abstract void PopMaskingInfo();
+        public abstract void PushDepthInfo(DepthInfo depthInfo);
+        public abstract void PopDepthInfo();
+        public abstract void Clear(ClearInfo clearInfo);
+        public abstract void PushScissorState(bool enabled);
+        public abstract void PopScissorState();
 
         #region IDisposable
 

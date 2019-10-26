@@ -377,7 +377,6 @@ namespace osu.Framework.Platform
 
         protected virtual void DrawFrame()
         {
-            // TODO: use graphics backend
             if (Root == null)
                 return;
 
@@ -399,26 +398,26 @@ namespace osu.Framework.Platform
                     {
                         var depthValue = new DepthValue();
 
-                        GLWrapper.PushDepthInfo(DepthInfo.Default);
+                        Graphics.PushDepthInfo(DepthInfo.Default);
 
                         // Front pass
                         buffer.Object.DrawOpaqueInteriorSubTree(depthValue, null);
 
-                        GLWrapper.PopDepthInfo();
+                        Graphics.PopDepthInfo();
 
                         // The back pass doesn't write depth, but needs to depth test properly
-                        GLWrapper.PushDepthInfo(new DepthInfo(true, false));
+                        Graphics.PushDepthInfo(new DepthInfo(true, false));
                     }
                     else
                     {
                         // Disable depth testing
-                        GLWrapper.PushDepthInfo(new DepthInfo());
+                        Graphics.PushDepthInfo(new DepthInfo());
                     }
 
                     // Back pass
                     buffer.Object.Draw(null);
 
-                    GLWrapper.PopDepthInfo();
+                    Graphics.PopDepthInfo();
 
                     lastDrawFrameId = buffer.FrameId;
                     break;

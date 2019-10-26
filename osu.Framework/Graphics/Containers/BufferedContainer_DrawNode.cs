@@ -68,12 +68,12 @@ namespace osu.Framework.Graphics.Containers
 
                 if (blurRadius.X > 0 || blurRadius.Y > 0)
                 {
-                    GLWrapper.PushScissorState(false);
+                    Graphics.PushScissorState(false);
 
                     if (blurRadius.X > 0) drawBlurredFrameBuffer(blurRadius.X, blurSigma.X, blurRotation);
                     if (blurRadius.Y > 0) drawBlurredFrameBuffer(blurRadius.Y, blurSigma.Y, blurRotation + 90);
 
-                    GLWrapper.PopScissorState();
+                    Graphics.PopScissorState();
                 }
             }
 
@@ -98,7 +98,7 @@ namespace osu.Framework.Graphics.Containers
                 FrameBuffer current = SharedData.CurrentEffectBuffer;
                 FrameBuffer target = SharedData.GetNextEffectBuffer();
 
-                GLWrapper.SetBlend(BlendingParameters.None);
+                Graphics.SetBlend(BlendingParameters.None);
 
                 using (BindFrameBuffer(target))
                 {

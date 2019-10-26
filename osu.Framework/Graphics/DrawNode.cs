@@ -218,7 +218,7 @@ namespace osu.Framework.Graphics
                                       Vector2? inflationPercentage = null)
             where T : IConvexPolygon
         {
-            var maskingQuad = GLWrapper.CurrentMaskingInfo.ConservativeScreenSpaceQuad;
+            var maskingQuad = Graphics.CurrentMaskingInfo.ConservativeScreenSpaceQuad;
 
             var clipper = new ConvexPolygonClipper<Quad, T>(ref maskingQuad, ref polygon);
             Span<Vector2> buffer = stackalloc Vector2[clipper.GetClipBufferSize()];
@@ -242,7 +242,7 @@ namespace osu.Framework.Graphics
                                       Vector2? inflationPercentage = null)
             where T : IConvexPolygon
         {
-            var maskingQuad = GLWrapper.CurrentMaskingInfo.ConservativeScreenSpaceQuad;
+            var maskingQuad = Graphics.CurrentMaskingInfo.ConservativeScreenSpaceQuad;
 
             var clipper = new ConvexPolygonClipper<Quad, T>(ref maskingQuad, ref polygon);
             Span<Vector2> buffer = stackalloc Vector2[clipper.GetClipBufferSize()];

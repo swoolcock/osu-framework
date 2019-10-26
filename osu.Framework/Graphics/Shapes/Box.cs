@@ -72,7 +72,7 @@ namespace osu.Framework.Graphics.Shapes
                 TextureShader.Bind();
                 Texture.TextureGL.WrapMode = WrapTexture ? TextureWrapMode.Repeat : TextureWrapMode.ClampToEdge;
 
-                if (GLWrapper.IsMaskingActive)
+                if (Graphics.IsMaskingActive)
                     DrawClipped(ref conservativeScreenSpaceDrawQuad, Texture, DrawColourInfo.Colour, vertexAction: vertexAction);
                 else
                 {

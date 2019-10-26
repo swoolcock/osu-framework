@@ -29,6 +29,6 @@ namespace osu.Framework.Graphics
             RoundedTextureShader = Source.RoundedTextureShader;
         }
 
-        protected virtual bool RequiresRoundedShader => GLWrapper.IsMaskingActive;
+        protected virtual bool RequiresRoundedShader => Graphics.IsMaskingActive;
     }
 }
