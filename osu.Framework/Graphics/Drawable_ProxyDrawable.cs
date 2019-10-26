@@ -4,8 +4,8 @@
 using System;
 using osu.Framework.Backends.Graphics;
 using osu.Framework.Graphics.OpenGL;
-using osu.Framework.Graphics.OpenGL.Vertices;
 using osu.Framework.Graphics.Primitives;
+using osu.Framework.Graphics.Vertices;
 
 namespace osu.Framework.Graphics
 {

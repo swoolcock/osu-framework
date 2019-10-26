@@ -3,10 +3,11 @@
 
 using System;
 using osu.Framework.Graphics.Batches;
-using osu.Framework.Graphics.OpenGL.Vertices;
+using osu.Framework.Graphics.OpenGL;
+using osu.Framework.Graphics.Vertices;
 using osuTK.Graphics.ES30;
 
-namespace osu.Framework.Graphics.OpenGL.Buffers
+namespace osu.Framework.Graphics.Buffers
 {
     internal static class LinearIndexData
     {

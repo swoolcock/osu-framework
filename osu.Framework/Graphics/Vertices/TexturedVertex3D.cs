@@ -7,7 +7,7 @@ using osuTK;
 using osuTK.Graphics;
 using osuTK.Graphics.ES30;
 
-namespace osu.Framework.Graphics.OpenGL.Vertices
+namespace osu.Framework.Graphics.Vertices
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct TexturedVertex3D : IEquatable<TexturedVertex3D>, IVertex

@@ -8,6 +8,7 @@ using System.Diagnostics;
 using osu.Framework.Backends.Graphics.OsuTK;
 using osu.Framework.Development;
 using osu.Framework.Graphics.Batches;
+using osu.Framework.Graphics.Buffers;
 using osu.Framework.Graphics.OpenGL.Textures;
 using osu.Framework.Graphics.Shaders;
 using osu.Framework.Threading;
@@ -17,9 +18,7 @@ using osuTK.Graphics.ES30;
 using osu.Framework.Statistics;
 using osu.Framework.MathUtils;
 using osu.Framework.Graphics.Primitives;
-using osu.Framework.Graphics.OpenGL.Buffers;
 using osu.Framework.Platform;
-using GameWindow = osu.Framework.Platform.GameWindow;
 
 namespace osu.Framework.Graphics.OpenGL
 {

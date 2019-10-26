@@ -7,10 +7,10 @@ using osuTK;
 using osuTK.Graphics;
 using osuTK.Graphics.ES30;
 
-namespace osu.Framework.Graphics.OpenGL.Vertices
+namespace osu.Framework.Graphics.Vertices
 {
     [StructLayout(LayoutKind.Sequential)]
-    public struct ParticleVertex2D : IEquatable<ParticleVertex2D>, IVertex
+    public struct TexturedVertex2D : IEquatable<TexturedVertex2D>, IVertex
     {
         [VertexMember(2, VertexAttribPointerType.Float)]
         public Vector2 Position;
@@ -21,12 +21,17 @@ namespace osu.Framework.Graphics.OpenGL.Vertices
         [VertexMember(2, VertexAttribPointerType.Float)]
         public Vector2 TexturePosition;
 
-        [VertexMember(1, VertexAttribPointerType.Float)]
-        public float Time;
+        [VertexMember(4, VertexAttribPointerType.Float)]
+        public Vector4 TextureRect;
 
         [VertexMember(2, VertexAttribPointerType.Float)]
-        public Vector2 Direction;
+        public Vector2 BlendRange;
 
-        public bool Equals(ParticleVertex2D other) => Position.Equals(other.Position) && TexturePosition.Equals(other.TexturePosition) && Colour.Equals(other.Colour) && Time.Equals(other.Time) && Direction.Equals(other.Direction);
+        public bool Equals(TexturedVertex2D other) =>
+            Position.Equals(other.Position)
+            && TexturePosition.Equals(other.TexturePosition)
+            && Colour.Equals(other.Colour)
+            && TextureRect.Equals(other.TextureRect)
+            && BlendRange.Equals(other.BlendRange);
     }
 }

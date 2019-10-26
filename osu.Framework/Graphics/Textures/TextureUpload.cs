@@ -3,8 +3,8 @@
 
 using System;
 using System.IO;
+using osu.Framework.Graphics.Buffers;
 using osu.Framework.Graphics.OpenGL;
-using osu.Framework.Graphics.OpenGL.Buffers;
 using osu.Framework.Graphics.Primitives;
 using osuTK.Graphics.ES30;
 using SixLabors.ImageSharp;

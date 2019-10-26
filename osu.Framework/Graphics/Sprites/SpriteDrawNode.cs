@@ -4,9 +4,9 @@
 using osuTK;
 using System;
 using osu.Framework.Backends.Graphics;
-using osu.Framework.Graphics.OpenGL.Vertices;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Textures;
+using osu.Framework.Graphics.Vertices;
 using osuTK.Graphics.ES30;
 
 namespace osu.Framework.Graphics.Sprites

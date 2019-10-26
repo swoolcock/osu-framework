@@ -3,12 +3,12 @@
 
 using System.Collections.Generic;
 using osu.Framework.Graphics.OpenGL;
-using osu.Framework.Graphics.OpenGL.Buffers;
 using osuTK;
 using osuTK.Graphics;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Shaders;
 using System;
+using osu.Framework.Graphics.Buffers;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.MathUtils;
 using osuTK.Graphics.ES30;

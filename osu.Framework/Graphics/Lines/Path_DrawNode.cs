@@ -10,10 +10,10 @@ using System;
 using System.Collections.Generic;
 using osu.Framework.Backends.Graphics;
 using osu.Framework.Graphics.Batches;
-using osu.Framework.Graphics.OpenGL.Vertices;
 using osuTK.Graphics;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Shaders;
+using osu.Framework.Graphics.Vertices;
 
 namespace osu.Framework.Graphics.Lines
 {

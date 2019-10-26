@@ -13,7 +13,7 @@ using System;
 using System.Runtime.CompilerServices;
 using osu.Framework.Backends.Graphics;
 using osu.Framework.Graphics.Effects;
-using osu.Framework.Graphics.OpenGL.Vertices;
+using osu.Framework.Graphics.Vertices;
 
 namespace osu.Framework.Graphics.Containers
 {
@@ -44,7 +44,7 @@ namespace osu.Framework.Graphics.Containers
             private MaskingInfo? maskingInfo;
 
             /// <summary>
-            /// The screen-space version of <see cref="OpenGL.MaskingInfo.MaskingRect"/>.
+            /// The screen-space version of <see cref="MaskingInfo.MaskingRect"/>.
             /// Used as cache of screen-space masking quads computed in previous frames.
             /// Assign null to reset.
             /// </summary>

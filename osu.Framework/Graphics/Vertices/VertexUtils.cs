@@ -9,7 +9,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using osuTK.Graphics.ES30;
 
-namespace osu.Framework.Graphics.OpenGL.Vertices
+namespace osu.Framework.Graphics.Vertices
 {
     /// <summary>
     /// Helper method that provides functionality to enable and bind vertex attributes.

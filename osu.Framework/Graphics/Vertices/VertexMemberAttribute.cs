@@ -4,7 +4,7 @@
 using System;
 using osuTK.Graphics.ES30;
 
-namespace osu.Framework.Graphics.OpenGL.Vertices
+namespace osu.Framework.Graphics.Vertices
 {
     [AttributeUsage(AttributeTargets.Field)]
     public class VertexMemberAttribute : Attribute

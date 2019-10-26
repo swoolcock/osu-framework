@@ -3,7 +3,7 @@
 
 using osuTK.Graphics;
 
-namespace osu.Framework.Graphics.OpenGL
+namespace osu.Framework.Graphics
 {
     /// <summary>
     /// Information for how the current frame buffer should be cleared.

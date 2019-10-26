@@ -3,12 +3,13 @@
 
 using System;
 using System.Collections.Generic;
+using osu.Framework.Graphics.OpenGL;
 using osu.Framework.Graphics.OpenGL.Textures;
 using osu.Framework.Graphics.Textures;
 using osuTK;
 using osuTK.Graphics.ES30;
 
-namespace osu.Framework.Graphics.OpenGL.Buffers
+namespace osu.Framework.Graphics.Buffers
 {
     public class FrameBuffer : IDisposable
     {

@@ -5,8 +5,8 @@ using System;
 using osu.Framework.Graphics.Primitives;
 using osuTK;
 using osu.Framework.Graphics.Colour;
-using osu.Framework.Graphics.OpenGL.Vertices;
 using osu.Framework.Graphics.Textures;
+using osu.Framework.Graphics.Vertices;
 using osuTK.Graphics.ES30;
 
 namespace osu.Framework.Graphics.OpenGL.Textures

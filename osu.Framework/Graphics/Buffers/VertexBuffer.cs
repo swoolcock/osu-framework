@@ -3,15 +3,16 @@
 
 using System;
 using System.Buffers;
-using osu.Framework.Graphics.OpenGL.Vertices;
-using osuTK.Graphics.ES30;
-using osu.Framework.Statistics;
 using osu.Framework.Development;
 using osu.Framework.Graphics.Batches;
+using osu.Framework.Graphics.OpenGL;
+using osu.Framework.Graphics.Vertices;
 using osu.Framework.Platform;
+using osu.Framework.Statistics;
+using osuTK.Graphics.ES30;
 using SixLabors.Memory;
 
-namespace osu.Framework.Graphics.OpenGL.Buffers
+namespace osu.Framework.Graphics.Buffers
 {
     public abstract class VertexBuffer<T> : IDisposable
         where T : struct, IEquatable<T>, IVertex

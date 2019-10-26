@@ -2,9 +2,9 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
-using osu.Framework.Graphics.OpenGL.Buffers;
+using osu.Framework.Graphics.Buffers;
+using osu.Framework.Graphics.Vertices;
 using osuTK.Graphics.ES30;
-using osu.Framework.Graphics.OpenGL.Vertices;
 
 namespace osu.Framework.Graphics.Batches
 {

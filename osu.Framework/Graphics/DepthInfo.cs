@@ -4,7 +4,7 @@
 using System;
 using osuTK.Graphics.ES30;
 
-namespace osu.Framework.Graphics.OpenGL
+namespace osu.Framework.Graphics
 {
     /// <summary>
     /// Information for how depth should be handled.

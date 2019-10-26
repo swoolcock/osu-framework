@@ -1,13 +1,11 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System.Collections.Generic;
 using osu.Framework.Backends.Audio;
 using osu.Framework.Backends.Graphics;
 using osu.Framework.Backends.Input;
 using osu.Framework.Backends.Video;
 using osu.Framework.Backends.Window;
-using osu.Framework.Input.Handlers;
 using osu.Framework.Logging;
 using osu.Framework.Timing;
 

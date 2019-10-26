@@ -3,7 +3,7 @@
 
 using System.Runtime.CompilerServices;
 
-namespace osu.Framework.Graphics.OpenGL
+namespace osu.Framework.Graphics
 {
     /// <summary>
     /// The depth value used to draw 2D objects to the screen.

@@ -3,8 +3,6 @@
 
 using System;
 using osu.Framework.Backends.Input;
-using osu.Framework.Backends.Window;
-using osu.Framework.Platform;
 
 namespace osu.Framework.Input
 {
