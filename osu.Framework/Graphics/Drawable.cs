@@ -23,7 +23,6 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
-using osu.Framework.Backends.Graphics;
 using osu.Framework.Bindables;
 using osu.Framework.Development;
 using osu.Framework.Graphics.Cursor;
@@ -1736,13 +1735,13 @@ namespace osu.Framework.Graphics
         /// <param name="treeIndex">The index of the <see cref="DrawNode"/> to use.</param>
         /// <param name="forceNewDrawNode">Whether the creation of a new <see cref="DrawNode"/> should be forced, rather than re-using an existing <see cref="DrawNode"/>.</param>
         /// <returns>A complete and updated <see cref="DrawNode"/>, or null if the <see cref="DrawNode"/> would be invisible.</returns>
-        internal virtual DrawNode GenerateDrawNodeSubtree(ulong frame, int treeIndex, bool forceNewDrawNode, IGraphics graphics)
+        internal virtual DrawNode GenerateDrawNodeSubtree(ulong frame, int treeIndex, bool forceNewDrawNode)
         {
             DrawNode node = drawNodes[treeIndex];
 
             if (node == null || forceNewDrawNode)
             {
-                drawNodes[treeIndex] = node = CreateDrawNode(graphics);
+                drawNodes[treeIndex] = node = CreateDrawNode();
                 FrameStatistics.Increment(StatisticsCounterType.DrawNodeCtor);
             }
 
@@ -1759,7 +1758,7 @@ namespace osu.Framework.Graphics
         /// Creates a draw node capable of containing all information required to draw this drawable.
         /// </summary>
         /// <returns>The created draw node.</returns>
-        protected virtual DrawNode CreateDrawNode(IGraphics graphics) => new DrawNode(this, graphics);
+        protected virtual DrawNode CreateDrawNode() => new DrawNode(this);
 
         #endregion
 

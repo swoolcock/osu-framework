@@ -67,8 +67,8 @@ namespace osu.Framework.Graphics.Containers
 
             private int sourceChildrenCount;
 
-            public CompositeDrawableDrawNode(CompositeDrawable source, IGraphics graphics)
-                : base(source, graphics)
+            public CompositeDrawableDrawNode(CompositeDrawable source)
+                : base(source)
             {
             }
 
@@ -175,7 +175,7 @@ namespace osu.Framework.Graphics.Containers
                     quadBatch = new QuadBatch<TexturedVertex2D>(100, 1000);
             }
 
-            public override void Draw(Action<TexturedVertex2D> vertexAction)
+            public override void Draw(Action<TexturedVertex2D> vertexAction, IGraphics graphics)
             {
                 updateQuadBatch();
 
@@ -183,7 +183,7 @@ namespace osu.Framework.Graphics.Containers
                 if (quadBatch != null)
                     vertexAction = quadBatch.AddAction;
 
-                base.Draw(vertexAction);
+                base.Draw(vertexAction, graphics);
 
                 drawEdgeEffect();
 
@@ -198,16 +198,16 @@ namespace osu.Framework.Graphics.Containers
 
                 if (Children != null)
                     for (int i = 0; i < Children.Count; i++)
-                        Children[i].Draw(vertexAction);
+                        Children[i].Draw(vertexAction, graphics);
 
                 if (maskingInfo != null)
                     GLWrapper.PopMaskingInfo();
             }
 
-            internal override void DrawOpaqueInteriorSubTree(DepthValue depthValue, Action<TexturedVertex2D> vertexAction)
+            internal override void DrawOpaqueInteriorSubTree(DepthValue depthValue, Action<TexturedVertex2D> vertexAction, IGraphics graphics)
             {
-                DrawChildrenOpaqueInteriors(depthValue, vertexAction);
-                base.DrawOpaqueInteriorSubTree(depthValue, vertexAction);
+                DrawChildrenOpaqueInteriors(depthValue, vertexAction, graphics);
+                base.DrawOpaqueInteriorSubTree(depthValue, vertexAction, graphics);
             }
 
             /// <summary>
@@ -216,7 +216,7 @@ namespace osu.Framework.Graphics.Containers
             /// <param name="depthValue">The previous depth value.</param>
             /// <param name="vertexAction">The action to be performed on each vertex of the draw node in order to draw it if required. This is primarily used by textured sprites.</param>
             [MethodImpl(MethodImplOptions.AggressiveInlining)]
-            protected virtual void DrawChildrenOpaqueInteriors(DepthValue depthValue, Action<TexturedVertex2D> vertexAction)
+            protected virtual void DrawChildrenOpaqueInteriors(DepthValue depthValue, Action<TexturedVertex2D> vertexAction, IGraphics graphics)
             {
                 bool canIncrement = depthValue.CanIncrement;
 
@@ -237,7 +237,7 @@ namespace osu.Framework.Graphics.Containers
                 if (Children != null)
                 {
                     for (int i = Children.Count - 1; i >= 0; i--)
-                        Children[i].DrawOpaqueInteriorSubTree(depthValue, vertexAction);
+                        Children[i].DrawOpaqueInteriorSubTree(depthValue, vertexAction, graphics);
                 }
 
                 // Assume that if we can't increment the depth value, no child can, thus nothing will be drawn.

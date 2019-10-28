@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using osu.Framework.Allocation;
-using osu.Framework.Backends.Graphics;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
@@ -42,7 +41,7 @@ namespace osu.Framework.Testing
 
         protected override bool CanBeFlattened => false;
 
-        internal override DrawNode GenerateDrawNodeSubtree(ulong frame, int treeIndex, bool forceNewDrawNode, IGraphics graphics)
+        internal override DrawNode GenerateDrawNodeSubtree(ulong frame, int treeIndex, bool forceNewDrawNode)
         {
             switch (recordState.Value)
             {
@@ -53,10 +52,10 @@ namespace osu.Framework.Testing
 
                     currentFrame.Value = currentFrame.MaxValue = 0;
 
-                    return base.GenerateDrawNodeSubtree(frame, treeIndex, forceNewDrawNode, graphics);
+                    return base.GenerateDrawNodeSubtree(frame, treeIndex, forceNewDrawNode);
 
                 case RecordState.Recording:
-                    var node = base.GenerateDrawNodeSubtree(frame, treeIndex, true, graphics);
+                    var node = base.GenerateDrawNodeSubtree(frame, treeIndex, true);
 
                     referenceRecursively(node);
 
@@ -97,7 +96,7 @@ namespace osu.Framework.Testing
         {
             // Required for the DrawVisualiser to not treat this Drawable as an overlay input receptor
             // ReSharper disable once RedundantOverriddenMember
-            protected override DrawNode CreateDrawNode(IGraphics graphics) => base.CreateDrawNode(graphics);
+            protected override DrawNode CreateDrawNode() => base.CreateDrawNode();
         }
     }
 }

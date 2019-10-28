@@ -3,7 +3,6 @@
 
 using System;
 using osu.Framework.Allocation;
-using osu.Framework.Backends.Graphics;
 using osu.Framework.Caching;
 using osu.Framework.Graphics.Textures;
 using osuTK.Graphics;
@@ -69,10 +68,10 @@ namespace osu.Framework.Graphics.Lines
             textureCache.Validate();
         }
 
-        internal override DrawNode GenerateDrawNodeSubtree(ulong frame, int treeIndex, bool forceNewDrawNode, IGraphics graphics)
+        internal override DrawNode GenerateDrawNodeSubtree(ulong frame, int treeIndex, bool forceNewDrawNode)
         {
             validateTexture();
-            return base.GenerateDrawNodeSubtree(frame, treeIndex, forceNewDrawNode, graphics);
+            return base.GenerateDrawNodeSubtree(frame, treeIndex, forceNewDrawNode);
         }
 
         /// <summary>

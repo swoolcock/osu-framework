@@ -7,7 +7,6 @@ using osu.Framework.Graphics.Textures;
 using osuTK;
 using osu.Framework.Graphics.Shaders;
 using osu.Framework.Allocation;
-using osu.Framework.Backends.Graphics;
 
 namespace osu.Framework.Graphics.Sprites
 {
@@ -51,7 +50,7 @@ namespace osu.Framework.Graphics.Sprites
 
         #endregion
 
-        protected override DrawNode CreateDrawNode(IGraphics graphics) => new SpriteDrawNode(this, graphics);
+        protected override DrawNode CreateDrawNode() => new SpriteDrawNode(this);
 
         [BackgroundDependencyLoader]
         private void load(IShaderManager shaders)

@@ -39,8 +39,8 @@ namespace osu.Framework.Graphics
         private RectangleF screenSpaceDrawRectangle;
         private Vector2 frameBufferSize;
 
-        public BufferedDrawNode(IBufferedDrawable source, IGraphics graphics, DrawNode child, BufferedDrawNodeSharedData sharedData)
-            : base(source, graphics)
+        public BufferedDrawNode(IBufferedDrawable source, DrawNode child, BufferedDrawNodeSharedData sharedData)
+            : base(source)
         {
             Child = child;
             SharedData = sharedData;
@@ -77,7 +77,7 @@ namespace osu.Framework.Graphics
         /// <returns>A version representing this <see cref="DrawNode"/>'s state.</returns>
         protected virtual long GetDrawVersion() => InvalidationID;
 
-        public sealed override void Draw(Action<TexturedVertex2D> vertexAction)
+        public sealed override void Draw(Action<TexturedVertex2D> vertexAction, IGraphics graphics)
         {
             if (RequiresRedraw)
             {
@@ -95,7 +95,7 @@ namespace osu.Framework.Graphics
                         Graphics.PushOrtho(screenSpaceDrawRectangle);
                         Graphics.Clear(new ClearInfo(backgroundColour));
 
-                        Child.Draw(vertexAction);
+                        Child.Draw(vertexAction, graphics);
 
                         Graphics.PopOrtho();
                     }
@@ -108,7 +108,7 @@ namespace osu.Framework.Graphics
 
             Shader.Bind();
 
-            base.Draw(vertexAction);
+            base.Draw(vertexAction, graphics);
             DrawContents();
 
             Shader.Unbind();

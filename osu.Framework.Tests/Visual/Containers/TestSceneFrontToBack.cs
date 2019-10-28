@@ -29,7 +29,7 @@ namespace osu.Framework.Tests.Visual.Containers
 
         private const int cell_count = 4;
 
-        protected override DrawNode CreateDrawNode(IGraphics graphics) => drawNode = new QueryingCompositeDrawableDrawNode(this, graphics);
+        protected override DrawNode CreateDrawNode() => drawNode = new QueryingCompositeDrawableDrawNode(this);
 
         public TestSceneFrontToBack()
             : base(cell_count / 2, cell_count / 2)
@@ -115,15 +115,15 @@ namespace osu.Framework.Tests.Visual.Containers
             public int DrawSamples { get; private set; }
             public int DrawOpaqueInteriorSubTreeSamples { get; private set; }
 
-            public QueryingCompositeDrawableDrawNode(CompositeDrawable source, IGraphics graphics)
-                : base(source, graphics)
+            public QueryingCompositeDrawableDrawNode(CompositeDrawable source)
+                : base(source)
             {
             }
 
-            internal override void DrawOpaqueInteriorSubTree(DepthValue depthValue, Action<TexturedVertex2D> vertexAction)
+            internal override void DrawOpaqueInteriorSubTree(DepthValue depthValue, Action<TexturedVertex2D> vertexAction, IGraphics graphics)
             {
                 startQuery();
-                base.DrawOpaqueInteriorSubTree(depthValue, vertexAction);
+                base.DrawOpaqueInteriorSubTree(depthValue, vertexAction, graphics);
                 DrawOpaqueInteriorSubTreeSamples = endQuery();
             }
 
@@ -134,10 +134,10 @@ namespace osu.Framework.Tests.Visual.Containers
                 base.ApplyState();
             }
 
-            public override void Draw(Action<TexturedVertex2D> vertexAction)
+            public override void Draw(Action<TexturedVertex2D> vertexAction, IGraphics graphics)
             {
                 startQuery();
-                base.Draw(vertexAction);
+                base.Draw(vertexAction, graphics);
                 DrawSamples = endQuery();
             }
 

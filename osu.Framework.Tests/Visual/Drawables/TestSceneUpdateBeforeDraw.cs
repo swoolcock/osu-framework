@@ -3,7 +3,6 @@
 
 using System;
 using NUnit.Framework;
-using osu.Framework.Backends.Graphics;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
@@ -102,10 +101,10 @@ namespace osu.Framework.Tests.Visual.Drawables
                 Alpha = 0;
             }
 
-            internal override DrawNode GenerateDrawNodeSubtree(ulong frame, int treeIndex, bool forceNewDrawNode, IGraphics graphics)
+            internal override DrawNode GenerateDrawNodeSubtree(ulong frame, int treeIndex, bool forceNewDrawNode)
             {
                 hasDrawn = true;
-                return base.GenerateDrawNodeSubtree(frame, treeIndex, forceNewDrawNode, graphics);
+                return base.GenerateDrawNodeSubtree(frame, treeIndex, forceNewDrawNode);
             }
         }
     }

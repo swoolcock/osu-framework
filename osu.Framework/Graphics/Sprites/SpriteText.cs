@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using osu.Framework.Allocation;
-using osu.Framework.Backends.Graphics;
 using osu.Framework.Bindables;
 using osu.Framework.Caching;
 using osu.Framework.Development;
@@ -560,7 +559,7 @@ namespace osu.Framework.Graphics.Sprites
 
         #region DrawNode
 
-        protected override DrawNode CreateDrawNode(IGraphics graphics) => new SpriteTextDrawNode(this, graphics);
+        protected override DrawNode CreateDrawNode() => new SpriteTextDrawNode(this);
 
         #endregion
 

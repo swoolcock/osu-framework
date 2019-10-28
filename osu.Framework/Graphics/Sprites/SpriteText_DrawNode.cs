@@ -25,8 +25,8 @@ namespace osu.Framework.Graphics.Sprites
 
             private readonly List<ScreenSpaceCharacterPart> parts = new List<ScreenSpaceCharacterPart>();
 
-            public SpriteTextDrawNode(SpriteText source, IGraphics graphics)
-                : base(source, graphics)
+            public SpriteTextDrawNode(SpriteText source)
+                : base(source)
             {
             }
 
@@ -45,9 +45,9 @@ namespace osu.Framework.Graphics.Sprites
                 }
             }
 
-            public override void Draw(Action<TexturedVertex2D> vertexAction)
+            public override void Draw(Action<TexturedVertex2D> vertexAction, IGraphics graphics)
             {
-                base.Draw(vertexAction);
+                base.Draw(vertexAction, graphics);
 
                 Shader.Bind();
 

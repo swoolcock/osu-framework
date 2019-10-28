@@ -54,16 +54,13 @@ namespace osu.Framework.Graphics
         /// </summary>
         private float drawDepth;
 
-        protected IGraphics Graphics { get; }
-
         /// <summary>
         /// Creates a new <see cref="DrawNode"/>.
         /// </summary>
         /// <param name="source">The <see cref="Drawable"/> to draw with this <see cref="DrawNode"/>.</param>
-        public DrawNode(IDrawable source, IGraphics graphics)
+        public DrawNode(IDrawable source)
         {
             Source = source;
-            Graphics = graphics;
 
             Reference();
         }
@@ -86,13 +83,13 @@ namespace osu.Framework.Graphics
         /// Subclasses must invoke <code>base.Draw()</code> prior to drawing vertices.
         /// </remarks>
         /// <param name="vertexAction">The action to be performed on each vertex of the draw node in order to draw it if required. This is primarily used by textured sprites.</param>
-        public virtual void Draw(Action<TexturedVertex2D> vertexAction)
+        public virtual void Draw(Action<TexturedVertex2D> vertexAction, IGraphics graphics)
         {
-            Graphics.SetBlend(DrawColourInfo.Blending);
+            graphics.SetBlend(DrawColourInfo.Blending);
 
             // This is the back-to-front (BTF) pass. The back-buffer depth test function used is GL_LESS.
             // The depth test will fail for samples that overlap the opaque interior of this <see cref="DrawNode"/> and any <see cref="DrawNode"/>s above this one.
-            Graphics.SetDrawDepth(drawDepth);
+            graphics.SetDrawDepth(drawDepth);
         }
 
         /// <summary>
@@ -107,7 +104,7 @@ namespace osu.Framework.Graphics
         /// </remarks>
         /// <param name="depthValue">The previous depth value.</param>
         /// <param name="vertexAction">The action to be performed on each vertex of the draw node in order to draw it if required. This is primarily used by textured sprites.</param>
-        internal virtual void DrawOpaqueInteriorSubTree(DepthValue depthValue, Action<TexturedVertex2D> vertexAction)
+        internal virtual void DrawOpaqueInteriorSubTree(DepthValue depthValue, Action<TexturedVertex2D> vertexAction, IGraphics graphics)
         {
             if (!depthValue.CanIncrement || !CanDrawOpaqueInterior)
             {
@@ -122,7 +119,7 @@ namespace osu.Framework.Graphics
             // Furthermore, a back-to-front-drawn object above the box will be visible since it will be drawn with a depth of (X - increment), satisfying the depth test
             drawDepth = depthValue.Increment();
 
-            DrawOpaqueInterior(vertexAction);
+            DrawOpaqueInterior(vertexAction, graphics);
         }
 
         /// <summary>
@@ -134,10 +131,10 @@ namespace osu.Framework.Graphics
         /// Subclasses must invoke <code>base.DrawOpaqueInterior()</code> prior to drawing vertices.
         /// </remarks>
         /// <param name="vertexAction">The action to be performed on each vertex of the draw node in order to draw it if required. This is primarily used by textured sprites.</param>
-        protected virtual void DrawOpaqueInterior(Action<TexturedVertex2D> vertexAction)
+        protected virtual void DrawOpaqueInterior(Action<TexturedVertex2D> vertexAction, IGraphics graphics)
         {
-            Graphics.SetBlend(DrawColourInfo.Blending);
-            Graphics.SetDrawDepth(drawDepth);
+            graphics.SetBlend(DrawColourInfo.Blending);
+            graphics.SetDrawDepth(drawDepth);
         }
 
         /// <summary>

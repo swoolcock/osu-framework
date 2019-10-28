@@ -28,8 +28,8 @@ namespace osu.Framework.Graphics.UserInterface
         private Vector2 drawSize;
         private Texture texture;
 
-        public CircularProgressDrawNode(CircularProgress source, IGraphics graphics)
-            : base(source, graphics)
+        public CircularProgressDrawNode(CircularProgress source)
+            : base(source)
         {
         }
 
@@ -141,9 +141,9 @@ namespace osu.Framework.Graphics.UserInterface
             }
         }
 
-        public override void Draw(Action<TexturedVertex2D> vertexAction)
+        public override void Draw(Action<TexturedVertex2D> vertexAction, IGraphics graphics)
         {
-            base.Draw(vertexAction);
+            base.Draw(vertexAction, graphics);
 
             if (texture?.Available != true)
                 return;

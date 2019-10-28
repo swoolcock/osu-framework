@@ -5,7 +5,6 @@ using osuTK;
 using osuTK.Graphics;
 using osuTK.Graphics.ES30;
 using osu.Framework.Allocation;
-using osu.Framework.Backends.Graphics;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Shaders;
@@ -247,7 +246,7 @@ namespace osu.Framework.Graphics.Containers
             blurShader = shaders.Load(VertexShaderDescriptor.TEXTURE_2, FragmentShaderDescriptor.BLUR);
         }
 
-        protected override DrawNode CreateDrawNode(IGraphics graphics) => new BufferedContainerDrawNode(this, graphics, sharedData);
+        protected override DrawNode CreateDrawNode() => new BufferedContainerDrawNode(this, sharedData);
 
         protected override RectangleF ComputeChildMaskingBounds(RectangleF maskingBounds) => ScreenSpaceDrawQuad.AABBFloat; // Make sure children never get masked away
 

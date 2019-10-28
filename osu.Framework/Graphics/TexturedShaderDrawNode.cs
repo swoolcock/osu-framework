@@ -1,7 +1,6 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osu.Framework.Backends.Graphics;
 using osu.Framework.Graphics.OpenGL;
 using osu.Framework.Graphics.Shaders;
 
@@ -16,8 +15,8 @@ namespace osu.Framework.Graphics
 
         protected new ITexturedShaderDrawable Source => (ITexturedShaderDrawable)base.Source;
 
-        protected TexturedShaderDrawNode(ITexturedShaderDrawable source, IGraphics graphics)
-            : base(source, graphics)
+        protected TexturedShaderDrawNode(ITexturedShaderDrawable source)
+            : base(source)
         {
         }
 
