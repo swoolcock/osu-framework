@@ -103,6 +103,8 @@ namespace osu.Framework.Platform
 
         #endregion
 
+        private IRenderer renderer;
+
         protected FrameworkDebugConfigManager DebugConfig { get; private set; }
 
         protected FrameworkConfigManager Config { get; private set; }
@@ -370,7 +372,8 @@ namespace osu.Framework.Platform
 
             setVSyncMode();
 
-            Graphics.ResetState();
+            renderer = Graphics.CreateRenderer();
+            renderer.ResetState(new Vector2(window.InternalSize.Value.Width, window.InternalSize.Value.Height));
         }
 
         private long lastDrawFrameId;
@@ -392,32 +395,32 @@ namespace osu.Framework.Platform
                     }
 
                     using (drawMonitor.BeginCollecting(PerformanceCollectionType.GLReset))
-                        Graphics.ResetState();
+                        renderer.ResetState(new Vector2(Window.InternalSize.Value.Width, Window.InternalSize.Value.Height));
 
                     if (!bypassFrontToBackPass.Value)
                     {
                         var depthValue = new DepthValue();
 
-                        Graphics.PushDepthInfo(DepthInfo.Default);
+                        renderer.PushDepthInfo(DepthInfo.Default);
 
                         // Front pass
-                        buffer.Object.DrawOpaqueInteriorSubTree(depthValue, null, Graphics);
+                        buffer.Object.DrawOpaqueInteriorSubTree(depthValue, null, renderer);
 
-                        Graphics.PopDepthInfo();
+                        renderer.PopDepthInfo();
 
                         // The back pass doesn't write depth, but needs to depth test properly
-                        Graphics.PushDepthInfo(new DepthInfo(true, false));
+                        renderer.PushDepthInfo(new DepthInfo(true, false));
                     }
                     else
                     {
                         // Disable depth testing
-                        Graphics.PushDepthInfo(new DepthInfo());
+                        renderer.PushDepthInfo(new DepthInfo());
                     }
 
                     // Back pass
-                    buffer.Object.Draw(null, Graphics);
+                    buffer.Object.Draw(null, renderer);
 
-                    Graphics.PopDepthInfo();
+                    renderer.PopDepthInfo();
 
                     lastDrawFrameId = buffer.FrameId;
                     break;

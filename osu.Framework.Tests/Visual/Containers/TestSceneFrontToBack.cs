@@ -120,10 +120,10 @@ namespace osu.Framework.Tests.Visual.Containers
             {
             }
 
-            internal override void DrawOpaqueInteriorSubTree(DepthValue depthValue, Action<TexturedVertex2D> vertexAction, IGraphics graphics)
+            internal override void DrawOpaqueInteriorSubTree(DepthValue depthValue, Action<TexturedVertex2D> vertexAction, IRenderer renderer)
             {
                 startQuery();
-                base.DrawOpaqueInteriorSubTree(depthValue, vertexAction, graphics);
+                base.DrawOpaqueInteriorSubTree(depthValue, vertexAction, renderer);
                 DrawOpaqueInteriorSubTreeSamples = endQuery();
             }
 
@@ -134,10 +134,10 @@ namespace osu.Framework.Tests.Visual.Containers
                 base.ApplyState();
             }
 
-            public override void Draw(Action<TexturedVertex2D> vertexAction, IGraphics graphics)
+            public override void Draw(Action<TexturedVertex2D> vertexAction, IRenderer renderer)
             {
                 startQuery();
-                base.Draw(vertexAction, graphics);
+                base.Draw(vertexAction, renderer);
                 DrawSamples = endQuery();
             }
 

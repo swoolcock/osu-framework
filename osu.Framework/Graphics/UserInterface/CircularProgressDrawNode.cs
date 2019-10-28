@@ -141,9 +141,9 @@ namespace osu.Framework.Graphics.UserInterface
             }
         }
 
-        public override void Draw(Action<TexturedVertex2D> vertexAction, IGraphics graphics)
+        public override void Draw(Action<TexturedVertex2D> vertexAction, IRenderer renderer)
         {
-            base.Draw(vertexAction, graphics);
+            base.Draw(vertexAction, renderer);
 
             if (texture?.Available != true)
                 return;

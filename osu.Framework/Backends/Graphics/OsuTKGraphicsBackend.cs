@@ -95,39 +95,6 @@ namespace osu.Framework.Backends.Graphics
 
         public override IShaderManager CreateShaderManager(ResourceStore<byte[]> store) => new OsuTKShaderManager(store);
 
-        public override void ResetState() => GLWrapper.Reset(new Vector2(windowBackend.InternalSize.Value.Width, windowBackend.InternalSize.Value.Height));
-
-        public override void SetBlend(BlendingParameters blendingParameters) => GLWrapper.SetBlend(blendingParameters);
-
-        public override void SetDrawDepth(float drawDepth) => GLWrapper.SetDrawDepth(drawDepth);
-
-        public override MaskingInfo CurrentMaskingInfo => GLWrapper.CurrentMaskingInfo;
-        public override RectangleI Viewport => GLWrapper.Viewport;
-        public override RectangleF Ortho => GLWrapper.Ortho;
-        public override Matrix4 ProjectionMatrix => GLWrapper.ProjectionMatrix;
-        public override DepthInfo CurrentDepthInfo => GLWrapper.CurrentDepthInfo;
-        public override bool IsMaskingActive => GLWrapper.IsMaskingActive;
-
-        public override void PushViewport(RectangleI viewport) => GLWrapper.PushViewport(viewport);
-
-        public override void PopViewport() => GLWrapper.PopViewport();
-
-        public override void PushOrtho(RectangleF ortho) => GLWrapper.PushOrtho(ortho);
-
-        public override void PopOrtho() => GLWrapper.PopOrtho();
-
-        public override void PushMaskingInfo(MaskingInfo maskingInfo, bool overwritePreviousScissor = false) => GLWrapper.PushMaskingInfo(maskingInfo, overwritePreviousScissor);
-
-        public override void PopMaskingInfo() => GLWrapper.PopMaskingInfo();
-
-        public override void PushDepthInfo(DepthInfo depthInfo) => GLWrapper.PushDepthInfo(depthInfo);
-
-        public override void PopDepthInfo() => GLWrapper.PopDepthInfo();
-
-        public override void Clear(ClearInfo clearInfo) => GLWrapper.Clear(clearInfo);
-
-        public override void PushScissorState(bool enabled) => GLWrapper.PushScissorState(enabled);
-
-        public override void PopScissorState() => GLWrapper.PopScissorState();
+        public override IRenderer CreateRenderer() => new OsuTKRenderer(this);
     }
 }

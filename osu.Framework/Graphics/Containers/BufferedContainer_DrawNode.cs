@@ -8,6 +8,7 @@ using osuTK.Graphics;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Shaders;
 using System;
+using osu.Framework.Backends.Graphics;
 using osu.Framework.Graphics.Buffers;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.MathUtils;
@@ -61,43 +62,43 @@ namespace osu.Framework.Graphics.Containers
 
             protected override long GetDrawVersion() => updateVersion;
 
-            protected override void PopulateContents()
+            protected override void PopulateContents(IRenderer renderer)
             {
-                base.PopulateContents();
+                base.PopulateContents(renderer);
 
                 if (blurRadius.X > 0 || blurRadius.Y > 0)
                 {
-                    Graphics.PushScissorState(false);
+                    renderer.PushScissorState(false);
 
-                    if (blurRadius.X > 0) drawBlurredFrameBuffer(blurRadius.X, blurSigma.X, blurRotation);
-                    if (blurRadius.Y > 0) drawBlurredFrameBuffer(blurRadius.Y, blurSigma.Y, blurRotation + 90);
+                    if (blurRadius.X > 0) drawBlurredFrameBuffer(blurRadius.X, blurSigma.X, blurRotation, renderer);
+                    if (blurRadius.Y > 0) drawBlurredFrameBuffer(blurRadius.Y, blurSigma.Y, blurRotation + 90, renderer);
 
-                    Graphics.PopScissorState();
+                    renderer.PopScissorState();
                 }
             }
 
-            protected override void DrawContents()
+            protected override void DrawContents(IRenderer renderer)
             {
                 if (drawOriginal && effectPlacement == EffectPlacement.InFront)
-                    base.DrawContents();
+                    base.DrawContents(renderer);
 
                 GLWrapper.SetBlend(effectBlending);
 
                 ColourInfo finalEffectColour = DrawColourInfo.Colour;
                 finalEffectColour.ApplyChild(effectColour);
 
-                DrawFrameBuffer(SharedData.CurrentEffectBuffer, DrawRectangle, finalEffectColour);
+                DrawFrameBuffer(SharedData.CurrentEffectBuffer, DrawRectangle, finalEffectColour, renderer);
 
                 if (drawOriginal && effectPlacement == EffectPlacement.Behind)
-                    base.DrawContents();
+                    base.DrawContents(renderer);
             }
 
-            private void drawBlurredFrameBuffer(int kernelRadius, float sigma, float blurRotation)
+            private void drawBlurredFrameBuffer(int kernelRadius, float sigma, float blurRotation, IRenderer renderer)
             {
                 FrameBuffer current = SharedData.CurrentEffectBuffer;
                 FrameBuffer target = SharedData.GetNextEffectBuffer();
 
-                Graphics.SetBlend(BlendingParameters.None);
+                renderer.SetBlend(BlendingParameters.None);
 
                 using (BindFrameBuffer(target))
                 {
@@ -112,7 +113,7 @@ namespace osu.Framework.Graphics.Containers
                     blurShader.GetUniform<Vector2>(@"g_BlurDirection").UpdateValue(ref blur);
 
                     blurShader.Bind();
-                    DrawFrameBuffer(current, new RectangleF(0, 0, current.Texture.Width, current.Texture.Height), ColourInfo.SingleColour(Color4.White));
+                    DrawFrameBuffer(current, new RectangleF(0, 0, current.Texture.Width, current.Texture.Height), ColourInfo.SingleColour(Color4.White), renderer);
                     blurShader.Unbind();
                 }
             }

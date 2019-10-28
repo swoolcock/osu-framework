@@ -77,7 +77,7 @@ namespace osu.Framework.Graphics
         /// <returns>A version representing this <see cref="DrawNode"/>'s state.</returns>
         protected virtual long GetDrawVersion() => InvalidationID;
 
-        public sealed override void Draw(Action<TexturedVertex2D> vertexAction, IGraphics graphics)
+        public sealed override void Draw(Action<TexturedVertex2D> vertexAction, IRenderer renderer)
         {
             if (RequiresRedraw)
             {
@@ -85,22 +85,22 @@ namespace osu.Framework.Graphics
 
                 SharedData.ResetCurrentEffectBuffer();
 
-                using (establishFrameBufferViewport())
+                using (establishFrameBufferViewport(renderer))
                 {
                     // Fill the frame buffer with drawn children
                     using (BindFrameBuffer(SharedData.MainBuffer))
                     {
                         // We need to draw children as if they were zero-based to the top-left of the texture.
                         // We can do this by adding a translation component to our (orthogonal) projection matrix.
-                        Graphics.PushOrtho(screenSpaceDrawRectangle);
-                        Graphics.Clear(new ClearInfo(backgroundColour));
+                        renderer.PushOrtho(screenSpaceDrawRectangle);
+                        renderer.Clear(new ClearInfo(backgroundColour));
 
-                        Child.Draw(vertexAction, graphics);
+                        Child.Draw(vertexAction, renderer);
 
-                        Graphics.PopOrtho();
+                        renderer.PopOrtho();
                     }
 
-                    PopulateContents();
+                    PopulateContents(renderer);
                 }
 
                 SharedData.DrawVersion = GetDrawVersion();
@@ -108,8 +108,8 @@ namespace osu.Framework.Graphics
 
             Shader.Bind();
 
-            base.Draw(vertexAction, graphics);
-            DrawContents();
+            base.Draw(vertexAction, renderer);
+            DrawContents(renderer);
 
             Shader.Unbind();
         }
@@ -118,16 +118,16 @@ namespace osu.Framework.Graphics
         /// Populates the contents of the effect buffers of <see cref="SharedData"/>.
         /// This is invoked after <see cref="Child"/> has been rendered to the main buffer.
         /// </summary>
-        protected virtual void PopulateContents()
+        protected virtual void PopulateContents(IRenderer renderer)
         {
         }
 
         /// <summary>
         /// Draws the applicable effect buffers of <see cref="SharedData"/> to the back buffer.
         /// </summary>
-        protected virtual void DrawContents()
+        protected virtual void DrawContents(IRenderer renderer)
         {
-            DrawFrameBuffer(SharedData.MainBuffer, DrawRectangle, DrawColourInfo.Colour);
+            DrawFrameBuffer(SharedData.MainBuffer, DrawRectangle, DrawColourInfo.Colour, renderer);
         }
 
         /// <summary>
@@ -145,14 +145,14 @@ namespace osu.Framework.Graphics
             return new ValueInvokeOnDisposal(frameBuffer.Unbind);
         }
 
-        private ValueInvokeOnDisposal establishFrameBufferViewport()
+        private ValueInvokeOnDisposal establishFrameBufferViewport(IRenderer renderer)
         {
             // Disable masking for generating the frame buffer since masking will be re-applied
             // when actually drawing later on anyways. This allows more information to be captured
             // in the frame buffer and helps with cached buffers being re-used.
             RectangleI screenSpaceMaskingRect = new RectangleI((int)Math.Floor(screenSpaceDrawRectangle.X), (int)Math.Floor(screenSpaceDrawRectangle.Y), (int)frameBufferSize.X + 1, (int)frameBufferSize.Y + 1);
 
-            Graphics.PushMaskingInfo(new MaskingInfo
+            renderer.PushMaskingInfo(new MaskingInfo
             {
                 ScreenSpaceAABB = screenSpaceMaskingRect,
                 MaskingRect = screenSpaceDrawRectangle,
@@ -162,15 +162,15 @@ namespace osu.Framework.Graphics
             }, true);
 
             // Match viewport to FrameBuffer such that we don't draw unnecessary pixels.
-            Graphics.PushViewport(new RectangleI(0, 0, (int)frameBufferSize.X, (int)frameBufferSize.Y));
+            renderer.PushViewport(new RectangleI(0, 0, (int)frameBufferSize.X, (int)frameBufferSize.Y));
 
-            return new ValueInvokeOnDisposal(returnViewport);
+            return new ValueInvokeOnDisposal(() => returnViewport(renderer));
         }
 
-        private void returnViewport()
+        private void returnViewport(IRenderer renderer)
         {
-            Graphics.PopViewport();
-            Graphics.PopMaskingInfo();
+            renderer.PopViewport();
+            renderer.PopMaskingInfo();
         }
 
         protected override void Dispose(bool isDisposing)

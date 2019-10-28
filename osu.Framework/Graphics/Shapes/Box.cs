@@ -65,21 +65,21 @@ namespace osu.Framework.Graphics.Shapes
                                     && DrawColourInfo.Colour.HasSingleColour;
             }
 
-            protected override void DrawOpaqueInterior(Action<TexturedVertex2D> vertexAction, IGraphics graphics)
+            protected override void DrawOpaqueInterior(Action<TexturedVertex2D> vertexAction, IRenderer renderer)
             {
-                base.DrawOpaqueInterior(vertexAction, graphics);
+                base.DrawOpaqueInterior(vertexAction, renderer);
 
                 TextureShader.Bind();
                 Texture.TextureGL.WrapMode = WrapTexture ? TextureWrapMode.Repeat : TextureWrapMode.ClampToEdge;
 
-                if (Graphics.IsMaskingActive)
-                    DrawClipped(ref conservativeScreenSpaceDrawQuad, Texture, DrawColourInfo.Colour, vertexAction: vertexAction);
+                if (renderer.IsMaskingActive)
+                    DrawClipped(ref conservativeScreenSpaceDrawQuad, Texture, DrawColourInfo.Colour, renderer, vertexAction: vertexAction);
                 else
                 {
                     ReadOnlySpan<Vector2> vertices = conservativeScreenSpaceDrawQuad.GetVertices();
 
                     for (int i = 2; i < vertices.Length; i++)
-                        DrawTriangle(Texture, new Primitives.Triangle(vertices[0], vertices[i - 1], vertices[i]), DrawColourInfo.Colour, vertexAction: vertexAction);
+                        DrawTriangle(Texture, new Primitives.Triangle(vertices[0], vertices[i - 1], vertices[i]), DrawColourInfo.Colour, renderer, vertexAction: vertexAction);
                 }
 
                 TextureShader.Unbind();
