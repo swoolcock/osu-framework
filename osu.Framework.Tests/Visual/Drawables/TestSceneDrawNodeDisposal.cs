@@ -103,7 +103,7 @@ namespace osu.Framework.Tests.Visual.Drawables
                 }
             });
 
-            AddWaitStep("wait for some draw nodes", GLWrapper.MAX_DRAW_NODES);
+            AddWaitStep("wait for some draw nodes", DrawNode.MAX_DRAW_NODES);
 
             // Clear the parent to ensure no references are held via drawables themselves,
             // and remove the parent to ensure that the parent maintains references to the child draw nodes

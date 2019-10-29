@@ -1726,7 +1726,7 @@ namespace osu.Framework.Graphics
 
         #region DrawNode
 
-        private readonly DrawNode[] drawNodes = new DrawNode[GLWrapper.MAX_DRAW_NODES];
+        private readonly DrawNode[] drawNodes = new DrawNode[DrawNode.MAX_DRAW_NODES];
 
         /// <summary>
         /// Generates the <see cref="DrawNode"/> for ourselves.
