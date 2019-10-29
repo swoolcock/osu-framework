@@ -45,9 +45,9 @@ namespace osu.Framework.Graphics.Sprites
                 }
             }
 
-            public override void Draw(Action<TexturedVertex2D> vertexAction, IRenderer renderer)
+            public override void Draw(Action<TexturedVertex2D> vertexAction)
             {
-                base.Draw(vertexAction, renderer);
+                base.Draw(vertexAction);
 
                 Shader.Bind();
 
@@ -69,10 +69,10 @@ namespace osu.Framework.Graphics.Sprites
                         shadowQuad.BottomLeft += shadowOffset;
                         shadowQuad.BottomRight += shadowOffset;
 
-                        DrawQuad(parts[i].Texture, shadowQuad, finalShadowColour, renderer, vertexAction: vertexAction, inflationPercentage: parts[i].InflationPercentage);
+                        DrawQuad(parts[i].Texture, shadowQuad, finalShadowColour, vertexAction: vertexAction, inflationPercentage: parts[i].InflationPercentage);
                     }
 
-                    DrawQuad(parts[i].Texture, parts[i].DrawQuad, DrawColourInfo.Colour, renderer, vertexAction: vertexAction, inflationPercentage: parts[i].InflationPercentage);
+                    DrawQuad(parts[i].Texture, parts[i].DrawQuad, DrawColourInfo.Colour, vertexAction: vertexAction, inflationPercentage: parts[i].InflationPercentage);
                 }
 
                 Shader.Unbind();

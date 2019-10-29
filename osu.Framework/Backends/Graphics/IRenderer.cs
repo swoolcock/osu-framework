@@ -9,6 +9,8 @@ namespace osu.Framework.Backends.Graphics
 {
     public interface IRenderer
     {
+        IGraphics Graphics { get; }
+
         void ResetState(Vector2 size);
         void SetBlend(BlendingParameters blendingParameters);
         void SetDrawDepth(float drawDepth);
@@ -33,5 +35,6 @@ namespace osu.Framework.Backends.Graphics
         void Clear(ClearInfo clearInfo);
         void PushScissorState(bool enabled);
         void PopScissorState();
+        void FlushCurrentBatch();
     }
 }

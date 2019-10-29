@@ -8,8 +8,18 @@ using osuTK;
 
 namespace osu.Framework.Backends.Graphics
 {
-    public abstract class BaseRenderer : IRenderer
+    public abstract class Renderer : IRenderer
     {
+        public static IRenderer Shared { get; internal set; }
+
+        public IGraphics Graphics { get; }
+
+        protected Renderer(IGraphics graphics)
+        {
+            Shared = this;
+            Graphics = graphics;
+        }
+
         public abstract void ResetState(Vector2 size);
         public abstract void SetBlend(BlendingParameters blendingParameters);
         public abstract void SetDrawDepth(float drawDepth);
@@ -33,6 +43,7 @@ namespace osu.Framework.Backends.Graphics
         public abstract void Clear(ClearInfo clearInfo);
         public abstract void PushScissorState(bool enabled);
         public abstract void PopScissorState();
+        public abstract void FlushCurrentBatch();
 
         #region IDisposable
 
@@ -56,7 +67,7 @@ namespace osu.Framework.Backends.Graphics
             GC.SuppressFinalize(this);
         }
 
-        ~BaseRenderer()
+        ~Renderer()
         {
             Dispose(false);
         }

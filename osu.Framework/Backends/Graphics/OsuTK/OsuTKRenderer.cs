@@ -8,13 +8,13 @@ using osuTK;
 
 namespace osu.Framework.Backends.Graphics.OsuTK
 {
-    internal class OsuTKRenderer : BaseRenderer
+    internal class OsuTKRenderer : Renderer
     {
-        private OsuTKGraphicsBackend graphics;
+        public new OsuTKGraphicsBackend Graphics => (OsuTKGraphicsBackend)base.Graphics;
 
         public OsuTKRenderer(OsuTKGraphicsBackend graphics)
+            : base(graphics)
         {
-            this.graphics = graphics;
         }
 
         public override MaskingInfo CurrentMaskingInfo => GLWrapper.CurrentMaskingInfo;
@@ -39,5 +39,6 @@ namespace osu.Framework.Backends.Graphics.OsuTK
         public override void Clear(ClearInfo clearInfo) => GLWrapper.Clear(clearInfo);
         public override void PushScissorState(bool enabled) => GLWrapper.PushScissorState(enabled);
         public override void PopScissorState() => GLWrapper.PopScissorState();
+        public override void FlushCurrentBatch() => GLWrapper.FlushCurrentBatch();
     }
 }

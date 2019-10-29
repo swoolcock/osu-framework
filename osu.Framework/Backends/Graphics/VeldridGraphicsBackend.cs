@@ -4,12 +4,9 @@
 using System;
 using osu.Framework.Backends.Window;
 using osu.Framework.Configuration;
-using osu.Framework.Graphics;
-using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Shaders;
 using osu.Framework.IO.Stores;
 using osu.Framework.Platform;
-using osuTK;
 using Veldrid;
 using Veldrid.StartupUtilities;
 

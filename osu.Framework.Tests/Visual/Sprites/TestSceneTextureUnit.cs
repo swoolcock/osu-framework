@@ -116,7 +116,7 @@ namespace osu.Framework.Tests.Visual.Sprites
                     blueTex = Source.blueTex;
                 }
 
-                public override void Draw(Action<TexturedVertex2D> vertexAction, IRenderer renderer)
+                public override void Draw(Action<TexturedVertex2D> vertexAction)
                 {
                     redTex.TextureGL.Bind(TextureUnit.Texture1);
                     greenTex.TextureGL.Bind(TextureUnit.Texture2);
@@ -125,7 +125,7 @@ namespace osu.Framework.Tests.Visual.Sprites
                     int unitId = unit - TextureUnit.Texture0;
                     Shader.GetUniform<int>("m_Sampler").UpdateValue(ref unitId);
 
-                    base.Draw(vertexAction, renderer);
+                    base.Draw(vertexAction);
 
                     unitId = 0;
                     Shader.GetUniform<int>("m_Sampler").UpdateValue(ref unitId);

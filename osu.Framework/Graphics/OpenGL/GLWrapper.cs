@@ -24,12 +24,6 @@ namespace osu.Framework.Graphics.OpenGL
 {
     public static class GLWrapper
     {
-        /// <summary>
-        /// Maximum number of <see cref="DrawNode"/>s a <see cref="Drawable"/> can draw with.
-        /// This is a carefully-chosen number to enable the update and draw threads to work concurrently without causing unnecessary load.
-        /// </summary>
-        public const int MAX_DRAW_NODES = 3;
-
         public static MaskingInfo CurrentMaskingInfo { get; private set; }
         public static RectangleI Viewport { get; private set; }
         public static RectangleF Ortho { get; private set; }
@@ -97,7 +91,7 @@ namespace osu.Framework.Graphics.OpenGL
             {
                 // There may be a number of DrawNodes queued to be drawn
                 // Disposal should only take place after
-                if (frameCount++ >= MAX_DRAW_NODES)
+                if (frameCount++ >= DrawNode.MAX_DRAW_NODES)
                     disposalAction.Invoke();
                 else
                     scheduleNextDisposal();
@@ -539,7 +533,7 @@ namespace osu.Framework.Graphics.OpenGL
             UpdateScissorToCurrentViewportAndOrtho();
         }
 
-        internal static void FlushCurrentBatch()
+        public static void FlushCurrentBatch()
         {
             lastActiveBatch?.Draw();
         }

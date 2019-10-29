@@ -202,17 +202,17 @@ namespace osu.Framework.Graphics.Lines
                     addLineQuads(segment, texRect);
             }
 
-            public override void Draw(Action<TexturedVertex2D> vertexAction, IRenderer renderer)
+            public override void Draw(Action<TexturedVertex2D> vertexAction)
             {
-                base.Draw(vertexAction, renderer);
+                base.Draw(vertexAction);
 
                 if (texture?.Available != true || segments.Count == 0)
                     return;
 
-                renderer.PushDepthInfo(DepthInfo.Default);
+                Renderer.Shared.PushDepthInfo(DepthInfo.Default);
 
                 // Blending is removed to allow for correct blending between the wedges of the path.
-                renderer.SetBlend(BlendingParameters.None);
+                Renderer.Shared.SetBlend(BlendingParameters.None);
 
                 pathShader.Bind();
 
@@ -223,7 +223,7 @@ namespace osu.Framework.Graphics.Lines
 
                 pathShader.Unbind();
 
-                renderer.PopDepthInfo();
+                Renderer.Shared.PopDepthInfo();
             }
 
             protected override void Dispose(bool isDisposing)

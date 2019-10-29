@@ -1,7 +1,7 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osu.Framework.Graphics.OpenGL;
+using osu.Framework.Backends.Graphics;
 using osu.Framework.Graphics.Shaders;
 
 namespace osu.Framework.Graphics
@@ -28,6 +28,6 @@ namespace osu.Framework.Graphics
             RoundedTextureShader = Source.RoundedTextureShader;
         }
 
-        protected virtual bool RequiresRoundedShader => false; // FIXME: Graphics.IsMaskingActive;
+        protected virtual bool RequiresRoundedShader => Renderer.Shared.IsMaskingActive;
     }
 }

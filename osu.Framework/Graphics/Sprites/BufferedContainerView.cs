@@ -135,9 +135,9 @@ namespace osu.Framework.Graphics.Sprites
                 sourceEffectPlacement = Source.container.EffectPlacement;
             }
 
-            public override void Draw(Action<TexturedVertex2D> vertexAction, IRenderer renderer)
+            public override void Draw(Action<TexturedVertex2D> vertexAction)
             {
-                base.Draw(vertexAction, renderer);
+                base.Draw(vertexAction);
 
                 if (shared?.MainBuffer?.Texture?.Available != true || shared.DrawVersion == -1)
                     return;
@@ -145,17 +145,17 @@ namespace osu.Framework.Graphics.Sprites
                 Shader.Bind();
 
                 if (sourceEffectPlacement == EffectPlacement.InFront)
-                    drawMainBuffer(vertexAction, renderer);
+                    drawMainBuffer(vertexAction);
 
-                drawEffectBuffer(vertexAction, renderer);
+                drawEffectBuffer(vertexAction);
 
                 if (sourceEffectPlacement == EffectPlacement.Behind)
-                    drawMainBuffer(vertexAction, renderer);
+                    drawMainBuffer(vertexAction);
 
                 Shader.Unbind();
             }
 
-            private void drawMainBuffer(Action<TexturedVertex2D> vertexAction, IRenderer renderer)
+            private void drawMainBuffer(Action<TexturedVertex2D> vertexAction)
             {
                 // If the original was drawn, draw it.
                 // Otherwise, if an effect will also not be drawn then we still need to display something - the original.
@@ -163,20 +163,20 @@ namespace osu.Framework.Graphics.Sprites
                 if (!sourceDrawsOriginal && shouldDrawEffectBuffer)
                     return;
 
-                renderer.SetBlend(DrawColourInfo.Blending);
-                DrawFrameBuffer(shared.MainBuffer, screenSpaceDrawQuad, DrawColourInfo.Colour, renderer, vertexAction);
+                Renderer.Shared.SetBlend(DrawColourInfo.Blending);
+                DrawFrameBuffer(shared.MainBuffer, screenSpaceDrawQuad, DrawColourInfo.Colour, vertexAction);
             }
 
-            private void drawEffectBuffer(Action<TexturedVertex2D> vertexAction, IRenderer renderer)
+            private void drawEffectBuffer(Action<TexturedVertex2D> vertexAction)
             {
                 if (!shouldDrawEffectBuffer)
                     return;
 
-                renderer.SetBlend(sourceEffectBlending);
+                Renderer.Shared.SetBlend(sourceEffectBlending);
                 ColourInfo finalEffectColour = DrawColourInfo.Colour;
                 finalEffectColour.ApplyChild(sourceEffectColour);
 
-                DrawFrameBuffer(shared.CurrentEffectBuffer, screenSpaceDrawQuad, DrawColourInfo.Colour, renderer, vertexAction);
+                DrawFrameBuffer(shared.CurrentEffectBuffer, screenSpaceDrawQuad, DrawColourInfo.Colour, vertexAction);
             }
 
             /// <summary>
