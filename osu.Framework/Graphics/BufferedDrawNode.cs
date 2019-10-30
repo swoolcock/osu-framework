@@ -5,7 +5,6 @@ using System;
 using osu.Framework.Allocation;
 using osu.Framework.Backends.Graphics;
 using osu.Framework.Graphics.Buffers;
-using osu.Framework.Graphics.OpenGL;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Vertices;
 using osu.Framework.Statistics;

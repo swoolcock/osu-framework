@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using osu.Framework.Backends.Graphics;
 using osu.Framework.Graphics.OpenGL;
 using osu.Framework.Graphics.OpenGL.Textures;
 using osu.Framework.Graphics.Textures;
@@ -112,7 +113,7 @@ namespace osu.Framework.Graphics.Buffers
 
         ~FrameBuffer()
         {
-            GLWrapper.ScheduleDisposal(() => Dispose(false));
+            Renderer.Shared.ScheduleDisposal(() => Dispose(false));
         }
 
         public void Dispose()

@@ -5,7 +5,6 @@ using osu.Framework.Graphics.Textures;
 using osuTK.Graphics.ES30;
 using osuTK;
 using System;
-using osu.Framework.Backends.Graphics;
 using osu.Framework.Graphics.Batches;
 using osu.Framework.Graphics.Primitives;
 using osuTK.Graphics;

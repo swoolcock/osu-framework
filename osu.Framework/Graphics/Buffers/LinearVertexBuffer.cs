@@ -2,21 +2,15 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using osu.Framework.Backends.Graphics;
 using osu.Framework.Graphics.Batches;
-using osu.Framework.Graphics.OpenGL;
 using osu.Framework.Graphics.Vertices;
-using osuTK.Graphics.ES30;
 
 namespace osu.Framework.Graphics.Buffers
 {
     internal static class LinearIndexData
     {
-        static LinearIndexData()
-        {
-            GL.GenBuffers(1, out EBO_ID);
-        }
-
-        public static readonly int EBO_ID;
+        public static int EBO_ID = -1;
         public static int MaxAmountIndices;
     }
 
@@ -28,7 +22,7 @@ namespace osu.Framework.Graphics.Buffers
     {
         private readonly int amountVertices;
 
-        internal LinearVertexBuffer(int amountVertices, BatchPrimitiveType type, BufferUsageHint usage)
+        internal LinearVertexBuffer(int amountVertices, BatchPrimitiveType type, BufferUsage usage)
             : base(amountVertices, usage)
         {
             this.amountVertices = amountVertices;
@@ -46,9 +40,10 @@ namespace osu.Framework.Graphics.Buffers
                 for (ushort i = 0; i < amountVertices; i++)
                     indices[i] = i;
 
-                GLWrapper.BindBuffer(BufferTarget.ElementArrayBuffer, LinearIndexData.EBO_ID);
-                GL.BufferData(BufferTarget.ElementArrayBuffer, (IntPtr)(amountVertices * sizeof(ushort)), indices, BufferUsageHint.StaticDraw);
-
+                int size = amountVertices * sizeof(ushort);
+                LinearIndexData.EBO_ID = Renderer.Shared.CreateIndexBuffer((uint)size, LinearIndexData.EBO_ID);
+                Renderer.Shared.BindIndexBuffer(LinearIndexData.EBO_ID);
+                Renderer.Shared.UpdateIndexBuffer(BufferUsage.Static, indices, (uint)size);
                 LinearIndexData.MaxAmountIndices = amountVertices;
             }
         }
@@ -57,8 +52,8 @@ namespace osu.Framework.Graphics.Buffers
         {
             base.Bind(forRendering);
 
-            if (forRendering)
-                GLWrapper.BindBuffer(BufferTarget.ElementArrayBuffer, LinearIndexData.EBO_ID);
+            if (forRendering && LinearIndexData.EBO_ID >= 0)
+                Renderer.Shared.BindIndexBuffer(LinearIndexData.EBO_ID);
         }
 
         protected override BatchPrimitiveType Type { get; }

@@ -2,8 +2,8 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using osu.Framework.Backends.Graphics;
 using osu.Framework.Graphics.Buffers;
-using osu.Framework.Graphics.OpenGL;
 using osuTK.Graphics.ES30;
 
 namespace osu.Framework.Graphics
@@ -98,12 +98,12 @@ namespace osu.Framework.Graphics
 
         ~BufferedDrawNodeSharedData()
         {
-            GLWrapper.ScheduleDisposal(() => Dispose(false));
+            Renderer.Shared.ScheduleDisposal(() => Dispose(false));
         }
 
         public void Dispose()
         {
-            GLWrapper.ScheduleDisposal(() => Dispose(true));
+            Renderer.Shared.ScheduleDisposal(() => Dispose(true));
             GC.SuppressFinalize(this);
         }
 

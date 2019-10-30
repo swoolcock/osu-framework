@@ -19,6 +19,7 @@ using osu.Framework.Statistics;
 using osu.Framework.MathUtils;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Platform;
+using BufferTarget = osuTK.Graphics.ES30.BufferTarget;
 
 namespace osu.Framework.Graphics.OpenGL
 {

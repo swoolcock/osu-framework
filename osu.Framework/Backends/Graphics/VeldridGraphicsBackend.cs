@@ -2,6 +2,7 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using System.Collections.Generic;
 using osu.Framework.Backends.Window;
 using osu.Framework.Configuration;
 using osu.Framework.Graphics.Shaders;
@@ -15,6 +16,10 @@ namespace osu.Framework.Backends.Graphics
     internal class VeldridGraphicsBackend : GraphicsBackend
     {
         private GraphicsDevice device;
+        private ResourceFactory factory;
+
+        private Dictionary<int, DeviceBuffer> buffers = new Dictionary<int, DeviceBuffer>();
+        private int nextBufferId;
 
         public override void Initialise(IGameHost host)
         {

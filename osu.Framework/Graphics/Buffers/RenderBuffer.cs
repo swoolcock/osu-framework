@@ -2,6 +2,7 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using osu.Framework.Backends.Graphics;
 using osu.Framework.Graphics.OpenGL;
 using osu.Framework.Platform;
 using osuTK;
@@ -92,7 +93,7 @@ namespace osu.Framework.Graphics.Buffers
 
         ~RenderBuffer()
         {
-            GLWrapper.ScheduleDisposal(() => Dispose(false));
+            Renderer.Shared.ScheduleDisposal(() => Dispose(false));
         }
 
         public void Dispose()

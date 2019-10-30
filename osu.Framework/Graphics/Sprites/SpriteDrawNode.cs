@@ -3,7 +3,6 @@
 
 using osuTK;
 using System;
-using osu.Framework.Backends.Graphics;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics.Vertices;

@@ -1,8 +1,12 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+using System;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Batches;
+using osu.Framework.Graphics.Buffers;
 using osu.Framework.Graphics.Primitives;
+using osu.Framework.Graphics.Vertices;
 using osuTK;
 
 namespace osu.Framework.Backends.Graphics
@@ -10,6 +14,8 @@ namespace osu.Framework.Backends.Graphics
     public interface IRenderer
     {
         IGraphics Graphics { get; }
+
+        void ScheduleDisposal(Action disposalAction);
 
         void ResetState(Vector2 size);
         void SetBlend(BlendingParameters blendingParameters);
@@ -36,5 +42,24 @@ namespace osu.Framework.Backends.Graphics
         void PushScissorState(bool enabled);
         void PopScissorState();
         void FlushCurrentBatch();
+
+        int CreateVertexBuffer<TVertex>(BufferUsage usage, uint size, int existingId = -1)
+            where TVertex : struct, IVertex, IEquatable<TVertex>;
+
+        int CreateIndexBuffer(uint size, int existingId = -1);
+
+        void BindVertexBuffer<TVertex>(int id)
+            where TVertex : struct, IVertex, IEquatable<TVertex>;
+
+        void BindIndexBuffer(int id);
+
+        void UpdateVertexBuffer<TVertex>(int offset, uint size, ref TVertex source)
+            where TVertex : struct, IVertex, IEquatable<TVertex>;
+
+        void UpdateIndexBuffer(BufferUsage usage, ushort[] indices, uint size);
+
+        void DestroyBuffer(int id);
+
+        void DrawIndices(BatchPrimitiveType type, int start, int count);
     }
 }

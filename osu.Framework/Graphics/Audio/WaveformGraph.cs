@@ -13,7 +13,6 @@ using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Shaders;
 using osu.Framework.Graphics.Textures;
 using osuTK;
-using osu.Framework.Graphics.OpenGL;
 using osu.Framework.Graphics.Vertices;
 using osu.Framework.MathUtils;
 using osu.Framework.Threading;

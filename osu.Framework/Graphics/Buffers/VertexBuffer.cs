@@ -3,13 +3,13 @@
 
 using System;
 using System.Buffers;
+using osu.Framework.Backends.Graphics;
 using osu.Framework.Development;
 using osu.Framework.Graphics.Batches;
 using osu.Framework.Graphics.OpenGL;
 using osu.Framework.Graphics.Vertices;
 using osu.Framework.Platform;
 using osu.Framework.Statistics;
-using osuTK.Graphics.ES30;
 using SixLabors.Memory;
 
 namespace osu.Framework.Graphics.Buffers
@@ -19,7 +19,7 @@ namespace osu.Framework.Graphics.Buffers
     {
         protected static readonly int STRIDE = VertexUtils<DepthWrappingVertex<T>>.STRIDE;
 
-        private readonly BufferUsageHint usage;
+        private readonly BufferUsage usage;
 
         private IMemoryOwner<DepthWrappingVertex<T>> memoryOwner;
         private Memory<DepthWrappingVertex<T>> vertexMemory;
@@ -27,7 +27,7 @@ namespace osu.Framework.Graphics.Buffers
         private bool isInitialised;
         private int vboId;
 
-        protected VertexBuffer(int amountVertices, BufferUsageHint usage)
+        protected VertexBuffer(int amountVertices, BufferUsage usage)
         {
             this.usage = usage;
 
@@ -67,20 +67,14 @@ namespace osu.Framework.Graphics.Buffers
         {
             ThreadSafety.EnsureDrawThread();
 
-            GL.GenBuffers(1, out vboId);
-
-            if (GLWrapper.BindBuffer(BufferTarget.ArrayBuffer, vboId))
-                VertexUtils<DepthWrappingVertex<T>>.Bind();
-
             int size = Size * STRIDE;
-
+            vboId = Renderer.Shared.CreateVertexBuffer<DepthWrappingVertex<T>>(usage, (uint)size);
             memoryLease = NativeMemoryTracker.AddMemory(this, size);
-            GL.BufferData(BufferTarget.ArrayBuffer, (IntPtr)size, IntPtr.Zero, usage);
         }
 
         ~VertexBuffer()
         {
-            GLWrapper.ScheduleDisposal(() => Dispose(false));
+            Renderer.Shared.ScheduleDisposal(() => Dispose(false));
         }
 
         public void Dispose()
@@ -105,7 +99,7 @@ namespace osu.Framework.Graphics.Buffers
                 Unbind();
 
                 memoryLease?.Dispose();
-                GL.DeleteBuffer(vboId);
+                Renderer.Shared.DestroyBuffer(vboId);
             }
 
             IsDisposed = true;
@@ -122,8 +116,7 @@ namespace osu.Framework.Graphics.Buffers
                 isInitialised = true;
             }
 
-            if (GLWrapper.BindBuffer(BufferTarget.ArrayBuffer, vboId))
-                VertexUtils<DepthWrappingVertex<T>>.Bind();
+            Renderer.Shared.BindVertexBuffer<DepthWrappingVertex<T>>(vboId);
         }
 
         public virtual void Unbind()
@@ -146,7 +139,7 @@ namespace osu.Framework.Graphics.Buffers
             Bind(true);
 
             int amountVertices = endIndex - startIndex;
-            GL.DrawElements(Type.ToOpenGL(), ToElements(amountVertices), DrawElementsType.UnsignedShort, (IntPtr)(ToElementIndex(startIndex) * sizeof(ushort)));
+            Renderer.Shared.DrawIndices(Type, ToElementIndex(startIndex), ToElements(amountVertices));
 
             Unbind();
         }
@@ -161,7 +154,7 @@ namespace osu.Framework.Graphics.Buffers
             Bind(false);
 
             int amountVertices = endIndex - startIndex;
-            GL.BufferSubData(BufferTarget.ArrayBuffer, (IntPtr)(startIndex * STRIDE), (IntPtr)(amountVertices * STRIDE), ref vertexMemory.Span[startIndex]);
+            Renderer.Shared.UpdateVertexBuffer(startIndex * STRIDE, (uint)(amountVertices * STRIDE), ref vertexMemory.Span[startIndex]);
 
             Unbind();
 

@@ -4,7 +4,6 @@
 using System.Text.RegularExpressions;
 using NUnit.Framework;
 using osu.Framework.Backends.Graphics.OsuTK;
-using osu.Framework.Graphics.Shaders;
 
 namespace osu.Framework.Tests.Graphics
 {

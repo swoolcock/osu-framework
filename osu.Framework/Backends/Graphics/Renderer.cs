@@ -3,7 +3,10 @@
 
 using System;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Batches;
+using osu.Framework.Graphics.Buffers;
 using osu.Framework.Graphics.Primitives;
+using osu.Framework.Graphics.Vertices;
 using osuTK;
 
 namespace osu.Framework.Backends.Graphics
@@ -19,6 +22,8 @@ namespace osu.Framework.Backends.Graphics
             Shared = this;
             Graphics = graphics;
         }
+
+        public abstract void ScheduleDisposal(Action disposalAction);
 
         public abstract void ResetState(Vector2 size);
         public abstract void SetBlend(BlendingParameters blendingParameters);
@@ -44,6 +49,25 @@ namespace osu.Framework.Backends.Graphics
         public abstract void PushScissorState(bool enabled);
         public abstract void PopScissorState();
         public abstract void FlushCurrentBatch();
+
+        public abstract int CreateVertexBuffer<TVertex>(BufferUsage usage, uint size, int existingId = -1)
+            where TVertex : struct, IVertex, IEquatable<TVertex>;
+
+        public abstract int CreateIndexBuffer(uint size, int existingId = -1);
+
+        public abstract void BindVertexBuffer<TVertex>(int id)
+            where TVertex : struct, IVertex, IEquatable<TVertex>;
+
+        public abstract void BindIndexBuffer(int id);
+
+        public abstract void UpdateVertexBuffer<TVertex>(int offset, uint size, ref TVertex source)
+            where TVertex : struct, IVertex, IEquatable<TVertex>;
+
+        public abstract void UpdateIndexBuffer(BufferUsage usage, ushort[] indices, uint size);
+
+        public abstract void DestroyBuffer(int id);
+
+        public abstract void DrawIndices(BatchPrimitiveType type, int start, int count);
 
         #region IDisposable
 

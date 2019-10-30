@@ -1,7 +1,6 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using osu.Framework.Graphics.OpenGL;
 using System;
 using System.Runtime.CompilerServices;
 using osu.Framework.Backends.Graphics;
@@ -285,8 +284,7 @@ namespace osu.Framework.Graphics
 
         ~DrawNode()
         {
-            // TODO: schedule disposal another way
-            GLWrapper.ScheduleDisposal(() => Dispose(false));
+            Renderer.Shared.ScheduleDisposal(() => Dispose(false));
         }
 
         protected internal bool IsDisposed { get; private set; }
@@ -296,8 +294,7 @@ namespace osu.Framework.Graphics
             if (referenceCount.Decrement() != 0)
                 return;
 
-            // TODO: schedule disposal another way
-            GLWrapper.ScheduleDisposal(() => Dispose(true));
+            Renderer.Shared.ScheduleDisposal(() => Dispose(true));
             GC.SuppressFinalize(this);
         }
 
