@@ -9,7 +9,6 @@ using osu.Framework.Bindables;
 using osu.Framework.Configuration;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
-using osu.Framework.Platform;
 
 namespace osu.Framework.Tests.Visual.Platform
 {

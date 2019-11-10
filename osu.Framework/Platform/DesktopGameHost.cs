@@ -1,9 +1,7 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using osu.Framework.Backends.Audio;
@@ -12,10 +10,6 @@ using osu.Framework.Backends.Input;
 using osu.Framework.Backends.Video;
 using osu.Framework.Backends.Window;
 using osu.Framework.Input;
-using osu.Framework.Input.Handlers;
-using osu.Framework.Input.Handlers.Joystick;
-using osu.Framework.Input.Handlers.Keyboard;
-using osu.Framework.Input.Handlers.Mouse;
 using osuTK;
 
 namespace osu.Framework.Platform
