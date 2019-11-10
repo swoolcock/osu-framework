@@ -378,7 +378,7 @@ namespace osu.Framework.Platform
         protected virtual void DrawFrame()
         {
             // TODO: use graphics backend
-            if (true) //Root == null)
+            if (Root == null || !(Graphics is OsuTKGraphicsBackend))
                 return;
 
             while (ExecutionState > ExecutionState.Stopping)

@@ -1,38 +1,18 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using osu.Framework.Backends.Window;
+using osu.Framework.Backends.Input.OsuTK.Joystick;
+using osu.Framework.Backends.Input.OsuTK.Keyboard;
+using osu.Framework.Backends.Input.OsuTK.Mouse;
 using osu.Framework.Configuration;
 using osu.Framework.Input.Handlers;
-using osu.Framework.Input.Handlers.Joystick;
-using osu.Framework.Input.Handlers.Keyboard;
-using osu.Framework.Input.Handlers.Mouse;
-using osu.Framework.Platform;
 
 namespace osu.Framework.Backends.Input
 {
     public class OsuTKInputBackend : InputBackend
     {
-        public override void Initialise(IGameHost host)
-        {
-            base.Initialise(host);
-
-            if (!(host.Window is OsuTKWindowBackend window))
-                throw new Exception($"{nameof(OsuTKInputBackend)} requires a corresponding {nameof(OsuTKWindowBackend)}");
-
-            // osuTK input events are triggered through the osuTK.GameWindow implementation
-            window.Implementation.KeyDown += (sender, e) => OnKeyDown(e);
-            window.Implementation.KeyUp += (sender, e) => OnKeyUp(e);
-            window.Implementation.KeyPress += (sender, e) => OnKeyPress(e);
-            window.Implementation.MouseDown += (sender, e) => OnMouseDown(e);
-            window.Implementation.MouseUp += (sender, e) => OnMouseUp(e);
-            window.Implementation.MouseMove += (sender, e) => OnMouseMove(e);
-            window.Implementation.MouseWheel += (sender, e) => OnMouseWheel(e);
-        }
-
         public override void Configure(ConfigManager<FrameworkSetting> config)
         {
         }

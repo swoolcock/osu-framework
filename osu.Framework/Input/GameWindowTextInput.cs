@@ -35,12 +35,12 @@ namespace osu.Framework.Input
 
         public void Deactivate(object sender)
         {
-            input.KeyPress -= HandleKeyPress;
+            // FIXME: input.KeyPress -= HandleKeyPress;
         }
 
         public void Activate(object sender)
         {
-            input.KeyPress += HandleKeyPress;
+            // FIXME: input.KeyPress += HandleKeyPress;
         }
 
         private void imeCompose()

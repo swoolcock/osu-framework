@@ -7,12 +7,14 @@ using System.Drawing;
 using System.Linq;
 using osu.Framework.Bindables;
 using osu.Framework.Configuration;
+using osu.Framework.Input;
+using osu.Framework.Input.Handlers;
 using osu.Framework.Platform;
 using osu.Framework.Threading;
 using osuTK;
 using osuTK.Input;
 
-namespace osu.Framework.Input.Handlers.Mouse
+namespace osu.Framework.Backends.Input.OsuTK.Mouse
 {
     internal class OsuTKRawMouseHandler : OsuTKMouseHandlerBase, IHasCursorSensitivity, INeedsMousePositionFeedback
     {

@@ -7,8 +7,6 @@ using osu.Framework.Bindables;
 using osu.Framework.Configuration;
 using osu.Framework.Input.Handlers;
 using osu.Framework.Platform;
-using osuTK;
-using osuTK.Input;
 
 namespace osu.Framework.Backends.Input
 {
@@ -20,31 +18,31 @@ namespace osu.Framework.Backends.Input
     {
         #region Events
 
-        public event EventHandler<KeyboardKeyEventArgs> KeyDown;
-        public event EventHandler<KeyboardKeyEventArgs> KeyUp;
-        public event EventHandler<KeyPressEventArgs> KeyPress;
-        public event EventHandler<MouseEventArgs> MouseDown;
-        public event EventHandler<MouseEventArgs> MouseUp;
-        public event EventHandler<MouseEventArgs> MouseMove;
-        public event EventHandler<MouseWheelEventArgs> MouseWheel;
+        // public event EventHandler<KeyDownEvent> KeyDown;
+        // public event EventHandler<KeyUpEvent> KeyUp;
+        // public event EventHandler<KeyboardEvent> KeyPress;
+        // public event EventHandler<MouseDownEvent> MouseDown;
+        // public event EventHandler<MouseUpEvent> MouseUp;
+        // public event EventHandler<MouseMoveEvent> MouseMove;
+        // public event EventHandler<MouseScrollChangeEvent> MouseScroll;
 
         #endregion
 
         #region Event Invocation
 
-        protected virtual void OnKeyDown(KeyboardKeyEventArgs args) => KeyDown?.Invoke(this, args);
-
-        protected virtual void OnKeyUp(KeyboardKeyEventArgs args) => KeyUp?.Invoke(this, args);
-
-        protected virtual void OnKeyPress(KeyPressEventArgs args) => KeyPress?.Invoke(this, args);
-
-        protected virtual void OnMouseDown(MouseEventArgs args) => MouseDown?.Invoke(this, args);
-
-        protected virtual void OnMouseUp(MouseEventArgs args) => MouseUp?.Invoke(this, args);
-
-        protected virtual void OnMouseMove(MouseEventArgs args) => MouseMove?.Invoke(this, args);
-
-        protected virtual void OnMouseWheel(MouseWheelEventArgs args) => MouseWheel?.Invoke(this, args);
+        // protected virtual void OnKeyDown(KeyDownEvent args) => KeyDown?.Invoke(this, args);
+        //
+        // protected virtual void OnKeyUp(KeyUpEvent args) => KeyUp?.Invoke(this, args);
+        //
+        // protected virtual void OnKeyPress(KeyboardEvent args) => KeyPress?.Invoke(this, args);
+        //
+        // protected virtual void OnMouseDown(MouseDownEvent args) => MouseDown?.Invoke(this, args);
+        //
+        // protected virtual void OnMouseUp(MouseUpEvent args) => MouseUp?.Invoke(this, args);
+        //
+        // protected virtual void OnMouseMove(MouseMoveEvent args) => MouseMove?.Invoke(this, args);
+        //
+        // protected virtual void OnMouseScroll(MouseScrollChangeEvent args) => MouseScroll?.Invoke(this, args);
 
         #endregion
 

@@ -2,12 +2,13 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using osu.Framework.Bindables;
+using osu.Framework.Input.Handlers;
 using osu.Framework.Input.StateChanges;
 using osu.Framework.Platform;
 using osu.Framework.Statistics;
 using osuTK;
 
-namespace osu.Framework.Input.Handlers.Mouse
+namespace osu.Framework.Backends.Input.OsuTK.Mouse
 {
     internal abstract class OsuTKMouseHandlerBase : InputHandler
     {

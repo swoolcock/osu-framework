@@ -1,12 +1,14 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+using System;
 using System.Drawing;
+using osu.Framework.Backends.Window;
 using osu.Framework.Platform;
 using osu.Framework.Threading;
 using osuTK;
 
-namespace osu.Framework.Input.Handlers.Mouse
+namespace osu.Framework.Backends.Input.OsuTK.Mouse
 {
     internal class OsuTKMouseHandler : OsuTKMouseHandlerBase
     {
@@ -19,14 +21,17 @@ namespace osu.Framework.Input.Handlers.Mouse
         {
             base.Initialize(host);
 
+            if (!(host.Window is OsuTKWindowBackend window))
+                throw new Exception($"{nameof(OsuTKMouseHandler)} requires a corresponding {nameof(OsuTKWindowBackend)}");
+
             Enabled.BindValueChanged(e =>
             {
                 if (e.NewValue)
                 {
-                    host.Input.MouseMove += handleMouseEvent;
-                    host.Input.MouseDown += handleMouseEvent;
-                    host.Input.MouseUp += handleMouseEvent;
-                    host.Input.MouseWheel += handleMouseEvent;
+                    window.Implementation.MouseMove += handleMouseEvent;
+                    window.Implementation.MouseDown += handleMouseEvent;
+                    window.Implementation.MouseUp += handleMouseEvent;
+                    window.Implementation.MouseWheel += handleMouseEvent;
 
                     // polling is used to keep a valid mouse position when we aren't receiving events.
                     osuTK.Input.MouseState? lastCursorState = null;
@@ -52,10 +57,10 @@ namespace osu.Framework.Input.Handlers.Mouse
                 {
                     scheduled?.Cancel();
 
-                    host.Input.MouseMove -= handleMouseEvent;
-                    host.Input.MouseDown -= handleMouseEvent;
-                    host.Input.MouseUp -= handleMouseEvent;
-                    host.Input.MouseWheel -= handleMouseEvent;
+                    window.Implementation.MouseMove -= handleMouseEvent;
+                    window.Implementation.MouseDown -= handleMouseEvent;
+                    window.Implementation.MouseUp -= handleMouseEvent;
+                    window.Implementation.MouseWheel -= handleMouseEvent;
 
                     lastPollState = null;
                     lastEventState = null;

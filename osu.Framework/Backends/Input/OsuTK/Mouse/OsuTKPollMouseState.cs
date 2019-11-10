@@ -3,14 +3,14 @@
 
 using osuTK;
 
-namespace osu.Framework.Input.Handlers.Mouse
+namespace osu.Framework.Backends.Input.OsuTK.Mouse
 {
     /// <summary>
-    /// An osuTK state which came from an event callback.
+    /// An osuTK state which was retrieved via polling.
     /// </summary>
-    internal class OsuTKEventMouseState : OsuTKMouseState
+    internal class OsuTKPollMouseState : OsuTKMouseState
     {
-        public OsuTKEventMouseState(osuTK.Input.MouseState tkState, bool active, Vector2? mappedPosition)
+        public OsuTKPollMouseState(osuTK.Input.MouseState tkState, bool active, Vector2? mappedPosition)
             : base(tkState, active, mappedPosition)
         {
         }

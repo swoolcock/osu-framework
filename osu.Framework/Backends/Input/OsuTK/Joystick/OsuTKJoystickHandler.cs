@@ -4,6 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using osu.Framework.Input;
+using osu.Framework.Input.Handlers;
 using osu.Framework.Input.StateChanges;
 using osu.Framework.Logging;
 using osu.Framework.MathUtils;
@@ -13,7 +15,7 @@ using osu.Framework.Threading;
 using osuTK.Input;
 using JoystickState = osu.Framework.Input.States.JoystickState;
 
-namespace osu.Framework.Input.Handlers.Joystick
+namespace osu.Framework.Backends.Input.OsuTK.Joystick
 {
     public class OsuTKJoystickHandler : InputHandler
     {

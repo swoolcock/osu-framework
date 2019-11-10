@@ -4,12 +4,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using osu.Framework.Backends.Window;
+using osu.Framework.Input.Handlers;
 using osu.Framework.Input.StateChanges;
 using osu.Framework.Platform;
 using osu.Framework.Statistics;
 using osuTK.Input;
+using KeyboardState = osu.Framework.Input.States.KeyboardState;
 
-namespace osu.Framework.Input.Handlers.Keyboard
+namespace osu.Framework.Backends.Input.OsuTK.Keyboard
 {
     internal class OsuTKKeyboardHandler : InputHandler
     {
@@ -18,21 +21,24 @@ namespace osu.Framework.Input.Handlers.Keyboard
         public override int Priority => 0;
 
         private TkKeyboardState lastEventState;
-        private KeyboardState? lastRawState;
+        private osuTK.Input.KeyboardState? lastRawState;
 
         public override bool Initialize(IGameHost host)
         {
+            if (!(host.Window is OsuTKWindowBackend window))
+                throw new Exception($"{nameof(OsuTKKeyboardHandler)} requires a corresponding {nameof(OsuTKWindowBackend)}");
+
             Enabled.BindValueChanged(e =>
             {
                 if (e.NewValue)
                 {
-                    host.Input.KeyDown += handleKeyboardEvent;
-                    host.Input.KeyUp += handleKeyboardEvent;
+                    window.Implementation.KeyDown += handleKeyboardEvent;
+                    window.Implementation.KeyUp += handleKeyboardEvent;
                 }
                 else
                 {
-                    host.Input.KeyDown -= handleKeyboardEvent;
-                    host.Input.KeyUp -= handleKeyboardEvent;
+                    window.Implementation.KeyDown -= handleKeyboardEvent;
+                    window.Implementation.KeyUp -= handleKeyboardEvent;
                     lastRawState = null;
                     lastEventState = null;
                 }
@@ -59,11 +65,11 @@ namespace osu.Framework.Input.Handlers.Keyboard
             FrameStatistics.Increment(StatisticsCounterType.KeyEvents);
         }
 
-        private class TkKeyboardState : States.KeyboardState
+        private class TkKeyboardState : KeyboardState
         {
             private static readonly IEnumerable<Key> all_keys = Enum.GetValues(typeof(Key)).Cast<Key>();
 
-            public TkKeyboardState(KeyboardState tkState)
+            public TkKeyboardState(osuTK.Input.KeyboardState tkState)
             {
                 if (tkState.IsAnyKeyDown)
                 {
