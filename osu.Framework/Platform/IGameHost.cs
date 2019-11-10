@@ -4,12 +4,14 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using osu.Framework.Allocation;
 using osu.Framework.Backends;
 using osu.Framework.Backends.Window;
 using osu.Framework.Bindables;
 using osu.Framework.Graphics.Textures;
+using osu.Framework.Graphics.Video;
 using osu.Framework.Input;
 using osu.Framework.Input.Bindings;
 using osu.Framework.IO.Stores;
@@ -78,6 +80,15 @@ namespace osu.Framework.Platform
         /// <param name="underlyingStore">The underlying provider of texture data (in arbitrary image formats).</param>
         /// <returns>A texture loader store.</returns>
         IResourceStore<TextureUpload> CreateTextureLoaderStore(IResourceStore<byte[]> underlyingStore);
+
+        /// <summary>
+        /// Create a <see cref="VideoDecoder"/> with the given stream. May be overridden by platforms that require a different
+        /// decoder implementation.
+        /// </summary>
+        /// <param name="stream">The <see cref="Stream"/> to decode.</param>
+        /// <param name="scheduler">The <see cref="Scheduler"/> to use when scheduling tasks from the decoder thread.</param>
+        /// <returns>An instance of <see cref="VideoDecoder"/> initialised with the given stream.</returns>
+        VideoDecoder CreateVideoDecoder(Stream stream, Scheduler scheduler);
 
         void Exit();
 
