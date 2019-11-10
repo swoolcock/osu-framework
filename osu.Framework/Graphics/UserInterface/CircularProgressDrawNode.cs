@@ -2,7 +2,6 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using osu.Framework.Graphics.Textures;
-using osuTK.Graphics.ES30;
 using osuTK;
 using System;
 using osu.Framework.Graphics.Batches;
@@ -149,8 +148,8 @@ namespace osu.Framework.Graphics.UserInterface
 
             Shader.Bind();
 
-            texture.TextureGL.WrapMode = TextureWrapMode.ClampToEdge;
-            texture.TextureGL.Bind();
+            // TODO: texture.TextureGL.WrapMode = TextureWrapMode.ClampToEdge;
+            texture.PrepareDraw();
 
             updateVertexBuffer();
 

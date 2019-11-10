@@ -91,6 +91,8 @@ namespace osu.Framework.Backends.Graphics
 
         public override IShaderManager CreateShaderManager(ResourceStore<byte[]> store) => new OsuTKShaderManager(store);
 
+        public override ITextureManager CreateTextureManager() => new OsuTKTextureManager(this);
+
         public override IRenderer CreateRenderer() => new OsuTKRenderer(this);
     }
 }

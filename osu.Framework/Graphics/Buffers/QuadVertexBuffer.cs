@@ -3,15 +3,15 @@
 
 using System;
 using osu.Framework.Backends.Graphics;
+using osu.Framework.Backends.Graphics.OsuTK;
 using osu.Framework.Graphics.Batches;
-using osu.Framework.Graphics.OpenGL.Textures;
 using osu.Framework.Graphics.Vertices;
 
 namespace osu.Framework.Graphics.Buffers
 {
     internal static class QuadIndexData
     {
-        public static int EBO_ID = -1;
+        public static int EboID = -1;
         public static int MaxAmountIndices;
     }
 
@@ -47,8 +47,8 @@ namespace osu.Framework.Graphics.Buffers
                 }
 
                 int size = amountIndices * sizeof(ushort);
-                QuadIndexData.EBO_ID = Renderer.Shared.CreateIndexBuffer((uint)size, QuadIndexData.EBO_ID);
-                Renderer.Shared.BindIndexBuffer(QuadIndexData.EBO_ID);
+                QuadIndexData.EboID = Renderer.Shared.CreateIndexBuffer((uint)size, QuadIndexData.EboID);
+                Renderer.Shared.BindIndexBuffer(QuadIndexData.EboID);
                 Renderer.Shared.UpdateIndexBuffer(BufferUsage.Static, indices, (uint)size);
                 QuadIndexData.MaxAmountIndices = amountIndices;
             }
@@ -58,8 +58,8 @@ namespace osu.Framework.Graphics.Buffers
         {
             base.Bind(forRendering);
 
-            if (forRendering && QuadIndexData.EBO_ID >= 0)
-                Renderer.Shared.BindIndexBuffer(QuadIndexData.EBO_ID);
+            if (forRendering && QuadIndexData.EboID >= 0)
+                Renderer.Shared.BindIndexBuffer(QuadIndexData.EboID);
         }
 
         protected override int ToElements(int vertices) => 3 * vertices / 2;

@@ -3,10 +3,10 @@
 
 using System;
 using osu.Framework.Graphics.OpenGL;
-using osu.Framework.Graphics.OpenGL.Textures;
 using osu.Framework.IO.Stores;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using osu.Framework.Backends.Graphics;
 using osu.Framework.Logging;
 using osuTK.Graphics.ES30;
 
@@ -55,7 +55,7 @@ namespace osu.Framework.Graphics.Textures
         {
             if (upload == null) return null;
 
-            TextureGL glTexture = null;
+            ITextureSource glTexture = null;
 
             if (Atlas != null)
             {
@@ -64,9 +64,10 @@ namespace osu.Framework.Graphics.Textures
             }
 
             if (glTexture == null)
-                glTexture = new TextureGLSingle(upload.Width, upload.Height, manualMipmaps, filteringMode);
+                glTexture = TextureManager.Shared.CreateTextureSource(upload.Width, upload.Height, manualMipmaps, filteringMode);
 
-            Texture tex = new Texture(glTexture) { ScaleAdjust = ScaleAdjust };
+            Texture tex = TextureManager.Shared.CreateTexture(glTexture);
+            tex.ScaleAdjust = ScaleAdjust;
 
             tex.SetData(upload);
 

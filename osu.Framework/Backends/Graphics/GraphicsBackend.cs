@@ -19,6 +19,8 @@ namespace osu.Framework.Backends.Graphics
         public abstract void Configure(ConfigManager<FrameworkSetting> config);
 
         public abstract IShaderManager CreateShaderManager(ResourceStore<byte[]> store);
+        public abstract ITextureManager CreateTextureManager();
+
         public abstract IRenderer CreateRenderer();
 
         #region IDisposable

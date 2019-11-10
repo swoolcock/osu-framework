@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using NUnit.Framework;
+using osu.Framework.Backends.Graphics;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Lines;
@@ -20,7 +21,7 @@ namespace osu.Framework.Tests.Visual.UserInterface
     {
         private const int texture_width = 20;
 
-        private readonly Texture gradientTexture = new Texture(texture_width, 1, true);
+        private readonly Texture gradientTexture = TextureManager.Shared.CreateTexture(texture_width, 1, true);
 
         public TestSceneDrawablePath()
         {

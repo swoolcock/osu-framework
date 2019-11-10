@@ -3,7 +3,7 @@
 
 using osuTK.Graphics.ES30;
 
-namespace osu.Framework.Graphics.OpenGL.Textures
+namespace osu.Framework.Backends.Graphics.OsuTK
 {
     /// <summary>
     /// A TextureGL which is acting as the backing for an atlas.

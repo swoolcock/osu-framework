@@ -2,36 +2,31 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
-using osu.Framework.Graphics.OpenGL;
-using osu.Framework.Graphics.OpenGL.Textures;
-using osuTK.Graphics.ES30;
+using osu.Framework.Allocation;
+using osu.Framework.Backends.Graphics;
 
 namespace osu.Framework.Graphics.Textures
 {
     /// <summary>
-    /// A texture which updates the reference count of the underlying <see cref="TextureGL"/> on ctor and disposal.
+    /// A texture which updates the reference count of the underlying <see cref="ITextureSource"/> on ctor and disposal.
     /// </summary>
     public class TextureWithRefCount : Texture
     {
-        public TextureWithRefCount(TextureGL textureGl)
-            : base(textureGl)
+        public TextureWithRefCount(ITextureSource source)
+            : base(source)
         {
-            textureGl.Reference();
+            if (source is IReferenceCounted rc)
+                rc.Reference();
         }
 
-        public TextureWithRefCount(int width, int height, bool manualMipmaps = false, All filteringMode = All.Linear)
-            : this(new TextureGLSingle(width, height, manualMipmaps, filteringMode))
-        {
-        }
+        internal int ReferenceCount => (base.Source as IReferenceCounted)?.ReferenceCount ?? 0;
 
-        internal int ReferenceCount => base.TextureGL.ReferenceCount;
-
-        public sealed override TextureGL TextureGL
+        public sealed override ITextureSource Source
         {
             get
             {
-                var tex = base.TextureGL;
-                if (tex.ReferenceCount <= 0)
+                var tex = base.Source;
+                if (tex is IReferenceCounted rc && rc.ReferenceCount <= 0)
                     throw new InvalidOperationException($"Attempting to access a {nameof(TextureWithRefCount)}'s underlying texture after all references are lost.");
 
                 return tex;
@@ -39,7 +34,7 @@ namespace osu.Framework.Graphics.Textures
         }
 
         // The base property references TextureGL, but doing so may throw an exception (above)
-        public sealed override bool Available => base.TextureGL.Available;
+        public sealed override bool Available => base.Source?.Available ?? false;
 
         #region Disposal
 
@@ -60,7 +55,7 @@ namespace osu.Framework.Graphics.Textures
 
             isDisposed = true;
 
-            GLWrapper.ScheduleDisposal(() => base.TextureGL.Dereference());
+            Renderer.Shared.ScheduleDisposal(() => (base.Source as IReferenceCounted)?.Dereference());
         }
 
         #endregion

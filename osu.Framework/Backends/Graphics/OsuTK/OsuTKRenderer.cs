@@ -47,6 +47,7 @@ namespace osu.Framework.Backends.Graphics.OsuTK
         public override void PushScissorState(bool enabled) => GLWrapper.PushScissorState(enabled);
         public override void PopScissorState() => GLWrapper.PopScissorState();
         public override void FlushCurrentBatch() => GLWrapper.FlushCurrentBatch();
+        public override void SetActiveBatch(IVertexBatch batch) => GLWrapper.SetActiveBatch(batch);
 
         public override int CreateVertexBuffer<TVertex>(BufferUsage usage, uint size, int existingId = -1)
         {

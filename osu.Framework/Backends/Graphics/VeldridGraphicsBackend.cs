@@ -35,6 +35,8 @@ namespace osu.Framework.Backends.Graphics
 
         public override IShaderManager CreateShaderManager(ResourceStore<byte[]> store) => throw new NotImplementedException();
 
+        public override ITextureManager CreateTextureManager() => throw new NotImplementedException();
+
         public override IRenderer CreateRenderer() => throw new NotImplementedException();
     }
 }

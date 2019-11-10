@@ -3,7 +3,7 @@
 
 using System;
 using System.Collections.Generic;
-using osu.Framework.Graphics.OpenGL.Textures;
+using osu.Framework.Backends.Graphics;
 using osuTK.Graphics.ES30;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Primitives;
@@ -18,11 +18,11 @@ namespace osu.Framework.Graphics.Textures
         // We are adding an extra padding on top of the padding required by
         // mipmap blending in order to support smooth edges without antialiasing which requires
         // inflating texture rectangles.
-        internal const int PADDING = (1 << TextureGLSingle.MAX_MIPMAP_LEVELS) * Sprite.MAX_EDGE_SMOOTHNESS;
-        internal const int WHITE_PIXEL_SIZE = 3 * (1 << TextureGLSingle.MAX_MIPMAP_LEVELS);
+        internal const int PADDING = (1 << Texture.MAX_MIPMAP_LEVELS) * Sprite.MAX_EDGE_SMOOTHNESS;
+        internal const int WHITE_PIXEL_SIZE = 3 * (1 << Texture.MAX_MIPMAP_LEVELS);
 
         private readonly List<RectangleI> subTextureBounds = new List<RectangleI>();
-        internal TextureGLSingle AtlasTexture;
+        internal ITextureSource AtlasTexture;
 
         private readonly int atlasWidth;
         private readonly int atlasHeight;
@@ -38,7 +38,7 @@ namespace osu.Framework.Graphics.Textures
                 if (AtlasTexture == null)
                     Reset();
 
-                return new TextureWhitePixel(new TextureGLAtlasWhite(AtlasTexture));
+                return new TextureWhitePixel(TextureManager.Shared.CreateTextureAtlasWhiteSource(AtlasTexture));
             }
         }
 
@@ -61,7 +61,7 @@ namespace osu.Framework.Graphics.Textures
             subTextureBounds.Clear();
             currentPosition = Vector2I.Zero;
 
-            AtlasTexture = new TextureGLAtlas(atlasWidth, atlasHeight, manualMipmaps, filteringMode);
+            AtlasTexture = TextureManager.Shared.CreateTextureAtlasSource(atlasWidth, atlasHeight, manualMipmaps, filteringMode);
 
             using (var whiteTex = Add(WHITE_PIXEL_SIZE, WHITE_PIXEL_SIZE))
                 whiteTex.SetData(new TextureUpload(new Image<Rgba32>(SixLabors.ImageSharp.Configuration.Default, whiteTex.Width, whiteTex.Height, Rgba32.White)));
@@ -106,7 +106,7 @@ namespace osu.Framework.Graphics.Textures
         /// <param name="width">The width of the requested texture.</param>
         /// <param name="height">The height of the requested texture.</param>
         /// <returns>A texture, or null if the requested size exceeds the atlas' bounds.</returns>
-        internal TextureGL Add(int width, int height)
+        internal ITextureSource Add(int width, int height)
         {
             if (width > atlasWidth || height > atlasHeight)
                 return null;
@@ -117,7 +117,7 @@ namespace osu.Framework.Graphics.Textures
                 RectangleI bounds = new RectangleI(position.X, position.Y, width, height);
                 subTextureBounds.Add(bounds);
 
-                return new TextureGLSub(bounds, AtlasTexture);
+                return TextureManager.Shared.CreateTextureSubSource(bounds, AtlasTexture);
             }
         }
     }

@@ -2,12 +2,11 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
-using System.IO;
+using osu.Framework.Backends.Graphics;
+using osu.Framework.Backends.Graphics.OsuTK;
 using osu.Framework.Graphics.Batches;
-using osu.Framework.Graphics.OpenGL.Textures;
 using osu.Framework.Graphics.Primitives;
 using osuTK;
-using osuTK.Graphics.ES30;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Vertices;
 using RectangleF = osu.Framework.Graphics.Primitives.RectangleF;
@@ -16,13 +15,15 @@ namespace osu.Framework.Graphics.Textures
 {
     public class Texture : IDisposable
     {
+        public const int MAX_MIPMAP_LEVELS = 3;
+
         // in case no other textures are used in the project, create a new atlas as a fallback source for the white pixel area (used to draw boxes etc.)
         private static readonly Lazy<TextureWhitePixel> white_pixel = new Lazy<TextureWhitePixel>(() =>
             new TextureAtlas(TextureAtlas.WHITE_PIXEL_SIZE + TextureAtlas.PADDING, TextureAtlas.WHITE_PIXEL_SIZE + TextureAtlas.PADDING, true).WhitePixel);
 
         public static Texture WhitePixel => white_pixel.Value;
 
-        public virtual TextureGL TextureGL { get; }
+        public virtual ITextureSource Source { get; }
 
         public string Filename;
         public string AssetName;
@@ -39,63 +40,33 @@ namespace osu.Framework.Graphics.Textures
         /// Create a new texture.
         /// </summary>
         /// <param name="textureGl">The GL texture.</param>
-        public Texture(TextureGL textureGl)
+        public Texture(ITextureSource source)
         {
-            TextureGL = textureGl ?? throw new ArgumentNullException(nameof(textureGl));
-        }
-
-        public Texture(int width, int height, bool manualMipmaps = false, All filteringMode = All.Linear)
-            : this(new TextureGLSingle(width, height, manualMipmaps, filteringMode))
-        {
-        }
-
-        /// <summary>
-        /// Creates a texture from a data stream representing a bitmap.
-        /// </summary>
-        /// <param name="stream">The data stream containing the texture data.</param>
-        /// <param name="atlas">The atlas to add the texture to.</param>
-        /// <returns>The created texture.</returns>
-        public static Texture FromStream(Stream stream, TextureAtlas atlas = null)
-        {
-            if (stream == null || stream.Length == 0)
-                return null;
-
-            try
-            {
-                var data = new TextureUpload(stream);
-                Texture tex = atlas == null ? new Texture(data.Width, data.Height) : new Texture(atlas.Add(data.Width, data.Height));
-                tex.SetData(data);
-                return tex;
-            }
-            catch (ArgumentException)
-            {
-                return null;
-            }
+            Source = source ?? throw new ArgumentNullException(nameof(source));
         }
 
         public int Width
         {
-            get => TextureGL.Width;
-            set => TextureGL.Width = value;
+            get => Source.Width;
+            set => Source.Width = value;
         }
 
         public int Height
         {
-            get => TextureGL.Height;
-            set => TextureGL.Height = value;
+            get => Source.Height;
+            set => Source.Height = value;
         }
 
         public Vector2 Size => new Vector2(Width, Height);
+
+        public bool PrepareDraw() => Source?.PrepareDraw() ?? false;
 
         /// <summary>
         /// Queue a <see cref="TextureUpload"/> to be uploaded on the draw thread.
         /// The provided upload will be disposed after the upload is completed.
         /// </summary>
         /// <param name="upload"></param>
-        public void SetData(ITextureUpload upload)
-        {
-            TextureGL?.SetData(upload);
-        }
+        public void SetData(ITextureUpload upload) => Source?.SetData(upload);
 
         protected virtual RectangleF TextureBounds(RectangleF? textureRect = null)
         {
@@ -112,7 +83,7 @@ namespace osu.Framework.Graphics.Textures
             return texRect;
         }
 
-        public RectangleF GetTextureRect(RectangleF? textureRect = null) => TextureGL.GetTextureRect(TextureBounds(textureRect));
+        public RectangleF GetTextureRect(RectangleF? textureRect = null) => Source.GetTextureRect(TextureBounds(textureRect));
 
         /// <summary>
         /// Draws a triangle to the screen.
@@ -122,12 +93,12 @@ namespace osu.Framework.Graphics.Textures
         /// <param name="textureRect">The texture rectangle.</param>
         /// <param name="vertexAction">An action that adds vertices to a <see cref="VertexBatch{T}"/>.</param>
         /// <param name="inflationPercentage">The percentage amount that <see cref="textureRect"/> should be inflated.</param>
-        internal void DrawTriangle(Triangle vertexTriangle, ColourInfo drawColour, RectangleF? textureRect = null, Action<TexturedVertex2D> vertexAction = null,
-                                   Vector2? inflationPercentage = null)
+        public void DrawTriangle(Triangle vertexTriangle, ColourInfo drawColour, RectangleF? textureRect = null, Action<TexturedVertex2D> vertexAction = null,
+                                 Vector2? inflationPercentage = null)
         {
-            if (TextureGL == null || !TextureGL.Bind()) return;
+            if (!PrepareDraw()) return;
 
-            TextureGL.DrawTriangle(vertexTriangle, drawColour, TextureBounds(textureRect), vertexAction, inflationPercentage);
+            Source?.DrawTriangle(vertexTriangle, drawColour, TextureBounds(textureRect), vertexAction, inflationPercentage);
         }
 
         /// <summary>
@@ -139,12 +110,12 @@ namespace osu.Framework.Graphics.Textures
         /// <param name="vertexAction">An action that adds vertices to a <see cref="VertexBatch{T}"/>.</param>
         /// <param name="inflationPercentage">The percentage amount that <see cref="textureRect"/> should be inflated.</param>
         /// <param name="blendRangeOverride">The range over which the edges of the <see cref="textureRect"/> should be blended.</param>
-        internal void DrawQuad(Quad vertexQuad, ColourInfo drawColour, RectangleF? textureRect = null, Action<TexturedVertex2D> vertexAction = null, Vector2? inflationPercentage = null,
-                               Vector2? blendRangeOverride = null)
+        public void DrawQuad(Quad vertexQuad, ColourInfo drawColour, RectangleF? textureRect = null, Action<TexturedVertex2D> vertexAction = null, Vector2? inflationPercentage = null,
+                             Vector2? blendRangeOverride = null)
         {
-            if (TextureGL == null || !TextureGL.Bind()) return;
+            if (!PrepareDraw()) return;
 
-            TextureGL.DrawQuad(vertexQuad, drawColour, TextureBounds(textureRect), vertexAction, inflationPercentage, blendRangeOverride);
+            Source?.DrawQuad(vertexQuad, drawColour, TextureBounds(textureRect), vertexAction, inflationPercentage, blendRangeOverride);
         }
 
         public override string ToString() => $@"{AssetName} ({Width}, {Height})";
@@ -152,7 +123,7 @@ namespace osu.Framework.Graphics.Textures
         /// <summary>
         /// Whether <see cref="TextureGL"/> is in a usable state.
         /// </summary>
-        public virtual bool Available => TextureGL.Available;
+        public virtual bool Available => Source?.Available ?? false;
 
         #region Disposal
 

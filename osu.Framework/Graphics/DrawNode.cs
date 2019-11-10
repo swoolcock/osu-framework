@@ -4,10 +4,10 @@
 using System;
 using System.Runtime.CompilerServices;
 using osu.Framework.Backends.Graphics;
+using osu.Framework.Backends.Graphics.OsuTK;
 using osu.Framework.Graphics.Batches;
 using osu.Framework.Graphics.Buffers;
 using osu.Framework.Graphics.Colour;
-using osu.Framework.Graphics.OpenGL.Textures;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics.Vertices;

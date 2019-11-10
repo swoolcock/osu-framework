@@ -104,6 +104,7 @@ namespace osu.Framework.Platform
         #endregion
 
         private IRenderer renderer;
+        private ITextureManager textureManager;
 
         protected FrameworkDebugConfigManager DebugConfig { get; private set; }
 
@@ -569,6 +570,8 @@ namespace osu.Framework.Platform
                 Dependencies.CacheAs(Audio);
                 Dependencies.CacheAs(Video);
                 Dependencies.CacheAs(Storage = GetStorage(Name));
+
+                Dependencies.CacheAs(textureManager = Graphics.CreateTextureManager());
 
                 SetupForRun();
 

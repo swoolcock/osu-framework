@@ -3,6 +3,7 @@
 
 using System;
 using System.Collections.Generic;
+using osu.Framework.Backends.Graphics;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Textures;
@@ -33,7 +34,7 @@ namespace osu.Framework.Tests.Visual.UserInterface
 
             var image = new Image<Rgba32>(width, 1);
 
-            gradientTextureHorizontal = new Texture(width, 1, true);
+            gradientTextureHorizontal = TextureManager.Shared.CreateTexture(width, 1, true);
 
             for (int i = 0; i < width; ++i)
             {
@@ -45,7 +46,7 @@ namespace osu.Framework.Tests.Visual.UserInterface
 
             image = new Image<Rgba32>(width, 1);
 
-            gradientTextureVertical = new Texture(1, width, true);
+            gradientTextureVertical = TextureManager.Shared.CreateTexture(1, width, true);
 
             for (int i = 0; i < width; ++i)
             {
@@ -57,7 +58,7 @@ namespace osu.Framework.Tests.Visual.UserInterface
 
             image = new Image<Rgba32>(width, width);
 
-            gradientTextureBoth = new Texture(width, width, true);
+            gradientTextureBoth = TextureManager.Shared.CreateTexture(width, width, true);
 
             for (int i = 0; i < width; ++i)
             {

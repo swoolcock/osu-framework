@@ -3,17 +3,19 @@
 
 using System;
 using System.Threading;
+using osu.Framework.Allocation;
 using osu.Framework.Graphics.Batches;
-using osu.Framework.Graphics.Primitives;
-using osuTK.Graphics.ES30;
-using osuTK;
 using osu.Framework.Graphics.Colour;
+using osu.Framework.Graphics.OpenGL;
+using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics.Vertices;
+using osuTK;
+using osuTK.Graphics.ES30;
 
-namespace osu.Framework.Graphics.OpenGL.Textures
+namespace osu.Framework.Backends.Graphics.OsuTK
 {
-    public abstract class TextureGL : IDisposable
+    public abstract class TextureGL : ITextureSource, IDisposable, IReferenceCounted
     {
         public bool IsTransparent;
         public TextureWrapMode WrapMode = TextureWrapMode.ClampToEdge;
@@ -25,13 +27,14 @@ namespace osu.Framework.Graphics.OpenGL.Textures
             Dispose(false);
         }
 
-        internal int ReferenceCount;
+        private int referenceCount;
+        public int ReferenceCount => referenceCount;
 
-        public void Reference() => Interlocked.Increment(ref ReferenceCount);
+        public void Reference() => Interlocked.Increment(ref referenceCount);
 
         public void Dereference()
         {
-            if (Interlocked.Decrement(ref ReferenceCount) == 0)
+            if (Interlocked.Decrement(ref referenceCount) == 0)
                 Dispose();
         }
 
@@ -71,6 +74,8 @@ namespace osu.Framework.Graphics.OpenGL.Textures
 
         public abstract RectangleF GetTextureRect(RectangleF? textureRect);
 
+        public bool PrepareDraw() => Bind();
+
         /// <summary>
         /// Draws a triangle to the screen.
         /// </summary>
@@ -79,8 +84,7 @@ namespace osu.Framework.Graphics.OpenGL.Textures
         /// <param name="textureRect">The texture rectangle.</param>
         /// <param name="vertexAction">An action that adds vertices to a <see cref="VertexBatch{T}"/>.</param>
         /// <param name="inflationPercentage">The percentage amount that <see cref="textureRect"/> should be inflated.</param>
-        internal abstract void DrawTriangle(Triangle vertexTriangle, ColourInfo drawColour, RectangleF? textureRect = null, Action<TexturedVertex2D> vertexAction = null,
-                                            Vector2? inflationPercentage = null);
+        public abstract void DrawTriangle(Triangle vertexTriangle, ColourInfo drawColour, RectangleF? textureRect = null, Action<TexturedVertex2D> vertexAction = null, Vector2? inflationPercentage = null);
 
         /// <summary>
         /// Draws a quad to the screen.
@@ -91,8 +95,7 @@ namespace osu.Framework.Graphics.OpenGL.Textures
         /// <param name="vertexAction">An action that adds vertices to a <see cref="VertexBatch{T}"/>.</param>
         /// <param name="inflationPercentage">The percentage amount that <see cref="textureRect"/> should be inflated.</param>
         /// <param name="blendRangeOverride">The range over which the edges of the <see cref="textureRect"/> should be blended.</param>
-        internal abstract void DrawQuad(Quad vertexQuad, ColourInfo drawColour, RectangleF? textureRect = null, Action<TexturedVertex2D> vertexAction = null, Vector2? inflationPercentage = null,
-                                        Vector2? blendRangeOverride = null);
+        public abstract void DrawQuad(Quad vertexQuad, ColourInfo drawColour, RectangleF? textureRect = null, Action<TexturedVertex2D> vertexAction = null, Vector2? inflationPercentage = null, Vector2? blendRangeOverride = null);
 
         /// <summary>
         /// Bind as active texture.
@@ -105,12 +108,12 @@ namespace osu.Framework.Graphics.OpenGL.Textures
         /// Uploads pending texture data to the GPU if it exists.
         /// </summary>
         /// <returns>Whether pending data existed and an upload has been performed.</returns>
-        internal abstract bool Upload();
+        public abstract bool Upload();
 
         /// <summary>
         /// Flush any unprocessed uploads without actually uploading.
         /// </summary>
-        internal abstract void FlushUploads();
+        public abstract void FlushUploads();
 
         public abstract void SetData(ITextureUpload upload);
     }

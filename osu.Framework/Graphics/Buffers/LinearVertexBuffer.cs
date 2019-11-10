@@ -10,7 +10,7 @@ namespace osu.Framework.Graphics.Buffers
 {
     internal static class LinearIndexData
     {
-        public static int EBO_ID = -1;
+        public static int EboID = -1;
         public static int MaxAmountIndices;
     }
 
@@ -41,8 +41,8 @@ namespace osu.Framework.Graphics.Buffers
                     indices[i] = i;
 
                 int size = amountVertices * sizeof(ushort);
-                LinearIndexData.EBO_ID = Renderer.Shared.CreateIndexBuffer((uint)size, LinearIndexData.EBO_ID);
-                Renderer.Shared.BindIndexBuffer(LinearIndexData.EBO_ID);
+                LinearIndexData.EboID = Renderer.Shared.CreateIndexBuffer((uint)size, LinearIndexData.EboID);
+                Renderer.Shared.BindIndexBuffer(LinearIndexData.EboID);
                 Renderer.Shared.UpdateIndexBuffer(BufferUsage.Static, indices, (uint)size);
                 LinearIndexData.MaxAmountIndices = amountVertices;
             }
@@ -52,8 +52,8 @@ namespace osu.Framework.Graphics.Buffers
         {
             base.Bind(forRendering);
 
-            if (forRendering && LinearIndexData.EBO_ID >= 0)
-                Renderer.Shared.BindIndexBuffer(LinearIndexData.EBO_ID);
+            if (forRendering && LinearIndexData.EboID >= 0)
+                Renderer.Shared.BindIndexBuffer(LinearIndexData.EboID);
         }
 
         protected override BatchPrimitiveType Type { get; }

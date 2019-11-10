@@ -13,8 +13,6 @@ namespace osu.Framework.Backends.Graphics
 {
     public interface IRenderer
     {
-        IGraphics Graphics { get; }
-
         void ScheduleDisposal(Action disposalAction);
 
         void ResetState(Vector2 size);
@@ -42,6 +40,7 @@ namespace osu.Framework.Backends.Graphics
         void PushScissorState(bool enabled);
         void PopScissorState();
         void FlushCurrentBatch();
+        void SetActiveBatch(IVertexBatch batch);
 
         int CreateVertexBuffer<TVertex>(BufferUsage usage, uint size, int existingId = -1)
             where TVertex : struct, IVertex, IEquatable<TVertex>;

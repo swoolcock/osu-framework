@@ -4,8 +4,8 @@
 using System;
 using System.Collections.Generic;
 using osu.Framework.Backends.Graphics;
+using osu.Framework.Backends.Graphics.OsuTK;
 using osu.Framework.Graphics.OpenGL;
-using osu.Framework.Graphics.OpenGL.Textures;
 using osu.Framework.Graphics.Textures;
 using osuTK;
 using osuTK.Graphics.ES30;

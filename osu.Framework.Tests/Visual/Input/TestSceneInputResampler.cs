@@ -2,6 +2,7 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using osu.Framework.Backends.Graphics;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Lines;
 using osu.Framework.Graphics.Sprites;
@@ -23,7 +24,7 @@ namespace osu.Framework.Tests.Visual.Input
             : base(3, 3)
         {
             const int width = 2;
-            Texture gradientTexture = new Texture(width, 1, true);
+            Texture gradientTexture = TextureManager.Shared.CreateTexture(width, 1, true);
             var image = new Image<Rgba32>(width, 1);
 
             for (int i = 0; i < width; ++i)

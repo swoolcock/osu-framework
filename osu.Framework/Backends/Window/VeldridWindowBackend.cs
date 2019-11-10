@@ -45,7 +45,7 @@ namespace osu.Framework.Backends.Window
 
         public VeldridWindowBackend()
         {
-            WindowCreateInfo windowCI = new WindowCreateInfo
+            WindowCreateInfo windowCi = new WindowCreateInfo
             {
                 X = 100,
                 Y = 100,
@@ -53,7 +53,7 @@ namespace osu.Framework.Backends.Window
                 WindowHeight = 540,
                 WindowTitle = "Test"
             };
-            Implementation = VeldridStartup.CreateWindow(ref windowCI);
+            Implementation = VeldridStartup.CreateWindow(ref windowCi);
         }
 
         public override void Run()

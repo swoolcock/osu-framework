@@ -1,10 +1,11 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+using osu.Framework.Graphics.OpenGL;
 using osu.Framework.Graphics.Primitives;
 using osuTK.Graphics.ES30;
 
-namespace osu.Framework.Graphics.OpenGL.Textures
+namespace osu.Framework.Backends.Graphics.OsuTK
 {
     /// <summary>
     /// A special texture which refers to the area of a texture atlas which is white.

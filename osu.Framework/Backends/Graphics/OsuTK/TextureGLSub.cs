@@ -2,14 +2,15 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
-using osu.Framework.Graphics.Primitives;
-using osuTK;
 using osu.Framework.Graphics.Colour;
+using osu.Framework.Graphics.OpenGL;
+using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics.Vertices;
+using osuTK;
 using osuTK.Graphics.ES30;
 
-namespace osu.Framework.Graphics.OpenGL.Textures
+namespace osu.Framework.Backends.Graphics.OsuTK
 {
     internal class TextureGLSub : TextureGL
     {
@@ -62,21 +63,21 @@ namespace osu.Framework.Graphics.OpenGL.Textures
 
         public override RectangleF GetTextureRect(RectangleF? textureRect) => parent.GetTextureRect(boundsInParent(textureRect));
 
-        internal override void DrawTriangle(Triangle vertexTriangle, ColourInfo drawColour, RectangleF? textureRect = null, Action<TexturedVertex2D> vertexAction = null,
-                                            Vector2? inflationPercentage = null)
+        public override void DrawTriangle(Triangle vertexTriangle, ColourInfo drawColour, RectangleF? textureRect = null, Action<TexturedVertex2D> vertexAction = null,
+                                          Vector2? inflationPercentage = null)
         {
             parent.DrawTriangle(vertexTriangle, drawColour, boundsInParent(textureRect), vertexAction, inflationPercentage);
         }
 
-        internal override void DrawQuad(Quad vertexQuad, ColourInfo drawColour, RectangleF? textureRect = null, Action<TexturedVertex2D> vertexAction = null, Vector2? inflationPercentage = null,
-                                        Vector2? blendRangeOverride = null)
+        public override void DrawQuad(Quad vertexQuad, ColourInfo drawColour, RectangleF? textureRect = null, Action<TexturedVertex2D> vertexAction = null, Vector2? inflationPercentage = null,
+                                      Vector2? blendRangeOverride = null)
         {
             parent.DrawQuad(vertexQuad, drawColour, boundsInParent(textureRect), vertexAction, inflationPercentage: inflationPercentage, blendRangeOverride: blendRangeOverride);
         }
 
-        internal override bool Upload() => false;
+        public override bool Upload() => false;
 
-        internal override void FlushUploads()
+        public override void FlushUploads()
         {
         }
 

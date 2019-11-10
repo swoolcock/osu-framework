@@ -3,6 +3,7 @@
 
 using System;
 using osu.Framework.Allocation;
+using osu.Framework.Backends.Graphics;
 using osu.Framework.Caching;
 using osu.Framework.Graphics.Textures;
 using osuTK.Graphics;
@@ -61,7 +62,7 @@ namespace osu.Framework.Graphics.Lines
                 raw[i, 0] = new Rgba32(colour.R, colour.G, colour.B, colour.A * Math.Min(progress / aa_portion, 1));
             }
 
-            var texture = new TextureWithRefCount(textureWidth, 1, true);
+            var texture = TextureManager.Shared.CreateTexture(textureWidth, 1, true, refCount: true);
             texture.SetData(new TextureUpload(raw));
             Texture = texture;
 

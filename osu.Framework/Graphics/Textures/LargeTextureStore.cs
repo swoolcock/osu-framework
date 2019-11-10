@@ -27,10 +27,10 @@ namespace osu.Framework.Graphics.Textures
         {
             var baseTex = base.Get(name);
 
-            if (baseTex?.TextureGL == null) return null;
+            if (baseTex?.Source == null) return null;
 
             // encapsulate texture for ref counting
-            return new TextureWithRefCount(baseTex.TextureGL) { ScaleAdjust = ScaleAdjust };
+            return new TextureWithRefCount(baseTex.Source) { ScaleAdjust = ScaleAdjust };
         }
     }
 }

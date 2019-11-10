@@ -3,7 +3,6 @@
 
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Textures;
-using osuTK.Graphics.ES30;
 using osuTK;
 using System;
 using System.Collections.Generic;
@@ -215,8 +214,8 @@ namespace osu.Framework.Graphics.Lines
 
                 pathShader.Bind();
 
-                texture.TextureGL.WrapMode = TextureWrapMode.ClampToEdge;
-                texture.TextureGL.Bind();
+                // TODO: texture.TextureGL.WrapMode = TextureWrapMode.ClampToEdge;
+                texture.PrepareDraw();
 
                 updateVertexBuffer();
 

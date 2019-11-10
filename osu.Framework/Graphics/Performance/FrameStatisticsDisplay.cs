@@ -15,6 +15,7 @@ using osu.Framework.Threading;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using osu.Framework.Backends.Graphics;
 using osu.Framework.Input.Events;
 using osuTK;
 using SixLabors.ImageSharp;
@@ -144,7 +145,7 @@ namespace osu.Framework.Graphics.Performance
                                     {
                                         counterBarBackground = new Sprite
                                         {
-                                            Texture = new Texture(1, HEIGHT),
+                                            Texture = TextureManager.Shared.CreateTexture(1, HEIGHT),
                                             RelativeSizeAxes = Axes.Both,
                                             Size = new Vector2(1, 1),
                                         },
@@ -505,7 +506,7 @@ namespace osu.Framework.Graphics.Performance
                 Size = new Vector2(WIDTH, HEIGHT);
                 Child = Sprite = new Sprite();
 
-                Sprite.Texture = new Texture(WIDTH, HEIGHT);
+                Sprite.Texture = TextureManager.Shared.CreateTexture(WIDTH, HEIGHT);
             }
         }
 

@@ -15,9 +15,9 @@ namespace osu.Framework.Backends.Graphics
     {
         public static IRenderer Shared { get; internal set; }
 
-        public IGraphics Graphics { get; }
+        internal IGraphics Graphics { get; }
 
-        protected Renderer(IGraphics graphics)
+        internal Renderer(IGraphics graphics)
         {
             Shared = this;
             Graphics = graphics;
@@ -49,6 +49,7 @@ namespace osu.Framework.Backends.Graphics
         public abstract void PushScissorState(bool enabled);
         public abstract void PopScissorState();
         public abstract void FlushCurrentBatch();
+        public abstract void SetActiveBatch(IVertexBatch batch);
 
         public abstract int CreateVertexBuffer<TVertex>(BufferUsage usage, uint size, int existingId = -1)
             where TVertex : struct, IVertex, IEquatable<TVertex>;

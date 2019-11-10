@@ -11,6 +11,8 @@ namespace osu.Framework.Backends.Graphics
     /// </summary>
     public interface IGraphics : IBackend
     {
+        ITextureManager CreateTextureManager();
+
         IShaderManager CreateShaderManager(ResourceStore<byte[]> store);
 
         IRenderer CreateRenderer();

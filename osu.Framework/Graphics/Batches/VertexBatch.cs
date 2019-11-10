@@ -4,8 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using osu.Framework.Backends.Graphics;
 using osu.Framework.Graphics.Buffers;
-using osu.Framework.Graphics.OpenGL;
 using osu.Framework.Graphics.Vertices;
 using osu.Framework.Statistics;
 
@@ -74,7 +74,7 @@ namespace osu.Framework.Graphics.Batches
         /// <param name="v">The vertex to add.</param>
         public void Add(T v)
         {
-            GLWrapper.SetActiveBatch(this);
+            Renderer.Shared.SetActiveBatch(this);
 
             if (currentBufferIndex < VertexBuffers.Count && currentVertexIndex >= currentVertexBuffer.Size)
             {

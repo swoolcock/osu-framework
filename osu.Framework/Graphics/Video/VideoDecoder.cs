@@ -11,9 +11,9 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using osu.Framework.Allocation;
+using osu.Framework.Backends.Graphics;
 using osu.Framework.Bindables;
 using SixLabors.ImageSharp.PixelFormats;
-using osu.Framework.Graphics.OpenGL.Textures;
 using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osu.Framework.Threading;
@@ -173,7 +173,7 @@ namespace osu.Framework.Graphics.Video
         {
             foreach (var f in frames)
             {
-                ((TextureGLSingle)f.Texture.TextureGL).FlushUploads();
+                f.Texture.Source.FlushUploads();
                 availableTextures.Enqueue(f.Texture);
             }
         }
@@ -400,7 +400,7 @@ namespace osu.Framework.Graphics.Video
                                         }
 
                                         if (!availableTextures.TryDequeue(out var tex))
-                                            tex = new Texture(codecParams.width, codecParams.height, true);
+                                            tex = TextureManager.Shared.CreateTexture(codecParams.width, codecParams.height, true);
 
                                         var upload = new ArrayPoolTextureUpload(tex.Width, tex.Height);
 

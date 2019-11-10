@@ -3,6 +3,7 @@
 
 using System;
 using osu.Framework.Allocation;
+using osu.Framework.Backends.Graphics;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Sprites;
@@ -82,7 +83,7 @@ namespace osu.Framework.Tests.Visual.Sprites
                 for (int y = 0; y < texData.Height; y++)
                     texData[x, y] = pixel;
 
-                var tex = new Texture(texData.Width, texData.Height, true);
+                var tex = TextureManager.Shared.CreateTexture(texData.Width, texData.Height, true);
                 tex.SetData(new TextureUpload(texData));
 
                 return tex;
@@ -117,9 +118,9 @@ namespace osu.Framework.Tests.Visual.Sprites
 
                 public override void Draw(Action<TexturedVertex2D> vertexAction)
                 {
-                    redTex.TextureGL.Bind(TextureUnit.Texture1);
-                    greenTex.TextureGL.Bind(TextureUnit.Texture2);
-                    blueTex.TextureGL.Bind(TextureUnit.Texture3);
+                    // TODO: redTex.TextureGL.Bind(TextureUnit.Texture1);
+                    // TODO: greenTex.TextureGL.Bind(TextureUnit.Texture2);
+                    // TODO: blueTex.TextureGL.Bind(TextureUnit.Texture3);
 
                     int unitId = unit - TextureUnit.Texture0;
                     Shader.GetUniform<int>("m_Sampler").UpdateValue(ref unitId);

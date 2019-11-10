@@ -9,7 +9,6 @@ using osu.Framework.Backends.Graphics.OsuTK;
 using osu.Framework.Development;
 using osu.Framework.Graphics.Batches;
 using osu.Framework.Graphics.Buffers;
-using osu.Framework.Graphics.OpenGL.Textures;
 using osu.Framework.Graphics.Shaders;
 using osu.Framework.Threading;
 using osuTK;

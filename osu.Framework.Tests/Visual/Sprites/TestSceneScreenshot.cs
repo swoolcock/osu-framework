@@ -2,6 +2,7 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using osu.Framework.Allocation;
+using osu.Framework.Backends.Graphics;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
@@ -57,7 +58,7 @@ namespace osu.Framework.Tests.Visual.Sprites
             {
                 var image = t.Result;
 
-                var tex = new Texture(image.Width, image.Height);
+                var tex = TextureManager.Shared.CreateTexture(image.Width, image.Height);
                 tex.SetData(new TextureUpload(image));
 
                 display.Texture = tex;

@@ -11,8 +11,8 @@ using osuTK.Graphics;
 using osuTK.Input;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Allocation;
+using osu.Framework.Backends.Graphics;
 using osu.Framework.Extensions.IEnumerableExtensions;
-using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Events;
 
 namespace osu.Framework.Graphics.Visualisation
@@ -128,7 +128,7 @@ namespace osu.Framework.Graphics.Visualisation
                             : new Sprite
                             {
                                 // It's fine to only bypass the ref count, because this sprite will dispose along with the original sprite
-                                Texture = new Texture(spriteTarget.Texture.TextureGL),
+                                Texture = TextureManager.Shared.CreateTexture(spriteTarget.Texture.Source),
                                 Scale = new Vector2(spriteTarget.Texture.DisplayWidth / spriteTarget.Texture.DisplayHeight, 1),
                                 Anchor = Anchor.CentreLeft,
                                 Origin = Anchor.CentreLeft,

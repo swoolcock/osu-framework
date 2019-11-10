@@ -6,7 +6,6 @@ using System;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics.Vertices;
-using osuTK.Graphics.ES30;
 
 namespace osu.Framework.Graphics.Sprites
 {
@@ -54,7 +53,7 @@ namespace osu.Framework.Graphics.Sprites
             if (Texture?.Available != true)
                 return;
 
-            Texture.TextureGL.WrapMode = WrapTexture ? TextureWrapMode.Repeat : TextureWrapMode.ClampToEdge;
+            // TODO: Texture.TextureGL.WrapMode = WrapTexture ? TextureWrapMode.Repeat : TextureWrapMode.ClampToEdge;
 
             Shader.Bind();
 
