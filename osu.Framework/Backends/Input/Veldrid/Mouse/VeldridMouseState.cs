@@ -6,7 +6,7 @@ using osu.Framework.Input.States;
 using osuTK;
 using Veldrid;
 
-namespace osu.Framework.Backends.Input.Veldrid
+namespace osu.Framework.Backends.Input.Veldrid.Mouse
 {
     internal class VeldridMouseState : MouseState
     {

@@ -2,7 +2,8 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System.Collections.Generic;
-using osu.Framework.Backends.Input.Veldrid;
+using osu.Framework.Backends.Input.Veldrid.Keyboard;
+using osu.Framework.Backends.Input.Veldrid.Mouse;
 using osu.Framework.Input.Handlers;
 using Veldrid;
 
@@ -14,6 +15,7 @@ namespace osu.Framework.Backends.Input
 
         public override IEnumerable<InputHandler> CreateInputHandlers() => new InputHandler[]
         {
+            new VeldridKeyboardHandler(),
             new VeldridMouseHandler(),
         };
     }

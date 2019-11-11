@@ -8,7 +8,7 @@ using osu.Framework.Platform;
 using osu.Framework.Statistics;
 using osuTK;
 
-namespace osu.Framework.Backends.Input.Veldrid
+namespace osu.Framework.Backends.Input.Veldrid.Mouse
 {
     internal abstract class VeldridMouseHandlerBase : InputHandler
     {
