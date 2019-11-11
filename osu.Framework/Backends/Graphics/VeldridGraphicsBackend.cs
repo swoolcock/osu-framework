@@ -6,7 +6,6 @@ using osu.Framework.Backends.Window;
 using osu.Framework.Configuration;
 using osu.Framework.Platform;
 using Veldrid;
-using Veldrid.Sdl2;
 using Veldrid.StartupUtilities;
 
 namespace osu.Framework.Backends.Graphics

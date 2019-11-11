@@ -2,18 +2,20 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System.Collections.Generic;
-using System.Drawing;
 using osu.Framework.Bindables;
 using osu.Framework.Configuration;
 using osu.Framework.Platform;
+using Veldrid;
 using Veldrid.Sdl2;
 using Veldrid.StartupUtilities;
+using Point = System.Drawing.Point;
 
 namespace osu.Framework.Backends.Window
 {
     public class VeldridWindowBackend : WindowBackend
     {
         internal readonly Sdl2Window Implementation;
+        internal InputSnapshot InputSnapshot;
 
         #region Read-only Bindables
 
@@ -60,7 +62,7 @@ namespace osu.Framework.Backends.Window
         {
             while (Implementation.Exists)
             {
-                Implementation.PumpEvents();
+                InputSnapshot = Implementation.PumpEvents();
             }
         }
 
