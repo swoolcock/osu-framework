@@ -1,10 +1,11 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+using System;
 using System.Collections.Generic;
+using osu.Framework.Backends.Input;
 using osu.Framework.Bindables;
 using osu.Framework.Configuration;
-using Veldrid;
 using Veldrid.Sdl2;
 using Veldrid.StartupUtilities;
 using Point = System.Drawing.Point;
@@ -14,7 +15,6 @@ namespace osu.Framework.Backends.Window
     public class VeldridWindowBackend : WindowBackend
     {
         internal readonly Sdl2Window Implementation;
-        internal InputSnapshot InputSnapshot;
 
         #region Read-only Bindables
 
@@ -51,9 +51,13 @@ namespace osu.Framework.Backends.Window
 
         public override void Run()
         {
+            if (!(Host.Input is VeldridInputBackend input))
+                throw new Exception($"{nameof(VeldridWindowBackend)} requires a corresponding {nameof(VeldridInputBackend)}");
+
             while (Implementation.Exists)
             {
-                InputSnapshot = Implementation.PumpEvents();
+                input.Snapshot = Implementation.PumpEvents();
+                OnUpdate();
             }
         }
 

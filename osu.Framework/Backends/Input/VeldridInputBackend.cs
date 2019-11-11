@@ -3,11 +3,14 @@
 
 using System.Collections.Generic;
 using osu.Framework.Input.Handlers;
+using Veldrid;
 
 namespace osu.Framework.Backends.Input
 {
     public class VeldridInputBackend : InputBackend
     {
+        internal InputSnapshot Snapshot;
+
         public override IEnumerable<InputHandler> CreateInputHandlers() => new InputHandler[0];
     }
 }
