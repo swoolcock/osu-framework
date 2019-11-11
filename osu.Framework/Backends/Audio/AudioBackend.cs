@@ -7,8 +7,6 @@ using System.IO;
 using System.Threading.Tasks;
 using osu.Framework.Audio.Sample;
 using osu.Framework.Audio.Track;
-using osu.Framework.Configuration;
-using osu.Framework.Platform;
 
 namespace osu.Framework.Backends.Audio
 {
@@ -16,47 +14,15 @@ namespace osu.Framework.Backends.Audio
     /// Abstract implementation of <see cref="IAudio"/> that will provide any base functionality required
     /// by backend subclasses that should not be exposed via the interface.
     /// </summary>
-    public abstract class AudioBackend : IAudio
+    public abstract class AudioBackend : Backend, IAudio
     {
         #region IAudio
-
-        public abstract void Initialise(IGameHost host);
-        public abstract void Configure(ConfigManager<FrameworkSetting> config);
 
         public abstract Track CreateTrack(Stream data, bool quick);
 
         public abstract Sample CreateSample(byte[] data, ConcurrentQueue<Task> customPendingActions, int concurrency);
 
         public abstract SampleChannel CreateSampleChannel(Sample sample, Action<SampleChannel> onPlay);
-
-        #endregion
-
-        #region IDisposable
-
-        private bool isDisposed;
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!isDisposed)
-            {
-                if (disposing)
-                {
-                }
-
-                isDisposed = true;
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        ~AudioBackend()
-        {
-            Dispose(false);
-        }
 
         #endregion
     }

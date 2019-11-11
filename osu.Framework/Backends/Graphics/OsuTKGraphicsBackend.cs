@@ -4,7 +4,6 @@
 using System;
 using System.Linq;
 using osu.Framework.Backends.Window;
-using osu.Framework.Configuration;
 using osu.Framework.Logging;
 using osu.Framework.Platform;
 using osuTK.Graphics;
@@ -27,6 +26,8 @@ namespace osu.Framework.Backends.Graphics
 
         public override void Initialise(IGameHost host)
         {
+            base.Initialise(host);
+
             if (!(host.Window is OsuTKWindowBackend window))
                 throw new Exception($"{nameof(OsuTKGraphicsBackend)} requires a corresponding {nameof(OsuTKWindowBackend)}");
 
@@ -68,10 +69,6 @@ namespace osu.Framework.Backends.Graphics
                         GL Extensions:              {GL.GetString(StringName.Extensions)}");
 
             window.Implementation.MakeCurrent();
-        }
-
-        public override void Configure(ConfigManager<FrameworkSetting> config)
-        {
         }
 
         private string getVersionNumberSubstring(string version)

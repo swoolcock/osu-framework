@@ -17,11 +17,8 @@ namespace osu.Framework.Backends.Window
     /// Abstract implementation of <see cref="IWindow"/> that will provide any base functionality required
     /// by backend subclasses that should not be exposed via the interface.
     /// </summary>
-    public abstract class WindowBackend : IWindow
+    public abstract class WindowBackend : Backend, IWindow
     {
-        public abstract void Initialise(IGameHost host);
-        public abstract void Configure(ConfigManager<FrameworkSetting> config);
-
         #region Read-only Bindables
 
         public abstract IBindable<bool> Focused { get; }
@@ -108,33 +105,6 @@ namespace osu.Framework.Backends.Window
 
         #endregion
 
-        #region IDisposable
 
-        private bool isDisposed;
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!isDisposed)
-            {
-                if (disposing)
-                {
-                }
-
-                isDisposed = true;
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        ~WindowBackend()
-        {
-            Dispose(false);
-        }
-
-        #endregion
     }
 }

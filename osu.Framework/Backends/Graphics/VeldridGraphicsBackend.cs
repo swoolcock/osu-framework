@@ -3,7 +3,6 @@
 
 using System;
 using osu.Framework.Backends.Window;
-using osu.Framework.Configuration;
 using osu.Framework.Platform;
 using Veldrid;
 using Veldrid.StartupUtilities;
@@ -16,14 +15,12 @@ namespace osu.Framework.Backends.Graphics
 
         public override void Initialise(IGameHost host)
         {
+            base.Initialise(host);
+
             if (!(host.Window is VeldridWindowBackend window))
                 throw new Exception($"{nameof(VeldridGraphicsBackend)} requires a corresponding {nameof(VeldridWindowBackend)}");
 
             Device = VeldridStartup.CreateGraphicsDevice(window.Implementation);
-        }
-
-        public override void Configure(ConfigManager<FrameworkSetting> config)
-        {
         }
     }
 }

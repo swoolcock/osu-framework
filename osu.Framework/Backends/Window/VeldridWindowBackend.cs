@@ -4,7 +4,6 @@
 using System.Collections.Generic;
 using osu.Framework.Bindables;
 using osu.Framework.Configuration;
-using osu.Framework.Platform;
 using Veldrid;
 using Veldrid.Sdl2;
 using Veldrid.StartupUtilities;
@@ -29,14 +28,6 @@ namespace osu.Framework.Backends.Window
         public override IBindable<bool> Visible => visible;
 
         #endregion
-
-        public override void Initialise(IGameHost host)
-        {
-        }
-
-        public override void Configure(ConfigManager<FrameworkSetting> config)
-        {
-        }
 
         protected override IEnumerable<WindowMode> DefaultSupportedWindowModes => new[]
         {

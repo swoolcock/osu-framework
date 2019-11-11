@@ -1,10 +1,8 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System;
 using System.Collections.Generic;
 using osu.Framework.Bindables;
-using osu.Framework.Configuration;
 using osu.Framework.Input.Handlers;
 using osu.Framework.Platform;
 
@@ -14,7 +12,7 @@ namespace osu.Framework.Backends.Input
     /// Abstract implementation of <see cref="IInput"/> that will provide any base functionality required
     /// by backend subclasses that should not be exposed via the interface.
     /// </summary>
-    public abstract class InputBackend : IInput
+    public abstract class InputBackend : Backend, IInput
     {
         #region Events
 
@@ -46,19 +44,16 @@ namespace osu.Framework.Backends.Input
 
         #endregion
 
-        protected IGameHost Host { get; private set; }
-
         public abstract IEnumerable<InputHandler> CreateInputHandlers();
 
         private readonly BindableList<InputHandler> availableInputHandlers = new BindableList<InputHandler>();
 
         public virtual IBindableList<InputHandler> AvailableInputHandlers => availableInputHandlers;
 
-        public abstract void Configure(ConfigManager<FrameworkSetting> config);
-
-        public virtual void Initialise(IGameHost host)
+        public override void Initialise(IGameHost host)
         {
-            Host = host;
+            base.Initialise(host);
+
             ResetInputHandlers();
         }
 
@@ -84,34 +79,5 @@ namespace osu.Framework.Backends.Input
 
             availableInputHandlers.AddRange(newHandlers);
         }
-
-        #region IDisposable
-
-        private bool isDisposed;
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!isDisposed)
-            {
-                if (disposing)
-                {
-                }
-
-                isDisposed = true;
-            }
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        ~InputBackend()
-        {
-            Dispose(false);
-        }
-
-        #endregion
     }
 }

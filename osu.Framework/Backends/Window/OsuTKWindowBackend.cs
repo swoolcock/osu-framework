@@ -65,14 +65,6 @@ namespace osu.Framework.Backends.Window
         {
         }
 
-        public override void Initialise(IGameHost host)
-        {
-        }
-
-        public override void Configure(ConfigManager<FrameworkSetting> config)
-        {
-        }
-
         #region Event Handlers
 
         private bool boundsChangingFromEvent;

@@ -6,17 +6,12 @@ using System.Linq;
 using osu.Framework.Backends.Input.OsuTK.Joystick;
 using osu.Framework.Backends.Input.OsuTK.Keyboard;
 using osu.Framework.Backends.Input.OsuTK.Mouse;
-using osu.Framework.Configuration;
 using osu.Framework.Input.Handlers;
 
 namespace osu.Framework.Backends.Input
 {
     public class OsuTKInputBackend : InputBackend
     {
-        public override void Configure(ConfigManager<FrameworkSetting> config)
-        {
-        }
-
         public override IEnumerable<InputHandler> CreateInputHandlers()
         {
             var defaultEnabled = new InputHandler[]
