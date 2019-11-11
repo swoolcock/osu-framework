@@ -3,11 +3,17 @@
 
 using VMouseButton = Veldrid.MouseButton;
 using TKMouseButton = osuTK.Input.MouseButton;
+using SNVector2 = System.Numerics.Vector2;
+using TKVector2 = osuTK.Vector2;
 
 namespace osu.Framework.Extensions
 {
     public static class OsuTKExtensions
     {
+        public static TKVector2 ToOsuTK(this SNVector2 vector) => new TKVector2(vector.X, vector.Y);
+
+        public static SNVector2 ToNumerics(this TKVector2 vector) => new SNVector2(vector.X, vector.Y);
+
         public static TKMouseButton ToOsuTK(this VMouseButton button)
         {
             switch (button)
