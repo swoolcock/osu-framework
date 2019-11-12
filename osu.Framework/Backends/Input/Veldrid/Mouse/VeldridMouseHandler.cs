@@ -4,9 +4,9 @@
 using System;
 using osu.Framework.Backends.Input.OsuTK.Mouse;
 using osu.Framework.Backends.Window;
-using osu.Framework.Extensions;
 using osu.Framework.Platform;
 using osu.Framework.Threading;
+using osuTK;
 
 namespace osu.Framework.Backends.Input.Veldrid.Mouse
 {
@@ -45,7 +45,7 @@ namespace osu.Framework.Backends.Input.Veldrid.Mouse
                     host.InputThread.Scheduler.Add(scheduled = new ScheduledDelegate(delegate
                         {
                             // we should be getting events if the mouse is inside the window.
-                            // if (MouseInWindow.Value || !host.Window.Visible.Value || host.Window.WindowState.Value == WindowState.Minimized) return;
+                            if (!host.Window.Visible.Value || host.Window.WindowState.Value == WindowState.Minimized) return;
 
                             // if (input.Snapshot.MouseEvents.Equals(lastMouseEvents)) return;
                             // int newHash = input.Snapshot.MouseEvents.GetHashCode();
@@ -56,9 +56,8 @@ namespace osu.Framework.Backends.Input.Veldrid.Mouse
                             //
                             // lastMouseEventsHash = newHash;
 
-                            // var mapped = host.Window.PointToClient(new Point(cursorState.X, cursorState.Y));
-
-                            var newState = new VeldridMouseState(input.Snapshot, host.IsActive.Value, input.Snapshot.MousePosition.ToOsuTK()); // new Vector2(mapped.X, mapped.Y));
+                            // var mapped = host.Window.PointToClient(new Point((int)input.Snapshot.MousePosition.X, (int)input.Snapshot.MousePosition.Y));
+                            var newState = new VeldridMouseState(input.Snapshot, host.IsActive.Value, null); //new Vector2(mapped.X, mapped.Y));
                             HandleState(newState, lastPollState, true);
                             lastPollState = newState;
                         }, 0, 1000.0 / 60));

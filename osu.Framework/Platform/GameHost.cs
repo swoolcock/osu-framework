@@ -360,12 +360,7 @@ namespace osu.Framework.Platform
 
         protected virtual void DrawInitialize()
         {
-            // TODO: use backends
-
-            if (!(Window is OsuTKWindowBackend window))
-                return;
-
-            window.Implementation.MakeCurrent();
+            Graphics.MakeCurrent();
             GLWrapper.Initialize(this);
 
             setVSyncMode();
@@ -377,8 +372,7 @@ namespace osu.Framework.Platform
 
         protected virtual void DrawFrame()
         {
-            // TODO: use graphics backend
-            if (Root == null || !(Graphics is OsuTKGraphicsBackend))
+            if (Root == null)
                 return;
 
             while (ExecutionState > ExecutionState.Stopping)
@@ -429,16 +423,12 @@ namespace osu.Framework.Platform
 
             using (drawMonitor.BeginCollecting(PerformanceCollectionType.SwapBuffer))
             {
-                // TODO: use backends
-                if (Window is OsuTKWindowBackend window)
-                {
-                    window.Implementation.SwapBuffers();
+                Graphics.SwapBuffers();
 
-                    // if (window.Implementation.VSync == VSyncMode.On)
-                    //     // without glFinish, vsync is basically unplayable due to the extra latency introduced.
-                    //     // we will likely want to give the user control over this in the future as an advanced setting.
-                    GL.Finish();
-                }
+                // if (window.Implementation.VSync == VSyncMode.On)
+                //     // without glFinish, vsync is basically unplayable due to the extra latency introduced.
+                //     // we will likely want to give the user control over this in the future as an advanced setting.
+                GL.Finish();
             }
         }
 

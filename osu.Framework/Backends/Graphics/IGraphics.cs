@@ -8,5 +8,7 @@ namespace osu.Framework.Backends.Graphics
     /// </summary>
     public interface IGraphics : IBackend
     {
+        void MakeCurrent();
+        void SwapBuffers();
     }
 }

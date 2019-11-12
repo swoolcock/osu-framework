@@ -5,6 +5,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using osu.Framework.Backends.Graphics;
 using osu.Framework.Development;
 using osu.Framework.Graphics.Batches;
 using osu.Framework.Graphics.OpenGL.Textures;
@@ -69,8 +70,8 @@ namespace osu.Framework.Graphics.OpenGL
         {
             if (IsInitialized) return;
 
-            // if (host.Window is GameWindow win)
-            //     isEmbedded = win.IsEmbedded;
+            if (host.Graphics is OpenGLGraphicsBackend graphics)
+                IsEmbedded = graphics.IsEmbedded;
 
             GLWrapper.host = new WeakReference<IGameHost>(host);
             reset_scheduler.SetCurrentThread();
@@ -163,7 +164,7 @@ namespace osu.Framework.Graphics.OpenGL
 
             if (clearInfo.Depth != currentClearInfo.Depth)
             {
-                if (IsEmbedded)
+                if (IsEmbedded || RuntimeInfo.OS == RuntimeInfo.Platform.MacOsx)
                 {
                     // GL ES only supports glClearDepthf
                     // See: https://www.khronos.org/registry/OpenGL-Refpages/es3.0/html/glClearDepthf.xhtml

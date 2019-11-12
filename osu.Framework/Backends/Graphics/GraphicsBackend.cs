@@ -9,5 +9,12 @@ namespace osu.Framework.Backends.Graphics
     /// </summary>
     public abstract class GraphicsBackend : Backend, IGraphics
     {
+        public virtual void MakeCurrent()
+        {
+        }
+
+        public virtual void SwapBuffers()
+        {
+        }
     }
 }

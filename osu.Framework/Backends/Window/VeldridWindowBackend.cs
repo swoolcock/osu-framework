@@ -10,9 +10,11 @@ using osu.Framework.Configuration;
 using osu.Framework.Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Platform;
+using Veldrid;
 using Veldrid.Sdl2;
 using Veldrid.StartupUtilities;
 using Point = System.Drawing.Point;
+using Rectangle = System.Drawing.Rectangle;
 
 // ReSharper disable InconsistentNaming
 
@@ -51,9 +53,15 @@ namespace osu.Framework.Backends.Window
                 Y = 100,
                 WindowWidth = 960,
                 WindowHeight = 540,
-                WindowTitle = "Test"
+                WindowTitle = "Test",
+                WindowInitialState = Veldrid.WindowState.Normal
             };
-            Implementation = VeldridStartup.CreateWindow(ref windowCi);
+            // Implementation = VeldridStartup.CreateWindow(ref windowCi);
+            SDL_WindowFlags flags = SDL_WindowFlags.OpenGL |
+                                    SDL_WindowFlags.Resizable |
+                                    SDL_WindowFlags.AllowHighDpi |
+                                    GetWindowFlags(windowCi.WindowInitialState);
+            Implementation = new Sdl2Window(windowCi.WindowTitle, windowCi.X, windowCi.Y, windowCi.WindowWidth, windowCi.WindowHeight, flags, false);
             SdlWindow = Implementation.SdlWindowHandle;
 
             Implementation.FocusGained += () => focused.Value = true;
@@ -193,6 +201,32 @@ namespace osu.Framework.Backends.Window
             int top, left, bottom, right;
             Sdl2Funcs.SDL_GetWindowBordersSize(SdlWindow, &top, &left, &bottom, &right);
             return new MarginPadding { Top = top, Left = left, Bottom = bottom, Right = right };
+        }
+
+        private static SDL_WindowFlags GetWindowFlags(WindowState state)
+        {
+            switch (state)
+            {
+                case Veldrid.WindowState.Normal:
+                    return 0;
+
+                case Veldrid.WindowState.FullScreen:
+                    return SDL_WindowFlags.Fullscreen;
+
+                case Veldrid.WindowState.Maximized:
+                    return SDL_WindowFlags.Maximized;
+
+                case Veldrid.WindowState.Minimized:
+                    return SDL_WindowFlags.Minimized;
+
+                case Veldrid.WindowState.BorderlessFullScreen:
+                    return SDL_WindowFlags.FullScreenDesktop;
+
+                case Veldrid.WindowState.Hidden:
+                    return SDL_WindowFlags.Hidden;
+            }
+
+            return 0;
         }
 
         #region IDisposable

@@ -29,7 +29,7 @@ namespace osu.Framework.Platform
         protected override IVideo CreateVideo() => new FfmpegVideoBackend();
 
 #if VELDRID
-        protected override IGraphics CreateGraphics() => new VeldridGraphicsBackend();
+        protected override IGraphics CreateGraphics() => new Sdl2GraphicsBackend();
         protected override IInput CreateInput() => new VeldridInputBackend();
         protected override IWindow CreateWindow() => new VeldridWindowBackend();
 #else
