@@ -104,7 +104,5 @@ namespace osu.Framework.Backends.Window
         public abstract Point PointToScreen(Point point);
 
         #endregion
-
-
     }
 }

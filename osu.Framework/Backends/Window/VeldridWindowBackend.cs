@@ -9,6 +9,7 @@ using osu.Framework.Bindables;
 using osu.Framework.Configuration;
 using osu.Framework.Extensions;
 using osu.Framework.Graphics;
+using osu.Framework.Platform;
 using Veldrid.Sdl2;
 using Veldrid.StartupUtilities;
 using Point = System.Drawing.Point;
@@ -55,15 +56,56 @@ namespace osu.Framework.Backends.Window
             Implementation = VeldridStartup.CreateWindow(ref windowCi);
             SdlWindow = Implementation.SdlWindowHandle;
 
+            Implementation.FocusGained += () => focused.Value = true;
+            Implementation.FocusLost += () => focused.Value = false;
             Implementation.Resized += implementation_Resized;
             Implementation.Moved += implementation_Moved;
             Implementation.MouseEntered += () => cursorInWindow.Value = true;
             Implementation.MouseLeft += () => cursorInWindow.Value = false;
+            Implementation.Hidden += implementation_HiddenShown;
+            Implementation.Shown += implementation_HiddenShown;
 
             Bounds.ValueChanged += bounds_ValueChanged;
             InternalSize.ValueChanged += internalSize_ValueChanged;
+            CursorState.ValueChanged += cursorState_ValueChanged;
 
             Bounds.Value = Implementation.Bounds.ToSystemDrawing();
+            visible.Value = Implementation.Visible;
+            CursorState.Value = Platform.CursorState.Default;
+        }
+
+        private void cursorState_ValueChanged(ValueChangedEvent<CursorState> evt)
+        {
+            switch (evt.NewValue)
+            {
+                case Platform.CursorState.Default:
+                    Implementation.CursorVisible = true;
+                    break;
+
+                case Platform.CursorState.Hidden:
+                    Implementation.CursorVisible = false;
+                    break;
+
+                case Platform.CursorState.Confined:
+                    Implementation.CursorVisible = true;
+                    break;
+
+                case Platform.CursorState.HiddenAndConfined:
+                    Implementation.CursorVisible = false;
+                    break;
+            }
+        }
+
+        private bool visibleChanging;
+
+        private void implementation_HiddenShown()
+        {
+            if (visibleChanging)
+                return;
+
+            visibleChanging = true;
+            visible.Value = Implementation.Visible;
+            visibleChanging = false;
         }
 
         private bool boundsChanging;
@@ -134,9 +176,9 @@ namespace osu.Framework.Backends.Window
         {
         }
 
-        public override Point PointToClient(Point point) => point;
+        public override Point PointToClient(Point point) => Implementation.ScreenToClient(point.ToVeldrid()).ToSystemDrawing();
 
-        public override Point PointToScreen(Point point) => point;
+        public override Point PointToScreen(Point point) => Implementation.ClientToScreen(point.ToVeldrid()).ToSystemDrawing();
 
         private unsafe Size getDrawableSize()
         {

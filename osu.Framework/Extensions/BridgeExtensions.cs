@@ -7,6 +7,8 @@ using SNVector2 = System.Numerics.Vector2;
 using TKVector2 = osuTK.Vector2;
 using SDRectangle = System.Drawing.Rectangle;
 using VRectangle = Veldrid.Rectangle;
+using SDPoint = System.Drawing.Point;
+using VPoint = Veldrid.Point;
 
 namespace osu.Framework.Extensions
 {
@@ -111,5 +113,11 @@ namespace osu.Framework.Extensions
 
         public static VRectangle ToVeldrid(this SDRectangle rect) =>
             new VRectangle(rect.X, rect.Y, rect.Width, rect.Height);
+
+        public static SDPoint ToSystemDrawing(this VPoint point) =>
+            new SDPoint(point.X, point.Y);
+
+        public static VPoint ToVeldrid(this SDPoint point) =>
+            new VPoint(point.X, point.Y);
     }
 }
