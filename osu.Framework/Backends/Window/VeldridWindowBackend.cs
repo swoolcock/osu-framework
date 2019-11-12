@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using osu.Framework.Backends.Input;
 using osu.Framework.Bindables;
+using osu.Framework.Caching;
 using osu.Framework.Configuration;
 using osu.Framework.Extensions;
 using osu.Framework.Graphics;
@@ -24,6 +25,24 @@ namespace osu.Framework.Backends.Window
     {
         internal readonly Sdl2Window Implementation;
         internal IntPtr SdlWindow;
+
+        private readonly Cached<float> scale = new Cached<float>();
+
+        internal float Scale
+        {
+            get
+            {
+                if (scale.IsValid)
+                    return scale.Value;
+
+                var borders = getWindowBorders();
+                var bounds = Implementation.Bounds;
+                float realWidth = bounds.Width - borders.Left - borders.Right;
+                float scaledWidth = getDrawableSize().Width;
+                scale.Value = scaledWidth / realWidth;
+                return scale.Value;
+            }
+        }
 
         #region Read-only Bindables
 
@@ -126,6 +145,7 @@ namespace osu.Framework.Backends.Window
             boundsChanging = true;
             Bounds.Value = Implementation.Bounds.ToSystemDrawing();
             InternalSize.Value = getDrawableSize();
+            scale.Invalidate();
             boundsChanging = false;
         }
 
@@ -150,6 +170,7 @@ namespace osu.Framework.Backends.Window
             Implementation.Width = evt.NewValue.Width;
             Implementation.Height = evt.NewValue.Height;
             InternalSize.Value = getDrawableSize();
+            scale.Invalidate();
             boundsChanging = false;
         }
 
@@ -165,6 +186,7 @@ namespace osu.Framework.Backends.Window
                 (int)(evt.NewValue.Width + borders.Left + borders.Right),
                 (int)(evt.NewValue.Height + borders.Top + borders.Bottom));
             Bounds.Value = newBounds;
+            scale.Invalidate();
             boundsChanging = false;
         }
 

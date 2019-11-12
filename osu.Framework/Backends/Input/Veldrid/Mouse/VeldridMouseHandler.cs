@@ -57,7 +57,8 @@ namespace osu.Framework.Backends.Input.Veldrid.Mouse
                             // lastMouseEventsHash = newHash;
 
                             // var mapped = host.Window.PointToClient(new Point((int)input.Snapshot.MousePosition.X, (int)input.Snapshot.MousePosition.Y));
-                            var newState = new VeldridMouseState(input.Snapshot, host.IsActive.Value, null); //new Vector2(mapped.X, mapped.Y));
+
+                            var newState = new VeldridMouseState(input.Snapshot, window.Scale, host.IsActive.Value, null); //new Vector2(mapped.X, mapped.Y));
                             HandleState(newState, lastPollState, true);
                             lastPollState = newState;
                         }, 0, 1000.0 / 60));

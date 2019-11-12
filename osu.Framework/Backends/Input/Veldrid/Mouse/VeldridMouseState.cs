@@ -14,7 +14,7 @@ namespace osu.Framework.Backends.Input.Veldrid.Mouse
         public readonly bool HasPreciseScroll;
         public InputSnapshot Snapshot;
 
-        public VeldridMouseState(InputSnapshot snapshot, bool active, Vector2? mappedPosition)
+        public VeldridMouseState(InputSnapshot snapshot, float scale, bool active, Vector2? mappedPosition)
         {
             WasActive = active;
 
@@ -32,7 +32,7 @@ namespace osu.Framework.Backends.Input.Veldrid.Mouse
 
             Scroll = new Vector2(0, snapshot.WheelDelta);
             HasPreciseScroll = false; // FIXME: tkState.Flags.HasFlag(MouseStateFlags.HasPreciseScroll);
-            Position = new Vector2(mappedPosition?.X ?? snapshot.MousePosition.X, mappedPosition?.Y ?? snapshot.MousePosition.Y);
+            Position = new Vector2(mappedPosition?.X ?? snapshot.MousePosition.X * scale, mappedPosition?.Y ?? snapshot.MousePosition.Y * scale);
         }
 
         private void addIfPressed(MouseButton button)
