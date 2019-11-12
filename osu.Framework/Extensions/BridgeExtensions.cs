@@ -5,6 +5,8 @@ using VMouseButton = Veldrid.MouseButton;
 using TKMouseButton = osuTK.Input.MouseButton;
 using SNVector2 = System.Numerics.Vector2;
 using TKVector2 = osuTK.Vector2;
+using SDRectangle = System.Drawing.Rectangle;
+using VRectangle = Veldrid.Rectangle;
 
 namespace osu.Framework.Extensions
 {
@@ -103,5 +105,11 @@ namespace osu.Framework.Extensions
                     return VMouseButton.LastButton;
             }
         }
+
+        public static SDRectangle ToSystemDrawing(this VRectangle rect) =>
+            new SDRectangle(rect.X, rect.Y, rect.Width, rect.Height);
+
+        public static VRectangle ToVeldrid(this SDRectangle rect) =>
+            new VRectangle(rect.X, rect.Y, rect.Width, rect.Height);
     }
 }
