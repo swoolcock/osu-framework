@@ -9,6 +9,8 @@ namespace osu.Framework.Backends.Graphics
     /// </summary>
     public abstract class GraphicsBackend : Backend, IGraphics
     {
+        public abstract IRenderer CreateRenderer();
+
         public virtual void MakeCurrent()
         {
         }

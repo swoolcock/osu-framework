@@ -2,6 +2,7 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using osu.Framework.Backends.Graphics.OsuTK;
 using osu.Framework.Backends.Window;
 using osu.Framework.Platform;
 using osuTK.Graphics;
@@ -25,6 +26,8 @@ namespace osu.Framework.Backends.Graphics
 
             MakeCurrent();
         }
+
+        public override IRenderer CreateRenderer() => new OsuTKRenderer(this);
 
         public override void MakeCurrent() => (Host.Window as OsuTKWindowBackend)?.Implementation.MakeCurrent();
 
