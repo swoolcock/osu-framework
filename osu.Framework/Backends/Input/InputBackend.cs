@@ -1,10 +1,14 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+using System;
 using System.Collections.Generic;
 using osu.Framework.Bindables;
+using osu.Framework.Input;
 using osu.Framework.Input.Handlers;
 using osu.Framework.Platform;
+using osuTK;
+using osuTK.Input;
 
 namespace osu.Framework.Backends.Input
 {
@@ -16,31 +20,31 @@ namespace osu.Framework.Backends.Input
     {
         #region Events
 
-        // public event EventHandler<KeyDownEvent> KeyDown;
-        // public event EventHandler<KeyUpEvent> KeyUp;
-        // public event EventHandler<KeyboardEvent> KeyPress;
-        // public event EventHandler<MouseDownEvent> MouseDown;
-        // public event EventHandler<MouseUpEvent> MouseUp;
-        // public event EventHandler<MouseMoveEvent> MouseMove;
-        // public event EventHandler<MouseScrollChangeEvent> MouseScroll;
+        public event EventHandler<KeyboardKeyEventArgs> KeyDown;
+        public event EventHandler<KeyboardKeyEventArgs> KeyUp;
+        public event EventHandler<KeyPressEventArgs> KeyPress;
+        public event EventHandler<MouseButtonEventArgs> MouseDown;
+        public event EventHandler<MouseButtonEventArgs> MouseUp;
+        public event EventHandler<MouseMoveEventArgs> MouseMove;
+        public event EventHandler<MouseWheelEventArgs> MouseScroll;
 
         #endregion
 
         #region Event Invocation
 
-        // protected virtual void OnKeyDown(KeyDownEvent args) => KeyDown?.Invoke(this, args);
-        //
-        // protected virtual void OnKeyUp(KeyUpEvent args) => KeyUp?.Invoke(this, args);
-        //
-        // protected virtual void OnKeyPress(KeyboardEvent args) => KeyPress?.Invoke(this, args);
-        //
-        // protected virtual void OnMouseDown(MouseDownEvent args) => MouseDown?.Invoke(this, args);
-        //
-        // protected virtual void OnMouseUp(MouseUpEvent args) => MouseUp?.Invoke(this, args);
-        //
-        // protected virtual void OnMouseMove(MouseMoveEvent args) => MouseMove?.Invoke(this, args);
-        //
-        // protected virtual void OnMouseScroll(MouseScrollChangeEvent args) => MouseScroll?.Invoke(this, args);
+        protected virtual void OnKeyDown(KeyboardKeyEventArgs args) => KeyDown?.Invoke(this, args);
+
+        protected virtual void OnKeyUp(KeyboardKeyEventArgs args) => KeyUp?.Invoke(this, args);
+
+        protected virtual void OnKeyPress(KeyPressEventArgs args) => KeyPress?.Invoke(this, args);
+
+        protected virtual void OnMouseDown(MouseButtonEventArgs args) => MouseDown?.Invoke(this, args);
+
+        protected virtual void OnMouseUp(MouseButtonEventArgs args) => MouseUp?.Invoke(this, args);
+
+        protected virtual void OnMouseMove(MouseMoveEventArgs args) => MouseMove?.Invoke(this, args);
+
+        protected virtual void OnMouseScroll(MouseWheelEventArgs args) => MouseScroll?.Invoke(this, args);
 
         #endregion
 
@@ -79,5 +83,7 @@ namespace osu.Framework.Backends.Input
 
             availableInputHandlers.AddRange(newHandlers);
         }
+
+        public abstract ITextInputSource CreateTextInputSource();
     }
 }

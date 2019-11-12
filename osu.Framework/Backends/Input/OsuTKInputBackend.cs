@@ -1,17 +1,37 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using osu.Framework.Backends.Input.OsuTK.Joystick;
 using osu.Framework.Backends.Input.OsuTK.Keyboard;
 using osu.Framework.Backends.Input.OsuTK.Mouse;
+using osu.Framework.Backends.Window;
+using osu.Framework.Input;
 using osu.Framework.Input.Handlers;
+using osu.Framework.Platform;
 
 namespace osu.Framework.Backends.Input
 {
     public class OsuTKInputBackend : InputBackend
     {
+        public override void Initialise(IGameHost host)
+        {
+            base.Initialise(host);
+
+            if (!(host.Window is OsuTKWindowBackend window))
+                throw new Exception($"{nameof(OsuTKInputBackend)} requires a corresponding {nameof(OsuTKWindowBackend)}");
+
+            window.Implementation.MouseDown += (_, e) => OnMouseDown(e);
+            window.Implementation.MouseUp += (_, e) => OnMouseUp(e);
+            window.Implementation.MouseWheel += (_, e) => OnMouseScroll(e);
+            window.Implementation.MouseMove += (_, e) => OnMouseMove(e);
+            window.Implementation.KeyDown += (_, e) => OnKeyDown(e);
+            window.Implementation.KeyUp += (_, e) => OnKeyUp(e);
+            window.Implementation.KeyPress += (_, e) => OnKeyPress(e);
+        }
+
         public override IEnumerable<InputHandler> CreateInputHandlers()
         {
             var defaultEnabled = new InputHandler[]
@@ -33,5 +53,7 @@ namespace osu.Framework.Backends.Input
 
             return defaultEnabled.Concat(defaultDisabled);
         }
+
+        public override ITextInputSource CreateTextInputSource() => Host.GetTextInput();
     }
 }

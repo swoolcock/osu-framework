@@ -168,6 +168,7 @@ namespace osu.Framework.Backends.Window
             while (Implementation.Exists)
             {
                 input.Snapshot = Implementation.PumpEvents();
+                input.TriggerKeypresses();
                 OnUpdate();
             }
         }

@@ -1,8 +1,11 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+using System;
 using osu.Framework.Bindables;
+using osu.Framework.Input;
 using osu.Framework.Input.Handlers;
+using osuTK;
 using osuTK.Input;
 
 namespace osu.Framework.Backends.Input
@@ -15,18 +18,20 @@ namespace osu.Framework.Backends.Input
     {
         #region Events
 
-        // event EventHandler<KeyDownEvent> KeyDown;
-        // event EventHandler<KeyUpEvent> KeyUp;
-        // event EventHandler<KeyboardEvent> KeyPress;
-        // event EventHandler<MouseDownEvent> MouseDown;
-        // event EventHandler<MouseUpEvent> MouseUp;
-        // event EventHandler<MouseMoveEvent> MouseMove;
-        // event EventHandler<MouseScrollChangeEvent> MouseScroll;
+        event EventHandler<KeyboardKeyEventArgs> KeyDown;
+        event EventHandler<KeyboardKeyEventArgs> KeyUp;
+        event EventHandler<KeyPressEventArgs> KeyPress;
+        event EventHandler<MouseButtonEventArgs> MouseDown;
+        event EventHandler<MouseButtonEventArgs> MouseUp;
+        event EventHandler<MouseMoveEventArgs> MouseMove;
+        event EventHandler<MouseWheelEventArgs> MouseScroll;
 
         #endregion
 
         IBindableList<InputHandler> AvailableInputHandlers { get; }
 
         void ResetInputHandlers();
+
+        ITextInputSource CreateTextInputSource();
     }
 }
