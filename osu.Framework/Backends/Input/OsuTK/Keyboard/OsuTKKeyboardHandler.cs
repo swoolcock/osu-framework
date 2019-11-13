@@ -26,7 +26,7 @@ namespace osu.Framework.Backends.Input.OsuTK.Keyboard
         public override bool Initialize(IGameHost host)
         {
             if (!(host.Window is OsuTKWindowBackend window))
-                throw new Exception($"{nameof(OsuTKKeyboardHandler)} requires a corresponding {nameof(OsuTKWindowBackend)}");
+                throw new BackendMismatchException(GetType(), typeof(OsuTKWindowBackend));
 
             Enabled.BindValueChanged(e =>
             {

@@ -1,7 +1,6 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System;
 using osu.Framework.Backends.Window.OsuTK;
 using osu.Framework.Platform;
 using osuTK;
@@ -19,7 +18,7 @@ namespace osu.Framework.Backends.Graphics.OsuTK
         protected override void CreateContext(IGameHost host)
         {
             if (!(host.Window is OsuTKWindowBackend window))
-                throw new Exception($"{nameof(OsuTKGraphicsBackend)} requires a corresponding {nameof(OsuTKWindowBackend)}");
+                throw new BackendMismatchException(GetType(), typeof(OsuTKWindowBackend));
 
             if (window.Implementation is osuTK.GameWindow impl)
                 context = impl.Context;

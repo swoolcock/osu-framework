@@ -194,7 +194,7 @@ namespace osu.Framework.Backends.Window.Sdl2
         public override void Run()
         {
             if (!(Host.Input is Sdl2InputBackend input))
-                throw new Exception($"{nameof(Sdl2WindowBackend)} requires a corresponding {nameof(Sdl2InputBackend)}");
+                throw new BackendMismatchException(GetType(), typeof(Sdl2InputBackend));
 
             while (Implementation.Exists)
             {

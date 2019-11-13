@@ -1,7 +1,6 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -27,7 +26,7 @@ namespace osu.Framework.Backends.Input.Sdl2
             base.Initialise(host);
 
             if (!(host.Window is Sdl2WindowBackend window))
-                throw new Exception($"{nameof(Sdl2InputBackend)} requires a corresponding {nameof(Sdl2WindowBackend)}");
+                throw new BackendMismatchException(GetType(), typeof(Sdl2WindowBackend));
 
             window.Implementation.MouseDown += e =>
                 OnMouseDown(new MouseButtonEventArgs((int)Snapshot.MousePosition.X, (int)Snapshot.MousePosition.Y, e.MouseButton.ToOsuTK(), true));

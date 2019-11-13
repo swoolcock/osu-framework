@@ -24,7 +24,7 @@ namespace osu.Framework.Backends.Graphics
         protected override void CreateContext(IGameHost host)
         {
             if (!(host.Window is Sdl2WindowBackend window))
-                throw new Exception($"{nameof(Sdl2GraphicsBackend)} requires a corresponding {nameof(Sdl2WindowBackend)}");
+                throw new BackendMismatchException(GetType(), typeof(Sdl2WindowBackend));
 
             SdlWindowHandle = window.SdlWindow;
             Context = Sdl2Native.SDL_GL_CreateContext(SdlWindowHandle);

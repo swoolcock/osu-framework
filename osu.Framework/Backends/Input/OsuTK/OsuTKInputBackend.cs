@@ -1,7 +1,6 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using osu.Framework.Backends.Input.OsuTK.Joystick;
@@ -22,7 +21,7 @@ namespace osu.Framework.Backends.Input.OsuTK
             base.Initialise(host);
 
             if (!(host.Window is OsuTKWindowBackend window))
-                throw new Exception($"{nameof(OsuTKInputBackend)} requires a corresponding {nameof(OsuTKWindowBackend)}");
+                throw new BackendMismatchException(GetType(), typeof(OsuTKWindowBackend));
 
             window.Implementation.MouseDown += (_, e) => OnMouseDown(e);
             window.Implementation.MouseUp += (_, e) => OnMouseUp(e);
