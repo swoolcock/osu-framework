@@ -9,6 +9,7 @@ using osu.Framework.Input.Handlers;
 using osu.Framework.Platform;
 using osuTK;
 using osuTK.Input;
+using Veldrid;
 
 namespace osu.Framework.Backends.Input
 {
@@ -20,8 +21,8 @@ namespace osu.Framework.Backends.Input
     {
         #region Events
 
-        public event EventHandler<KeyboardKeyEventArgs> KeyDown;
-        public event EventHandler<KeyboardKeyEventArgs> KeyUp;
+        public event Action<KeyEvent> KeyDown;
+        public event Action<KeyEvent> KeyUp;
         public event EventHandler<KeyPressEventArgs> KeyPress;
         public event EventHandler<MouseButtonEventArgs> MouseDown;
         public event EventHandler<MouseButtonEventArgs> MouseUp;
@@ -32,9 +33,9 @@ namespace osu.Framework.Backends.Input
 
         #region Event Invocation
 
-        protected virtual void OnKeyDown(KeyboardKeyEventArgs args) => KeyDown?.Invoke(this, args);
+        protected virtual void OnKeyDown(KeyEvent args) => KeyDown?.Invoke(args);
 
-        protected virtual void OnKeyUp(KeyboardKeyEventArgs args) => KeyUp?.Invoke(this, args);
+        protected virtual void OnKeyUp(KeyEvent args) => KeyUp?.Invoke(args);
 
         protected virtual void OnKeyPress(KeyPressEventArgs args) => KeyPress?.Invoke(this, args);
 

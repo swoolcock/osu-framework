@@ -5,6 +5,7 @@ using System;
 using osu.Framework.Backends.Window;
 using osu.Framework.Input.Handlers;
 using osu.Framework.Input.StateChanges;
+using osu.Framework.Input.States;
 using osu.Framework.Platform;
 using osu.Framework.Statistics;
 using Veldrid;
@@ -14,6 +15,9 @@ namespace osu.Framework.Backends.Input.Veldrid.Keyboard
 {
     internal class VeldridKeyboardHandler : InputHandler
     {
+        private readonly KeyboardState lastKeyboardState = new KeyboardState();
+        private readonly KeyboardState thisKeyboardState = new KeyboardState();
+
         public override bool IsActive => true;
 
         public override int Priority => 0;
@@ -42,8 +46,9 @@ namespace osu.Framework.Backends.Input.Veldrid.Keyboard
 
         private void handleKeyboardEvent(KeyEvent keyEvent)
         {
-            PendingInputs.Enqueue(new KeyboardKeyInput((Key)keyEvent.Key, keyEvent.Down));
-
+            thisKeyboardState.Keys.SetPressed((Key)keyEvent.Key, keyEvent.Down);
+            PendingInputs.Enqueue(new KeyboardKeyInput(thisKeyboardState.Keys, lastKeyboardState.Keys));
+            lastKeyboardState.Keys.SetPressed((Key)keyEvent.Key, keyEvent.Down);
             FrameStatistics.Increment(StatisticsCounterType.KeyEvents);
         }
     }

@@ -1,6 +1,9 @@
 // Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+using osuTK.Input;
+using Veldrid;
+using Key = Veldrid.Key;
 using VMouseButton = Veldrid.MouseButton;
 using TKMouseButton = osuTK.Input.MouseButton;
 using SNVector2 = System.Numerics.Vector2;
@@ -119,5 +122,13 @@ namespace osu.Framework.Extensions
 
         public static VPoint ToVeldrid(this SDPoint point) =>
             new VPoint(point.X, point.Y);
+
+        public static KeyEvent ToVeldrid(this KeyboardKeyEventArgs args, bool down = true)
+        {
+            ModifierKeys modifiers = (args.Control ? ModifierKeys.Control : 0) |
+                                     (args.Shift ? ModifierKeys.Shift : 0) |
+                                     (args.Alt ? ModifierKeys.Alt : 0);
+            return new KeyEvent((Key)args.Key, down, modifiers);
+        }
     }
 }

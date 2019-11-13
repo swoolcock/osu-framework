@@ -3,6 +3,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using osu.Framework.Backends.Input.Veldrid.Keyboard;
 using osu.Framework.Backends.Input.Veldrid.Mouse;
 using osu.Framework.Backends.Window;
@@ -38,6 +40,16 @@ namespace osu.Framework.Backends.Input
 
             window.Implementation.MouseMove += e =>
                 OnMouseMove(new MouseMoveEventArgs((int)e.MousePosition.X, (int)e.MousePosition.Y, (int)(e.MousePosition.X - Snapshot.MousePosition.X), (int)(e.MousePosition.Y - Snapshot.MousePosition.Y)));
+
+            window.Implementation.KeyDown += OnKeyDown;
+            window.Implementation.KeyUp += OnKeyUp;
+        }
+
+        private KeyboardKeyEventArgs createKeyEventArgs(KeyEvent keyEvent)
+        {
+            var args = new KeyboardKeyEventArgs();
+            args.GetType().GetRuntimeProperties().First(x => x.Name == "Key").SetValue(args, keyEvent.Key);
+            return args;
         }
 
         internal void TriggerKeypresses()
