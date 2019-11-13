@@ -21,6 +21,9 @@ namespace osu.Framework.Backends.Input.Sdl2
     {
         internal InputSnapshot Snapshot;
 
+        private int snapshotMousePositionX => (int)(Snapshot?.MousePosition.X ?? 0);
+        private int snapshotMousePositionY => (int)(Snapshot?.MousePosition.Y ?? 0);
+
         public override void Initialise(IGameHost host)
         {
             base.Initialise(host);
@@ -29,16 +32,16 @@ namespace osu.Framework.Backends.Input.Sdl2
                 throw new BackendMismatchException(GetType(), typeof(Sdl2WindowBackend));
 
             window.Implementation.MouseDown += e =>
-                OnMouseDown(new MouseButtonEventArgs((int)Snapshot.MousePosition.X, (int)Snapshot.MousePosition.Y, e.MouseButton.ToOsuTK(), true));
+                OnMouseDown(new MouseButtonEventArgs(snapshotMousePositionX, snapshotMousePositionY, e.MouseButton.ToOsuTK(), true));
 
             window.Implementation.MouseUp += e =>
-                OnMouseDown(new MouseButtonEventArgs((int)Snapshot.MousePosition.X, (int)Snapshot.MousePosition.Y, e.MouseButton.ToOsuTK(), false));
+                OnMouseDown(new MouseButtonEventArgs(snapshotMousePositionX, snapshotMousePositionY, e.MouseButton.ToOsuTK(), false));
 
             window.Implementation.MouseWheel += e =>
-                OnMouseScroll(new MouseWheelEventArgs((int)Snapshot.MousePosition.X, (int)Snapshot.MousePosition.Y, 0, (int)e.WheelDelta));
+                OnMouseScroll(new MouseWheelEventArgs(snapshotMousePositionX, snapshotMousePositionY, 0, (int)e.WheelDelta));
 
             window.Implementation.MouseMove += e =>
-                OnMouseMove(new MouseMoveEventArgs((int)e.MousePosition.X, (int)e.MousePosition.Y, (int)(e.MousePosition.X - Snapshot.MousePosition.X), (int)(e.MousePosition.Y - Snapshot.MousePosition.Y)));
+                OnMouseMove(new MouseMoveEventArgs((int)e.MousePosition.X, (int)e.MousePosition.Y, (int)(e.MousePosition.X - snapshotMousePositionX), (int)(e.MousePosition.Y - snapshotMousePositionY)));
 
             window.Implementation.KeyDown += OnKeyDown;
             window.Implementation.KeyUp += OnKeyUp;
