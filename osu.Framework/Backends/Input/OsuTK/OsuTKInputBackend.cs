@@ -7,13 +7,13 @@ using System.Linq;
 using osu.Framework.Backends.Input.OsuTK.Joystick;
 using osu.Framework.Backends.Input.OsuTK.Keyboard;
 using osu.Framework.Backends.Input.OsuTK.Mouse;
-using osu.Framework.Backends.Window;
+using osu.Framework.Backends.Window.OsuTK;
 using osu.Framework.Extensions;
 using osu.Framework.Input;
 using osu.Framework.Input.Handlers;
 using osu.Framework.Platform;
 
-namespace osu.Framework.Backends.Input
+namespace osu.Framework.Backends.Input.OsuTK
 {
     public class OsuTKInputBackend : InputBackend
     {

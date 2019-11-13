@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 using osu.Framework.Audio.Sample;
 using osu.Framework.Audio.Track;
 
-namespace osu.Framework.Backends.Audio
+namespace osu.Framework.Backends.Audio.Bass
 {
     public class BassAudioBackend : AudioBackend
     {

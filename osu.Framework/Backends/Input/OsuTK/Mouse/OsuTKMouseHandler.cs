@@ -3,7 +3,7 @@
 
 using System;
 using System.Drawing;
-using osu.Framework.Backends.Window;
+using osu.Framework.Backends.Window.OsuTK;
 using osu.Framework.Platform;
 using osu.Framework.Threading;
 using osuTK;

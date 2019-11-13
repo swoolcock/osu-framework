@@ -8,9 +8,9 @@ using osu.Framework.Platform;
 using osu.Framework.Statistics;
 using osuTK;
 
-namespace osu.Framework.Backends.Input.Veldrid.Mouse
+namespace osu.Framework.Backends.Input.Sdl2.Mouse
 {
-    internal abstract class VeldridMouseHandlerBase : InputHandler
+    internal abstract class Sdl2MouseHandlerBase : InputHandler
     {
         protected IGameHost Host;
         protected readonly IBindable<bool> MouseInWindow = new Bindable<bool>();
@@ -24,7 +24,7 @@ namespace osu.Framework.Backends.Input.Veldrid.Mouse
 
         private Vector2 currentPosition;
 
-        protected void HandleState(VeldridMouseState state, VeldridMouseState lastState, bool isAbsolutePosition)
+        protected void HandleState(Sdl2MouseState state, Sdl2MouseState lastState, bool isAbsolutePosition)
         {
             if (lastState == null || isAbsolutePosition)
             {

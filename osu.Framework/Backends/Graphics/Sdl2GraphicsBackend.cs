@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using osu.Framework.Backends.Graphics.OsuTK;
-using osu.Framework.Backends.Window;
+using osu.Framework.Backends.Window.Sdl2;
 using osu.Framework.Platform;
 using osuTK.Graphics;
 using osuTK.Graphics.ES30;
@@ -23,8 +23,8 @@ namespace osu.Framework.Backends.Graphics
 
         protected override void CreateContext(IGameHost host)
         {
-            if (!(host.Window is VeldridWindowBackend window))
-                throw new Exception($"{nameof(Sdl2GraphicsBackend)} requires a corresponding {nameof(VeldridWindowBackend)}");
+            if (!(host.Window is Sdl2WindowBackend window))
+                throw new Exception($"{nameof(Sdl2GraphicsBackend)} requires a corresponding {nameof(Sdl2WindowBackend)}");
 
             SdlWindowHandle = window.SdlWindow;
             Context = Sdl2Native.SDL_GL_CreateContext(SdlWindowHandle);

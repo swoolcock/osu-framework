@@ -5,7 +5,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
-using osu.Framework.Backends.Graphics;
+using osu.Framework.Backends.Graphics.OsuTK;
 using osu.Framework.Development;
 using osu.Framework.Graphics.Batches;
 using osu.Framework.Graphics.OpenGL.Textures;
@@ -69,7 +69,7 @@ namespace osu.Framework.Graphics.OpenGL
         {
             if (IsInitialized) return;
 
-            if (host.Graphics is OpenGLGraphicsBackend graphics)
+            if (host.Graphics is OsuTKGraphicsBackend graphics)
                 IsEmbedded = graphics.IsEmbedded;
 
             GLWrapper.host = new WeakReference<IGameHost>(host);

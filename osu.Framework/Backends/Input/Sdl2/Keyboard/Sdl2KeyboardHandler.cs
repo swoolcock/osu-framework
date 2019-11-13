@@ -2,7 +2,7 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
-using osu.Framework.Backends.Window;
+using osu.Framework.Backends.Window.Sdl2;
 using osu.Framework.Input.Handlers;
 using osu.Framework.Input.StateChanges;
 using osu.Framework.Input.States;
@@ -11,9 +11,9 @@ using osu.Framework.Statistics;
 using Veldrid;
 using Key = osuTK.Input.Key;
 
-namespace osu.Framework.Backends.Input.Veldrid.Keyboard
+namespace osu.Framework.Backends.Input.Sdl2.Keyboard
 {
-    internal class VeldridKeyboardHandler : InputHandler
+    internal class Sdl2KeyboardHandler : InputHandler
     {
         private readonly KeyboardState lastKeyboardState = new KeyboardState();
         private readonly KeyboardState thisKeyboardState = new KeyboardState();
@@ -24,8 +24,8 @@ namespace osu.Framework.Backends.Input.Veldrid.Keyboard
 
         public override bool Initialize(IGameHost host)
         {
-            if (!(host.Window is VeldridWindowBackend window))
-                throw new Exception($"{nameof(VeldridKeyboardHandler)} requires a corresponding {nameof(VeldridWindowBackend)}");
+            if (!(host.Window is Sdl2WindowBackend window))
+                throw new Exception($"{nameof(Sdl2KeyboardHandler)} requires a corresponding {nameof(Sdl2WindowBackend)}");
 
             Enabled.BindValueChanged(e =>
             {

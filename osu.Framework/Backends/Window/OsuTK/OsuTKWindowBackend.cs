@@ -11,7 +11,7 @@ using osuTK;
 using osuTK.Graphics;
 using osuTK.Platform;
 
-namespace osu.Framework.Backends.Window
+namespace osu.Framework.Backends.Window.OsuTK
 {
     public class OsuTKWindowBackend : WindowBackend
     {

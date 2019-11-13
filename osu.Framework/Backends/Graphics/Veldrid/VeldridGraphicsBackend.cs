@@ -2,13 +2,12 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
-using osu.Framework.Backends.Graphics.Veldrid;
-using osu.Framework.Backends.Window;
+using osu.Framework.Backends.Window.Sdl2;
 using osu.Framework.Platform;
 using Veldrid;
 using Veldrid.StartupUtilities;
 
-namespace osu.Framework.Backends.Graphics
+namespace osu.Framework.Backends.Graphics.Veldrid
 {
     public class VeldridGraphicsBackend : GraphicsBackend
     {
@@ -18,8 +17,8 @@ namespace osu.Framework.Backends.Graphics
         {
             base.Initialise(host);
 
-            if (!(host.Window is VeldridWindowBackend window))
-                throw new Exception($"{nameof(VeldridGraphicsBackend)} requires a corresponding {nameof(VeldridWindowBackend)}");
+            if (!(host.Window is Sdl2WindowBackend window))
+                throw new Exception($"{nameof(VeldridGraphicsBackend)} requires a corresponding {nameof(Sdl2WindowBackend)}");
 
             Device = VeldridStartup.CreateGraphicsDevice(window.Implementation);
         }

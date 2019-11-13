@@ -2,16 +2,15 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
-using osu.Framework.Backends.Graphics.OsuTK;
-using osu.Framework.Backends.Window;
+using osu.Framework.Backends.Window.OsuTK;
 using osu.Framework.Platform;
 using osuTK;
 using osuTK.Graphics;
 
-namespace osu.Framework.Backends.Graphics
+namespace osu.Framework.Backends.Graphics.OsuTK
 {
     /// <summary>
-    /// Concrete implementation of <see cref="IGraphicsBackend"/> that uses osuTK's OpenGL context and calls.
+    /// Concrete implementation of <see cref="IGraphics"/> that uses osuTK's OpenGL context and calls.
     /// </summary>
     public class OsuTKGraphicsBackend : OpenGLGraphicsBackend
     {

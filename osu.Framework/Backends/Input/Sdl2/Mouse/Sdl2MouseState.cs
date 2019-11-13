@@ -6,15 +6,15 @@ using osu.Framework.Input.States;
 using osuTK;
 using Veldrid;
 
-namespace osu.Framework.Backends.Input.Veldrid.Mouse
+namespace osu.Framework.Backends.Input.Sdl2.Mouse
 {
-    internal class VeldridMouseState : MouseState
+    internal class Sdl2MouseState : MouseState
     {
         public readonly bool WasActive;
         public readonly bool HasPreciseScroll;
         public InputSnapshot Snapshot;
 
-        public VeldridMouseState(InputSnapshot snapshot, float scale, bool active, Vector2? mappedPosition)
+        public Sdl2MouseState(InputSnapshot snapshot, float scale, bool active, Vector2? mappedPosition)
         {
             WasActive = active;
 

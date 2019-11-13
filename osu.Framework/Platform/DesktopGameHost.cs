@@ -1,16 +1,22 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
+// #define SDL2
 // #define VELDRID
 
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 using osu.Framework.Backends.Audio;
+using osu.Framework.Backends.Audio.Bass;
 using osu.Framework.Backends.Graphics;
+using osu.Framework.Backends.Graphics.OsuTK;
 using osu.Framework.Backends.Input;
+using osu.Framework.Backends.Input.OsuTK;
 using osu.Framework.Backends.Video;
+using osu.Framework.Backends.Video.Ffmpeg;
 using osu.Framework.Backends.Window;
+using osu.Framework.Backends.Window.OsuTK;
 using osu.Framework.Input;
 using osuTK;
 
@@ -28,10 +34,14 @@ namespace osu.Framework.Platform
         protected override IAudio CreateAudio() => new BassAudioBackend();
         protected override IVideo CreateVideo() => new FfmpegVideoBackend();
 
+#if SDL2
 #if VELDRID
+        protected override IGraphics CreateGraphics() => new VeldridGraphicsBackend();
+#else
         protected override IGraphics CreateGraphics() => new Sdl2GraphicsBackend();
-        protected override IInput CreateInput() => new VeldridInputBackend();
-        protected override IWindow CreateWindow() => new VeldridWindowBackend();
+#endif
+        protected override IInput CreateInput() => new Sdl2InputBackend();
+        protected override IWindow CreateWindow() => new Sdl2WindowBackend();
 #else
         protected override IGraphics CreateGraphics() => new OsuTKGraphicsBackend();
         protected override IInput CreateInput() => new OsuTKInputBackend();

@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using osu.Framework.Backends.Input;
+using osu.Framework.Backends.Input.Sdl2;
 using osu.Framework.Bindables;
 using osu.Framework.Caching;
 using osu.Framework.Configuration;
@@ -19,9 +19,9 @@ using Rectangle = System.Drawing.Rectangle;
 
 // ReSharper disable InconsistentNaming
 
-namespace osu.Framework.Backends.Window
+namespace osu.Framework.Backends.Window.Sdl2
 {
-    public class VeldridWindowBackend : WindowBackend
+    public class Sdl2WindowBackend : WindowBackend
     {
         internal readonly Sdl2Window Implementation;
         internal IntPtr SdlWindow;
@@ -64,7 +64,7 @@ namespace osu.Framework.Backends.Window
             Configuration.WindowMode.Fullscreen,
         };
 
-        public VeldridWindowBackend()
+        public Sdl2WindowBackend()
         {
             WindowCreateInfo windowCi = new WindowCreateInfo
             {
@@ -193,8 +193,8 @@ namespace osu.Framework.Backends.Window
 
         public override void Run()
         {
-            if (!(Host.Input is VeldridInputBackend input))
-                throw new Exception($"{nameof(VeldridWindowBackend)} requires a corresponding {nameof(VeldridInputBackend)}");
+            if (!(Host.Input is Sdl2InputBackend input))
+                throw new Exception($"{nameof(Sdl2WindowBackend)} requires a corresponding {nameof(Sdl2InputBackend)}");
 
             while (Implementation.Exists)
             {

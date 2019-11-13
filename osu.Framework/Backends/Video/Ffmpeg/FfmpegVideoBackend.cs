@@ -5,7 +5,7 @@ using System.IO;
 using osu.Framework.Graphics.Video;
 using osu.Framework.Threading;
 
-namespace osu.Framework.Backends.Video
+namespace osu.Framework.Backends.Video.Ffmpeg
 {
     public class FfmpegVideoBackend : VideoBackend
     {

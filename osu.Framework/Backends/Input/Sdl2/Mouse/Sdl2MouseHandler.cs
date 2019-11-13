@@ -3,29 +3,29 @@
 
 using System;
 using osu.Framework.Backends.Input.OsuTK.Mouse;
-using osu.Framework.Backends.Window;
+using osu.Framework.Backends.Window.Sdl2;
 using osu.Framework.Platform;
 using osu.Framework.Threading;
 using osuTK;
 
-namespace osu.Framework.Backends.Input.Veldrid.Mouse
+namespace osu.Framework.Backends.Input.Sdl2.Mouse
 {
-    internal class VeldridMouseHandler : VeldridMouseHandlerBase
+    internal class Sdl2MouseHandler : Sdl2MouseHandlerBase
     {
         private ScheduledDelegate scheduled;
 
-        private VeldridMouseState lastPollState;
-        private VeldridMouseState lastEventState;
+        private Sdl2MouseState lastPollState;
+        private Sdl2MouseState lastEventState;
 
         public override bool Initialize(IGameHost host)
         {
             base.Initialize(host);
 
-            if (!(host.Window is VeldridWindowBackend window))
-                throw new Exception($"{nameof(VeldridMouseHandler)} requires a corresponding {nameof(VeldridWindowBackend)}");
+            if (!(host.Window is Sdl2WindowBackend window))
+                throw new Exception($"{nameof(Sdl2MouseHandler)} requires a corresponding {nameof(Sdl2WindowBackend)}");
 
-            if (!(host.Input is VeldridInputBackend input))
-                throw new Exception($"{nameof(VeldridMouseHandler)} requires a corresponding {nameof(VeldridInputBackend)}");
+            if (!(host.Input is Sdl2InputBackend input))
+                throw new Exception($"{nameof(Sdl2MouseHandler)} requires a corresponding {nameof(Sdl2InputBackend)}");
 
             Enabled.BindValueChanged(e =>
             {
@@ -58,7 +58,7 @@ namespace osu.Framework.Backends.Input.Veldrid.Mouse
 
                             // var mapped = host.Window.PointToClient(new Point((int)input.Snapshot.MousePosition.X, (int)input.Snapshot.MousePosition.Y));
 
-                            var newState = new VeldridMouseState(input.Snapshot, window.Scale, host.IsActive.Value, null); //new Vector2(mapped.X, mapped.Y));
+                            var newState = new Sdl2MouseState(input.Snapshot, window.Scale, host.IsActive.Value, null); //new Vector2(mapped.X, mapped.Y));
                             HandleState(newState, lastPollState, true);
                             lastPollState = newState;
                         }, 0, 1000.0 / 60));

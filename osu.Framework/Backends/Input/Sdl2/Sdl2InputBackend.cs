@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using osu.Framework.Backends.Input.Veldrid.Keyboard;
-using osu.Framework.Backends.Input.Veldrid.Mouse;
-using osu.Framework.Backends.Window;
+using osu.Framework.Backends.Input.Sdl2.Keyboard;
+using osu.Framework.Backends.Input.Sdl2.Mouse;
+using osu.Framework.Backends.Window.Sdl2;
 using osu.Framework.Extensions;
 using osu.Framework.Input;
 using osu.Framework.Input.Handlers;
@@ -16,9 +16,9 @@ using osuTK;
 using osuTK.Input;
 using Veldrid;
 
-namespace osu.Framework.Backends.Input
+namespace osu.Framework.Backends.Input.Sdl2
 {
-    public class VeldridInputBackend : InputBackend
+    public class Sdl2InputBackend : InputBackend
     {
         internal InputSnapshot Snapshot;
 
@@ -26,8 +26,8 @@ namespace osu.Framework.Backends.Input
         {
             base.Initialise(host);
 
-            if (!(host.Window is VeldridWindowBackend window))
-                throw new Exception($"{nameof(VeldridInputBackend)} requires a corresponding {nameof(VeldridWindowBackend)}");
+            if (!(host.Window is Sdl2WindowBackend window))
+                throw new Exception($"{nameof(Sdl2InputBackend)} requires a corresponding {nameof(Sdl2WindowBackend)}");
 
             window.Implementation.MouseDown += e =>
                 OnMouseDown(new MouseButtonEventArgs((int)Snapshot.MousePosition.X, (int)Snapshot.MousePosition.Y, e.MouseButton.ToOsuTK(), true));
@@ -60,8 +60,8 @@ namespace osu.Framework.Backends.Input
 
         public override IEnumerable<InputHandler> CreateInputHandlers() => new InputHandler[]
         {
-            new VeldridKeyboardHandler(),
-            new VeldridMouseHandler(),
+            new Sdl2KeyboardHandler(),
+            new Sdl2MouseHandler(),
         };
 
         public override ITextInputSource CreateTextInputSource() => Host.GetTextInput(); // new VeldridTextInputSource(Host.Input);
