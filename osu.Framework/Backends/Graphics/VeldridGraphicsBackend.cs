@@ -24,6 +24,8 @@ namespace osu.Framework.Backends.Graphics
             Device = VeldridStartup.CreateGraphicsDevice(window.Implementation);
         }
 
+        protected override void SetVSync(bool vsync) => Device.SyncToVerticalBlank = vsync;
+
         public override IRenderer CreateRenderer() => new VeldridRenderer(this);
     }
 }

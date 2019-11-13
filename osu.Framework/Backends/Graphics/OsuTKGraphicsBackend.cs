@@ -5,6 +5,7 @@ using System;
 using osu.Framework.Backends.Graphics.OsuTK;
 using osu.Framework.Backends.Window;
 using osu.Framework.Platform;
+using osuTK;
 using osuTK.Graphics;
 
 namespace osu.Framework.Backends.Graphics
@@ -25,6 +26,12 @@ namespace osu.Framework.Backends.Graphics
                 context = impl.Context;
 
             MakeCurrent();
+        }
+
+        protected override void SetVSync(bool vsync)
+        {
+            if (Host.Window is OsuTKWindowBackend window && window.Implementation is osuTK.GameWindow gameWindow)
+                gameWindow.VSync = vsync ? VSyncMode.On : VSyncMode.Off;
         }
 
         public override IRenderer CreateRenderer() => new OsuTKRenderer(this);

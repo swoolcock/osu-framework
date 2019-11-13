@@ -9,6 +9,7 @@ using osuTK.Graphics;
 using osu.Framework.Graphics.Primitives;
 using osu.Framework.Graphics.Shaders;
 using System;
+using osu.Framework.Backends.Graphics;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.MathUtils;
 using osuTK.Graphics.ES30;
@@ -67,12 +68,12 @@ namespace osu.Framework.Graphics.Containers
 
                 if (blurRadius.X > 0 || blurRadius.Y > 0)
                 {
-                    GLWrapper.PushScissorState(false);
+                    Renderer.Shared.PushScissorState(false);
 
                     if (blurRadius.X > 0) drawBlurredFrameBuffer(blurRadius.X, blurSigma.X, blurRotation);
                     if (blurRadius.Y > 0) drawBlurredFrameBuffer(blurRadius.Y, blurSigma.Y, blurRotation + 90);
 
-                    GLWrapper.PopScissorState();
+                    Renderer.Shared.PopScissorState();
                 }
             }
 

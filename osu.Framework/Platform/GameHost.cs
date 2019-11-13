@@ -16,7 +16,6 @@ using System.Threading.Tasks;
 using osuTK;
 using osuTK.Graphics;
 using osuTK.Graphics.ES30;
-using osuTK.Input;
 using osu.Framework.Allocation;
 using osu.Framework.Backends.Audio;
 using osu.Framework.Backends.Graphics;
@@ -44,6 +43,9 @@ using osu.Framework.Graphics.Textures;
 using osu.Framework.Graphics.Video;
 using osu.Framework.IO.Stores;
 using SixLabors.Memory;
+using Veldrid;
+using PixelFormat = osuTK.Graphics.ES30.PixelFormat;
+using WindowState = osuTK.WindowState;
 
 namespace osu.Framework.Platform
 {
@@ -239,6 +241,8 @@ namespace osu.Framework.Platform
             }
         }
 
+        private IRenderer renderer;
+
         private PerformanceMonitor inputMonitor => InputThread.Monitor;
         private PerformanceMonitor drawMonitor => DrawThread.Monitor;
 
@@ -360,12 +364,14 @@ namespace osu.Framework.Platform
 
         protected virtual void DrawInitialize()
         {
+            renderer = Graphics.CreateRenderer();
+
             Graphics.MakeCurrent();
             GLWrapper.Initialize(this);
 
-            setVSyncMode();
+            Graphics.VerticalSync.Value = true;
 
-            GLWrapper.Reset(new Vector2(Window.InternalSize.Value.Width, Window.InternalSize.Value.Height));
+            Renderer.Shared.Reset(new Vector2(Window.InternalSize.Value.Width, Window.InternalSize.Value.Height));
         }
 
         private long lastDrawFrameId;
@@ -387,32 +393,32 @@ namespace osu.Framework.Platform
                     }
 
                     using (drawMonitor.BeginCollecting(PerformanceCollectionType.GLReset))
-                        GLWrapper.Reset(new Vector2(Window.InternalSize.Value.Width, Window.InternalSize.Value.Height));
+                        Renderer.Shared.Reset(new Vector2(Window.InternalSize.Value.Width, Window.InternalSize.Value.Height));
 
                     if (!bypassFrontToBackPass.Value)
                     {
                         var depthValue = new DepthValue();
 
-                        GLWrapper.PushDepthInfo(DepthInfo.Default);
+                        Renderer.Shared.PushDepthInfo(DepthInfo.Default);
 
                         // Front pass
                         buffer.Object.DrawOpaqueInteriorSubTree(depthValue, null);
 
-                        GLWrapper.PopDepthInfo();
+                        Renderer.Shared.PopDepthInfo();
 
                         // The back pass doesn't write depth, but needs to depth test properly
-                        GLWrapper.PushDepthInfo(new DepthInfo(true, false));
+                        Renderer.Shared.PushDepthInfo(new DepthInfo(true, false));
                     }
                     else
                     {
                         // Disable depth testing
-                        GLWrapper.PushDepthInfo(new DepthInfo());
+                        Renderer.Shared.PushDepthInfo(new DepthInfo());
                     }
 
                     // Back pass
                     buffer.Object.Draw(null);
 
-                    GLWrapper.PopDepthInfo();
+                    Renderer.Shared.PopDepthInfo();
 
                     lastDrawFrameId = buffer.FrameId;
                     break;
@@ -425,10 +431,10 @@ namespace osu.Framework.Platform
             {
                 Graphics.SwapBuffers();
 
-                // if (window.Implementation.VSync == VSyncMode.On)
-                //     // without glFinish, vsync is basically unplayable due to the extra latency introduced.
-                //     // we will likely want to give the user control over this in the future as an advanced setting.
-                GL.Finish();
+                // without glFinish, vsync is basically unplayable due to the extra latency introduced.
+                // we will likely want to give the user control over this in the future as an advanced setting.
+                if (frameSyncMode.Value == FrameSync.VSync)
+                    GL.Finish();
             }
         }
 
@@ -567,6 +573,8 @@ namespace osu.Framework.Platform
 
                 connectBackends();
 
+                Input.KeyDown += window_KeyDown;
+
                 // TODO: Window.SetupWindow(Config);
                 Window.Title.Value = $@"osu!framework (running ""{Name}"")";
                 // TODO: IsActive.BindTo(Window.IsActive);
@@ -674,14 +682,14 @@ namespace osu.Framework.Platform
                 InputThread.RunUpdate();
         }
 
-        private void window_KeyDown(object sender, KeyboardKeyEventArgs e)
+        private void window_KeyDown(KeyEvent e)
         {
-            if (!e.Control)
+            if (!e.Modifiers.HasFlag(ModifierKeys.Control))
                 return;
 
             switch (e.Key)
             {
-                case Key.F7:
+                case Veldrid.Key.F7:
                     var nextMode = frameSyncMode.Value + 1;
                     if (nextMode > FrameSync.Unlimited)
                         nextMode = FrameSync.VSync;
@@ -744,7 +752,7 @@ namespace osu.Framework.Platform
                 float drawLimiter = refreshRate;
                 float updateLimiter = drawLimiter * 2;
 
-                setVSyncMode();
+                Graphics.VerticalSync.Value = e.NewValue == FrameSync.VSync;
 
                 switch (e.NewValue)
                 {
@@ -831,14 +839,14 @@ namespace osu.Framework.Platform
             }, true);
         }
 
-        private void setVSyncMode()
-        {
-            // TODO: not hardcode to osuTK
-            if (Window is OsuTKWindowBackend window && window.Implementation is osuTK.GameWindow gameWindow)
-            {
-                DrawThread.Scheduler.Add(() => gameWindow.VSync = frameSyncMode.Value == FrameSync.VSync ? VSyncMode.On : VSyncMode.Off);
-            }
-        }
+        // private void setVSyncMode()
+        // {
+        //     // TODO: not hardcode to osuTK
+        //     if (Window is OsuTKWindowBackend window && window.Implementation is osuTK.GameWindow gameWindow)
+        //     {
+        //         DrawThread.Scheduler.Add(() => gameWindow.VSync = frameSyncMode.Value == FrameSync.VSync ? VSyncMode.On : VSyncMode.Off);
+        //     }
+        // }
 
         public abstract ITextInputSource GetTextInput();
 

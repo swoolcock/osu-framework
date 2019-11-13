@@ -19,12 +19,7 @@ namespace osu.Framework.Backends.Graphics
         internal IntPtr SdlWindowHandle;
         internal IntPtr Context;
 
-        public override void Initialise(IGameHost host)
-        {
-            base.Initialise(host);
-
-            // TODO: create framebuffers etc.
-        }
+        protected override void SetVSync(bool vsync) => Sdl2Native.SDL_GL_SetSwapInterval(vsync ? 1 : 0);
 
         protected override void CreateContext(IGameHost host)
         {
