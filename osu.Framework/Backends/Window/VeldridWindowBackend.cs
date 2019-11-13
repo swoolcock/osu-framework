@@ -91,6 +91,7 @@ namespace osu.Framework.Backends.Window
             Implementation.MouseLeft += () => cursorInWindow.Value = false;
             Implementation.Hidden += implementation_HiddenShown;
             Implementation.Shown += implementation_HiddenShown;
+            Implementation.Closed += OnClosed;
 
             Bounds.ValueChanged += bounds_ValueChanged;
             InternalSize.ValueChanged += internalSize_ValueChanged;
@@ -205,6 +206,8 @@ namespace osu.Framework.Backends.Window
 
         public override void Close()
         {
+            if (!OnCloseRequested())
+                Implementation.Close();
         }
 
         public override Point PointToClient(Point point) => Implementation.ScreenToClient(point.ToVeldrid()).ToSystemDrawing();
