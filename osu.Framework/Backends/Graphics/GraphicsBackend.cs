@@ -23,8 +23,6 @@ namespace osu.Framework.Backends.Graphics
 
         protected abstract void SetVSync(bool vsync);
 
-        public abstract IRenderer CreateRenderer();
-
         public virtual void MakeCurrent()
         {
         }

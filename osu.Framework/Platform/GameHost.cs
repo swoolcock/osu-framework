@@ -241,8 +241,6 @@ namespace osu.Framework.Platform
             }
         }
 
-        private IRenderer renderer;
-
         private PerformanceMonitor inputMonitor => InputThread.Monitor;
         private PerformanceMonitor drawMonitor => DrawThread.Monitor;
 
@@ -364,14 +362,12 @@ namespace osu.Framework.Platform
 
         protected virtual void DrawInitialize()
         {
-            renderer = Graphics.CreateRenderer();
-
             Graphics.MakeCurrent();
             GLWrapper.Initialize(this);
 
             Graphics.VerticalSync.Value = true;
 
-            Renderer.Shared.Reset(new Vector2(Window.InternalSize.Value.Width, Window.InternalSize.Value.Height));
+            GLWrapper.Reset(new Vector2(Window.InternalSize.Value.Width, Window.InternalSize.Value.Height));
         }
 
         private long lastDrawFrameId;
@@ -393,32 +389,32 @@ namespace osu.Framework.Platform
                     }
 
                     using (drawMonitor.BeginCollecting(PerformanceCollectionType.GLReset))
-                        Renderer.Shared.Reset(new Vector2(Window.InternalSize.Value.Width, Window.InternalSize.Value.Height));
+                        GLWrapper.Reset(new Vector2(Window.InternalSize.Value.Width, Window.InternalSize.Value.Height));
 
                     if (!bypassFrontToBackPass.Value)
                     {
                         var depthValue = new DepthValue();
 
-                        Renderer.Shared.PushDepthInfo(DepthInfo.Default);
+                        GLWrapper.PushDepthInfo(DepthInfo.Default);
 
                         // Front pass
                         buffer.Object.DrawOpaqueInteriorSubTree(depthValue, null);
 
-                        Renderer.Shared.PopDepthInfo();
+                        GLWrapper.PopDepthInfo();
 
                         // The back pass doesn't write depth, but needs to depth test properly
-                        Renderer.Shared.PushDepthInfo(new DepthInfo(true, false));
+                        GLWrapper.PushDepthInfo(new DepthInfo(true, false));
                     }
                     else
                     {
                         // Disable depth testing
-                        Renderer.Shared.PushDepthInfo(new DepthInfo());
+                        GLWrapper.PushDepthInfo(new DepthInfo());
                     }
 
                     // Back pass
                     buffer.Object.Draw(null);
 
-                    Renderer.Shared.PopDepthInfo();
+                    GLWrapper.PopDepthInfo();
 
                     lastDrawFrameId = buffer.FrameId;
                     break;

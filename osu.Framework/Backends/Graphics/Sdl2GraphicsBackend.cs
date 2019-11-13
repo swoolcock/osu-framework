@@ -5,7 +5,6 @@ using System;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using osu.Framework.Backends.Graphics.OsuTK;
 using osu.Framework.Backends.Window.Sdl2;
 using osu.Framework.Platform;
 using osuTK.Graphics;
@@ -33,8 +32,6 @@ namespace osu.Framework.Backends.Graphics
 
             loadTKBindings();
         }
-
-        public override IRenderer CreateRenderer() => new OsuTKRenderer(this);
 
         public override void MakeCurrent() => Sdl2Native.SDL_GL_MakeCurrent(SdlWindowHandle, Context);
 

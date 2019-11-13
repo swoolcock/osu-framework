@@ -32,8 +32,6 @@ namespace osu.Framework.Backends.Graphics.OsuTK
                 gameWindow.VSync = vsync ? VSyncMode.On : VSyncMode.Off;
         }
 
-        public override IRenderer CreateRenderer() => new OsuTKRenderer(this);
-
         public override void MakeCurrent() => (Host.Window as OsuTKWindowBackend)?.Implementation.MakeCurrent();
 
         public override void SwapBuffers() => (Host.Window as OsuTKWindowBackend)?.Implementation.SwapBuffers();

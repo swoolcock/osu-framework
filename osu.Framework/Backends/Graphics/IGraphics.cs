@@ -12,8 +12,6 @@ namespace osu.Framework.Backends.Graphics
     {
         Bindable<bool> VerticalSync { get; }
 
-        IRenderer CreateRenderer();
-
         void MakeCurrent();
         void SwapBuffers();
     }
