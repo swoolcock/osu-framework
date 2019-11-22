@@ -2,6 +2,7 @@
 // See the LICENCE file in the repository root for full licence text.
 
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 using osu.Framework.Caching;
 using osu.Framework.Threading;
@@ -137,6 +138,39 @@ namespace osu.Framework.Platform
         }
 
         #endregion
+
+        private readonly Cached<Display[]> displays = new Cached<Display[]>();
+
+        public IEnumerable<Display> Displays
+        {
+            get
+            {
+                if (displays.IsValid)
+                    return displays.Value;
+
+                int numVideoDisplays = Sdl2Functions.SDL_GetNumVideoDisplays();
+                var displayList = new List<Display>();
+
+                for (int displayIndex = 0; displayIndex < numVideoDisplays; displayIndex++)
+                {
+                    int numModes = Sdl2Functions.SDL_GetNumDisplayModes(displayIndex);
+                    var modes = new List<DisplayMode>();
+
+                    for (int modeIndex = 0; modeIndex < numModes; modeIndex++)
+                    {
+                        DisplayMode? mode = Sdl2Functions.SDL_GetDisplayMode(displayIndex, modeIndex);
+                        if (mode.HasValue)
+                            modes.Add(mode.Value);
+                    }
+
+                    displayList.Add(new Display(displayIndex, modes.ToArray()));
+                }
+
+                displays.Value = displayList.ToArray();
+
+                return displays.Value;
+            }
+        }
 
         #region IWindowBackend.Events
 
