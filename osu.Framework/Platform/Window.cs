@@ -28,8 +28,8 @@ namespace osu.Framework.Platform
     /// </summary>
     public class Window : IWindow, ILegacyWindow
     {
-        private readonly IWindowBackend windowBackend;
-        private readonly IGraphicsBackend graphicsBackend;
+        protected readonly IWindowBackend WindowBackend;
+        protected readonly IGraphicsBackend GraphicsBackend;
 
         #region Properties
 
@@ -38,8 +38,8 @@ namespace osu.Framework.Platform
         /// </summary>
         public string Title
         {
-            get => windowBackend.Title;
-            set => windowBackend.Title = value;
+            get => WindowBackend.Title;
+            set => WindowBackend.Title = value;
         }
 
         /// <summary>
@@ -47,15 +47,15 @@ namespace osu.Framework.Platform
         /// </summary>
         public bool VerticalSync
         {
-            get => graphicsBackend.VerticalSync;
-            set => graphicsBackend.VerticalSync = value;
+            get => GraphicsBackend.VerticalSync;
+            set => GraphicsBackend.VerticalSync = value;
         }
 
         /// <summary>
         /// Returns true if window has been created.
         /// Returns false if the window has not yet been created, or has been closed.
         /// </summary>
-        public bool Exists => windowBackend.Exists;
+        public bool Exists => WindowBackend.Exists;
 
         #endregion
 
@@ -75,7 +75,7 @@ namespace osu.Framework.Platform
         /// Returns the scale of window's drawable area.
         /// In high-dpi environments this will be greater than one.
         /// </summary>
-        public float Scale => windowBackend.Scale;
+        public float Scale => WindowBackend.Scale;
 
         /// <summary>
         /// Provides a bindable that controls the window's <see cref="WindowState"/>.
@@ -253,19 +253,19 @@ namespace osu.Framework.Platform
         /// <param name="graphicsBackend">The <see cref="IGraphicsBackend"/> to use.</param>
         public Window(IWindowBackend windowBackend, IGraphicsBackend graphicsBackend)
         {
-            this.windowBackend = windowBackend;
-            this.graphicsBackend = graphicsBackend;
+            WindowBackend = windowBackend;
+            GraphicsBackend = graphicsBackend;
 
             Position.ValueChanged += position_ValueChanged;
             Size.ValueChanged += size_ValueChanged;
 
             CursorState.ValueChanged += evt =>
             {
-                this.windowBackend.CursorVisible = !evt.NewValue.HasFlag(Platform.CursorState.Hidden);
-                this.windowBackend.CursorConfined = evt.NewValue.HasFlag(Platform.CursorState.Confined);
+                WindowBackend.CursorVisible = !evt.NewValue.HasFlag(Platform.CursorState.Hidden);
+                WindowBackend.CursorConfined = evt.NewValue.HasFlag(Platform.CursorState.Confined);
             };
 
-            WindowState.ValueChanged += evt => this.windowBackend.WindowState = evt.NewValue;
+            WindowState.ValueChanged += evt => WindowBackend.WindowState = evt.NewValue;
 
             Visible.ValueChanged += visible_ValueChanged;
 
@@ -320,23 +320,23 @@ namespace osu.Framework.Platform
         /// <summary>
         /// Starts the window's run loop.
         /// </summary>
-        public void Run() => windowBackend.Run();
+        public void Run() => WindowBackend.Run();
 
         /// <summary>
         /// Attempts to close the window.
         /// </summary>
-        public void Close() => windowBackend.Close();
+        public void Close() => WindowBackend.Close();
 
         /// <summary>
         /// Requests that the graphics backend perform a buffer swap.
         /// </summary>
-        public void SwapBuffers() => graphicsBackend.SwapBuffers();
+        public void SwapBuffers() => GraphicsBackend.SwapBuffers();
 
         /// <summary>
         /// Requests that the graphics backend become the current context.
         /// May be unrequired for some backends.
         /// </summary>
-        public void MakeCurrent() => graphicsBackend.MakeCurrent();
+        public void MakeCurrent() => GraphicsBackend.MakeCurrent();
 
         #endregion
 
@@ -344,7 +344,7 @@ namespace osu.Framework.Platform
 
         private void visible_ValueChanged(ValueChangedEvent<bool> evt)
         {
-            windowBackend.Visible = evt.NewValue;
+            WindowBackend.Visible = evt.NewValue;
 
             if (evt.NewValue)
                 OnShown();
@@ -359,8 +359,8 @@ namespace osu.Framework.Platform
             if (!boundsChanging)
             {
                 boundsChanging = true;
-                Position.Value = windowBackend.Position;
-                Size.Value = windowBackend.Size;
+                Position.Value = WindowBackend.Position;
+                Size.Value = WindowBackend.Size;
                 boundsChanging = false;
             }
 
@@ -385,7 +385,7 @@ namespace osu.Framework.Platform
                 return;
 
             boundsChanging = true;
-            windowBackend.Position = evt.NewValue;
+            WindowBackend.Position = evt.NewValue;
             boundsChanging = false;
         }
 
@@ -395,7 +395,7 @@ namespace osu.Framework.Platform
                 return;
 
             boundsChanging = true;
-            windowBackend.Size = evt.NewValue;
+            WindowBackend.Size = evt.NewValue;
             boundsChanging = false;
         }
 
@@ -479,14 +479,14 @@ namespace osu.Framework.Platform
 
         public bool CursorVisible
         {
-            get => windowBackend.CursorVisible;
-            set => windowBackend.CursorVisible = value;
+            get => WindowBackend.CursorVisible;
+            set => WindowBackend.CursorVisible = value;
         }
 
         public bool CursorGrabbed
         {
-            get => windowBackend.CursorConfined;
-            set => windowBackend.CursorConfined = value;
+            get => WindowBackend.CursorConfined;
+            set => WindowBackend.CursorConfined = value;
         }
 
 #pragma warning disable 0067
@@ -610,7 +610,7 @@ namespace osu.Framework.Platform
             // TODO: CycleMode
         }
 
-        public void SetupWindow(FrameworkConfigManager config)
+        public virtual void SetupWindow(FrameworkConfigManager config)
         {
             // TODO: SetupWindow
         }
