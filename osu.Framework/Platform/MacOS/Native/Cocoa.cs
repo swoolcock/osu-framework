@@ -8,7 +8,6 @@ namespace osu.Framework.Platform.MacOS.Native
 {
     internal static class Cocoa
     {
-        internal const string LIB_DL = "libdl.dylib";
         internal const string LIB_APPKIT = "/System/Library/Frameworks/AppKit.framework/AppKit";
         internal const string LIB_OBJ_C = "/usr/lib/libobjc.dylib";
         internal const string LIB_CORE_GRAPHICS = "/System/Library/Frameworks/CoreGraphics.framework/Versions/Current/CoreGraphics";
@@ -77,15 +76,9 @@ namespace osu.Framework.Platform.MacOS.Native
         [DllImport(LIB_CORE_GRAPHICS, EntryPoint = "CGEventSourceFlagsState")]
         public static extern ulong CGEventSourceFlagsState(int stateID);
 
-        [DllImport(LIB_DL)]
-        private static extern IntPtr dlsym(IntPtr handle, string name);
-
-        [DllImport(LIB_DL)]
-        private static extern IntPtr dlopen(string fileName, int flags);
-
         static Cocoa()
         {
-            AppKitLibrary = dlopen(LIB_APPKIT, RTLD_NOW);
+            AppKitLibrary = NativeUtils.Load(LIB_APPKIT);
         }
 
         private static readonly IntPtr sel_c_string_using_encoding = Selector.Get("cStringUsingEncoding:");
@@ -102,12 +95,6 @@ namespace osu.Framework.Platform.MacOS.Native
                 var handle = SendIntPtr(Class.Get("NSString"), Selector.Get("alloc"));
                 return SendIntPtr(handle, Selector.Get("initWithCharacters:length:"), (IntPtr)ptrFirstChar, str.Length);
             }
-        }
-
-        public static IntPtr GetStringConstant(IntPtr handle, string symbol)
-        {
-            IntPtr ptr = dlsym(handle, symbol);
-            return ptr == IntPtr.Zero ? IntPtr.Zero : Marshal.ReadIntPtr(ptr);
         }
     }
 }

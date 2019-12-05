@@ -20,8 +20,8 @@ namespace osu.Framework.Platform.MacOS.Native
             IntPtr nsncClass = Class.Get("NSNotificationCenter");
             Handle = Cocoa.SendIntPtr(nsncClass, sel_default_center);
 
-            WINDOW_DID_ENTER_FULL_SCREEN = Cocoa.GetStringConstant(Cocoa.AppKitLibrary, "NSWindowDidEnterFullScreenNotification");
-            WINDOW_DID_EXIT_FULL_SCREEN = Cocoa.GetStringConstant(Cocoa.AppKitLibrary, "NSWindowDidExitFullScreenNotification");
+            WINDOW_DID_ENTER_FULL_SCREEN = NativeUtils.GetStringConstant(Cocoa.AppKitLibrary, "NSWindowDidEnterFullScreenNotification");
+            WINDOW_DID_EXIT_FULL_SCREEN = NativeUtils.GetStringConstant(Cocoa.AppKitLibrary, "NSWindowDidExitFullScreenNotification");
         }
 
         internal static void AddObserver(IntPtr target, IntPtr selector, IntPtr name, IntPtr obj) =>
