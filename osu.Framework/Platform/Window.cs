@@ -308,7 +308,7 @@ namespace osu.Framework.Platform
         /// <summary>
         /// Creates the concrete window implementation and initialises the graphics backend.
         /// </summary>
-        public void Create()
+        public virtual void Create()
         {
             windowBackend.Create();
 

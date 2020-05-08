@@ -1,18 +1,23 @@
 ﻿// Copyright (c) ppy Pty Ltd <contact@ppy.sh>. Licensed under the MIT Licence.
 // See the LICENCE file in the repository root for full licence text.
 
-using UIKit;
+using System;
+using osu.Framework.iOS;
+using SDL2;
 
 namespace SampleGame.iOS
 {
     public class Application
     {
-        // This is the main entry point of the application.
-        public static void Main(string[] args)
+        public static void Main(string[] args) => SDL.SDL_UIKitRunApp(0, IntPtr.Zero, gameMain);
+
+        [ObjCRuntime.MonoPInvokeCallback(typeof(SDL.SDL_main_func))]
+        private static int gameMain(int argc, IntPtr argv)
         {
-            // if you want to use a different Application Delegate class from "AppDelegate"
-            // you can specify it here.
-            UIApplication.Main(args, "GameUIApplication", "AppDelegate");
+            using (var host = new IOSHost())
+                host.Run(new SampleGameGame());
+
+            return 0;
         }
     }
 }

@@ -28,6 +28,7 @@
   <ItemGroup>
     <None Include="Info.plist" />
     <None Include="Entitlements.plist" />
+    <BundleResource Include="SDL2-CS.dll.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Application.cs" />

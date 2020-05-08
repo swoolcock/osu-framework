@@ -47,7 +47,7 @@ namespace osu.Framework.Graphics.OpenGL
 
         public static int DefaultFrameBuffer;
 
-        public static bool IsEmbedded { get; internal set; }
+        public static bool IsEmbedded { get; set; }
 
         /// <summary>
         /// Check whether we have an initialised and non-disposed GL context.

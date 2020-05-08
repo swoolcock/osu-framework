@@ -38,6 +38,10 @@ namespace osu.Framework.iOS
             NSNotificationCenter.DefaultCenter.AddObserver(UIKeyboard.DidHideNotification, handleKeyboardNotification);
         }
 
+        public IOSGameHost()
+        {
+        }
+
         /// <summary>
         /// If the keyboard visibility changes (including the hardware keyboard helper bar) we select the keyboard
         /// handler based on the height of the on-screen keyboard at the end of the animation. If the height is above
@@ -68,8 +72,8 @@ namespace osu.Framework.iOS
             IOSGameWindow.GameView = gameView;
 
             AllowScreenSuspension.BindValueChanged(allow =>
-                InputThread.Scheduler.Add(() => UIApplication.SharedApplication.IdleTimerDisabled = !allow.NewValue),
-            true);
+                    InputThread.Scheduler.Add(() => UIApplication.SharedApplication.IdleTimerDisabled = !allow.NewValue),
+                true);
         }
 
         protected override IWindow CreateWindow() => new IOSGameWindow();

@@ -7,6 +7,7 @@ using System.Drawing;
 using SixLabors.ImageSharp.PixelFormats;
 using AVFoundation;
 using System;
+using SDL2;
 
 namespace osu.Framework.iOS
 {

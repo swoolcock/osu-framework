@@ -26,7 +26,7 @@ namespace osu.Framework.Platform.Sdl
 
         #region Internal Properties
 
-        internal IntPtr SdlWindowHandle { get; private set; } = IntPtr.Zero;
+        protected internal IntPtr SdlWindowHandle { get; private set; } = IntPtr.Zero;
 
         #endregion
 
@@ -312,7 +312,7 @@ namespace osu.Framework.Platform.Sdl
 
         #region IWindowBackend.Methods
 
-        public void Create()
+        public virtual void Create()
         {
             SDL.SDL_WindowFlags flags = SDL.SDL_WindowFlags.SDL_WINDOW_OPENGL |
                                         SDL.SDL_WindowFlags.SDL_WINDOW_RESIZABLE |
@@ -326,7 +326,7 @@ namespace osu.Framework.Platform.Sdl
             Exists = true;
         }
 
-        public void Run()
+        public virtual void Run()
         {
             while (Exists)
             {
@@ -351,10 +351,15 @@ namespace osu.Framework.Platform.Sdl
 
         #region SDL Event Handling
 
+        protected virtual bool HandleCustomEvent(SDL.SDL_Event evt) => false;
+
         private void processEvents()
         {
             while (SDL.SDL_PollEvent(out var evt) > 0)
             {
+                if (HandleCustomEvent(evt))
+                    continue;
+
                 switch (evt.type)
                 {
                     case SDL.SDL_EventType.SDL_QUIT:

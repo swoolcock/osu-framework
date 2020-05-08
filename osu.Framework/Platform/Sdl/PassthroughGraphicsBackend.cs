@@ -21,8 +21,9 @@ namespace osu.Framework.Platform.Sdl
     {
         private bool initialised;
 
-        internal IntPtr SdlWindowHandle;
-        internal IntPtr Context;
+        protected internal IntPtr SdlWindowHandle { get; private set; }
+
+        protected internal IntPtr Context { get; private set; }
 
         internal Version GLVersion { get; private set; }
 
@@ -36,7 +37,7 @@ namespace osu.Framework.Platform.Sdl
             set => SDL.SDL_GL_SetSwapInterval(value ? 1 : 0);
         }
 
-        public void Initialise(IWindowBackend windowBackend)
+        public virtual void Initialise(IWindowBackend windowBackend)
         {
             if (initialised)
                 return;

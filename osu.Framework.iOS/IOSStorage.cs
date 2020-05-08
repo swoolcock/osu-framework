@@ -8,7 +8,7 @@ namespace osu.Framework.iOS
 {
     public class IOSStorage : NativeStorage
     {
-        public IOSStorage(string path, IOSGameHost host = null)
+        public IOSStorage(string path, GameHost host = null)
             : base(path, host)
         {
         }
