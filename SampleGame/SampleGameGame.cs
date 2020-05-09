@@ -19,11 +19,10 @@ namespace SampleGame
         {
             Add(box = new Box
             {
-                Anchor = Anchor.TopLeft,
-                Origin = Anchor.TopLeft,
+                Anchor = Anchor.Centre,
+                Origin = Anchor.Centre,
                 Size = new Vector2(150, 150),
                 Colour = Color4.Tomato,
-                Margin = new MarginPadding(50)
             });
         }
 

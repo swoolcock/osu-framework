@@ -472,6 +472,24 @@ namespace osu.Framework.Platform.Sdl
 
         private void handleTouchFingerEvent(SDL.SDL_TouchFingerEvent evtTfinger)
         {
+            var scaledX = evtTfinger.x * Size.Width * Scale;
+            var scaledY = evtTfinger.y * Size.Height * Scale;
+
+            switch (evtTfinger.type)
+            {
+                case (uint)SDL.SDL_EventType.SDL_FINGERDOWN:
+                    OnMouseMove(new MousePositionAbsoluteInput { Position = new Vector2(scaledX, scaledY) });
+                    OnMouseDown(new MouseButtonInput(MouseButton.Left, true));
+                    break;
+
+                case (uint)SDL.SDL_EventType.SDL_FINGERUP:
+                    OnMouseUp(new MouseButtonInput(MouseButton.Left, false));
+                    break;
+
+                case (uint)SDL.SDL_EventType.SDL_FINGERMOTION:
+                    OnMouseMove(new MousePositionAbsoluteInput { Position = new Vector2(scaledX, scaledY) });
+                    break;
+            }
         }
 
         private void handleControllerDeviceEvent(SDL.SDL_ControllerDeviceEvent evtCdevice)

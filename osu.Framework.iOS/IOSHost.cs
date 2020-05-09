@@ -7,6 +7,8 @@ using System.Linq;
 using Foundation;
 using osu.Framework.Input;
 using osu.Framework.Input.Handlers;
+using osu.Framework.Input.Handlers.Keyboard;
+using osu.Framework.Input.Handlers.Mouse;
 using osu.Framework.Platform;
 using UIKit;
 
@@ -45,7 +47,11 @@ namespace osu.Framework.iOS
 
         public override string UserStoragePath => Environment.GetFolderPath(Environment.SpecialFolder.Personal);
 
-        protected override IEnumerable<InputHandler> CreateAvailableInputHandlers() => Enumerable.Empty<InputHandler>();
+        protected override IEnumerable<InputHandler> CreateAvailableInputHandlers() => new InputHandler[]
+        {
+            new KeyboardHandler(),
+            new MouseHandler(),
+        };
 
         public override ITextInputSource GetTextInput() => null;
     }
